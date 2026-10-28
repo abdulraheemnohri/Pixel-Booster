@@ -476,6 +476,7 @@ fun SystemVitalityHudCard(
     onOpenHealth: () -> Unit
 ) {
     val scoreColor = when {
+        vitalityScore < 0 -> TextSecondaryDark
         vitalityScore >= 85 -> PositiveMint
         vitalityScore >= 60 -> WarningAmber
         else -> CriticalRed
@@ -519,16 +520,21 @@ fun SystemVitalityHudCard(
                     Spacer(modifier = Modifier.height(3.dp))
                     Text(
                         text = when {
-                            vitalityScore >= 85 -> "Peak Operational State"
-                            vitalityScore >= 60 -> "Moderate Hardware Load"
-                            else -> "Thermal / Power Throttle"
+                            vitalityScore < 0 -> "Status unavailable"
+                            vitalityScore >= 85 -> "No major issues detected"
+                            vitalityScore >= 60 -> "Review device conditions"
+                            else -> "Device needs attention"
                         },
                         style = MaterialTheme.typography.titleLarge,
                         fontWeight = FontWeight.Bold,
                         color = MaterialTheme.colorScheme.onSurface
                     )
                     Text(
-                        text = if (isOverheating) "High thermal rise detected • Active mitigation" else "All compute clusters & sensors calibrated",
+                        text = when {
+                            isOverheating -> "Elevated thermal readings reported by Android"
+                            vitalityScore < 0 -> "Not enough exposed telemetry to calculate a score"
+                            else -> "Heuristic status from available readings; not a diagnostic certification"
+                        },
                         style = MaterialTheme.typography.bodySmall,
                         color = if (isOverheating) WarningAmber else TextSecondaryDark
                     )
@@ -559,13 +565,13 @@ fun SystemVitalityHudCard(
                     }
                     Column(horizontalAlignment = Alignment.CenterHorizontally) {
                         Text(
-                            text = "${animatedScore.toInt()}",
+                            text = if (vitalityScore >= 0) "${animatedScore.toInt()}" else "—",
                             style = MaterialTheme.typography.titleLarge,
                             fontWeight = FontWeight.Bold,
                             color = scoreColor
                         )
                         Text(
-                            text = "PTS",
+                            text = if (vitalityScore >= 0) "PTS" else "N/A",
                             style = MaterialTheme.typography.labelSmall,
                             color = scoreColor.copy(alpha = 0.8f),
                             fontSize = 8.sp,
