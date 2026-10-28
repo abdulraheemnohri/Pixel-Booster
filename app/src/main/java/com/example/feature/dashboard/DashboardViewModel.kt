@@ -249,13 +249,13 @@ class DashboardViewModel(application: Application) : AndroidViewModel(applicatio
             Device: ${current.deviceSpecs.manufacturer} ${current.deviceSpecs.model} (${current.deviceSpecs.pixelGenerationName})
             Android: ${current.deviceSpecs.androidVersion} (API ${current.deviceSpecs.sdkInt})
             SoC / Processor: ${current.deviceSpecs.socModel}
-            CPU Load: ${telemetry?.processor?.formattedCpuUsage ?: "Nominal"} (${telemetry?.processor?.coreCount ?: 8} cores)
-            GPU Engine: ${telemetry?.processor?.gpuEngineName ?: "Arm Mali-G715"} (${telemetry?.processor?.formattedGpuUsage ?: "Nominal"})
-            TPU / Neural Engine: ${telemetry?.processor?.tpuEngineName ?: "Google Tensor TPU"} (${telemetry?.processor?.tpuTopsRating ?: "45 TOPS"})
-            Network: ${telemetry?.network?.connectionType ?: "Connected"} (Down: ${telemetry?.network?.formattedDownloadSpeed ?: "0 B/s"}, Up: ${telemetry?.network?.formattedUploadSpeed ?: "0 B/s"})
+            CPU Load: ${telemetry?.processor?.formattedCpuUsage ?: "Unavailable"} (${telemetry?.processor?.coreCount?.takeIf { it > 0 } ?: "Unavailable"} cores)
+            GPU Engine: ${telemetry?.processor?.gpuEngineName?.takeIf { it.isNotBlank() && it != "Unavailable" } ?: "Unavailable"} (${telemetry?.processor?.formattedGpuUsage ?: "Unavailable"})
+            TPU / Neural Engine: ${telemetry?.processor?.tpuEngineName?.takeIf { it.isNotBlank() && it != "Unavailable" } ?: "Unavailable"} (${telemetry?.processor?.tpuTopsRating?.takeIf { it.isNotBlank() && it != "Unavailable" } ?: "Unavailable"})
+            Network: ${telemetry?.network?.connectionType ?: "Unavailable"} (Down: ${telemetry?.network?.formattedDownloadSpeed ?: "Unavailable"}, Up: ${telemetry?.network?.formattedUploadSpeed ?: "Unavailable"})
             RAM: ${current.memory.formattedUsed} used of ${current.memory.formattedTotal} (${String.format(java.util.Locale.US, "%.1f", current.memory.usedPercentage)}%)
             Internal Storage: ${current.storage.formattedUsed} used of ${current.storage.formattedTotal} (${String.format(java.util.Locale.US, "%.1f", current.storage.usedPercentage)}%)
-            Battery: ${current.battery.levelPercentage}% (Capacity: ${telemetry?.batteryHealth?.formattedCurrentCapacity ?: "5000 mAh"} / ${telemetry?.batteryHealth?.formattedDesignedCapacity ?: "5000 mAh"}, Health: ${telemetry?.batteryHealth?.healthGrade ?: "Optimal"})
+            Battery: ${current.battery.levelPercentage}% (Capacity: ${telemetry?.batteryHealth?.formattedCurrentCapacity ?: "Unavailable"} / ${telemetry?.batteryHealth?.formattedDesignedCapacity ?: "Unavailable"}, Health: ${telemetry?.batteryHealth?.healthGrade ?: "Unavailable"})
             Cell Temp: ${telemetry?.thermal?.formattedCurrentTemp ?: current.battery.formattedTemperature} (Status: ${telemetry?.thermal?.statusName ?: current.thermal.statusName})
             Overall State: ${current.overallStatusTitle}
             """.trimIndent()
