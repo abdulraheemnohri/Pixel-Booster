@@ -699,29 +699,38 @@ class HardwareMonitorService(
         battery: BatteryHealthData,
         ramUsedPercent: Float
     ): Int {
+        // A composite score is not meaningful when both thermal readings and
+        // battery-health telemetry are unavailable. -1 is the UI's unavailable sentinel.
+        val thermalKnown = thermal.currentTempCelsius > 0f ||
+            thermal.statusName != "Sensor unavailable"
+        val batteryHealthKnown = !battery.healthGrade.startsWith("Unavailable")
+        if (!thermalKnown && !batteryHealthKnown) return -1
+
         var score = 100
 
-        // Thermal deductions
-        if (thermal.isOverheating) {
-            score -= 25
-        } else if (thermal.currentTempCelsius > 39f) {
-            score -= 10
+        // Apply only deductions supported by available readings.
+        if (thermalKnown) {
+            if (thermal.isOverheating) {
+                score -= 25
+            } else if (thermal.currentTempCelsius > 39f) {
+                score -= 10
+            }
         }
 
-        // Battery deductions
-        if (battery.levelPercentage < 20) {
+        if (battery.levelPercentage in 0..19) {
             score -= 15
-        } else if (battery.levelPercentage < 35) {
+        } else if (battery.levelPercentage in 20..34) {
             score -= 8
         }
 
-        // RAM deductions
-        if (ramUsedPercent > 85f) {
-            score -= 15
-        } else if (ramUsedPercent > 70f) {
-            score -= 8
+        if (ramUsedPercent in 0f..100f) {
+            if (ramUsedPercent > 85f) {
+                score -= 15
+            } else if (ramUsedPercent > 70f) {
+                score -= 8
+            }
         }
 
-        return score.coerceIn(20, 100)
+        return score.coerceIn(0, 100)
     }
 }
