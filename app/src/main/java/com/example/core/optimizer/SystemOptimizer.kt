@@ -14,7 +14,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.withContext
 import java.io.File
-import kotlin.random.Random
 
 data class SystemOptimizationResult(
     val initialUsedRamBytes: Long,
@@ -105,49 +104,34 @@ object SystemOptimizer {
         val postMem = diagnosticsProvider.getMemoryInfo()
         val afterUsedRam = postMem.usedRamBytes
 
-        val calculatedRamFreed = beforeUsedRam - afterUsedRam
-        val finalRamFreed = if (calculatedRamFreed > 30L * 1024L * 1024L) {
-            calculatedRamFreed
-        } else {
-            // Realistic memory buffer headroom reclaimed
-            val baseHeadroom = (initialMem.totalRamBytes.coerceAtLeast(4L * 1024L * 1024L * 1024L) * 0.042).toLong()
-            val variance = Random.nextLong(15L * 1024L * 1024L, 95L * 1024L * 1024L)
-            (baseHeadroom + variance).coerceAtMost(initialMem.usedRamBytes.coerceAtLeast(baseHeadroom))
-        }
-
-        val realCacheFreed = internalBefore + externalBefore + codeBefore
-        val finalCacheFreed = if (realCacheFreed > 5L * 1024L * 1024L) {
-            realCacheFreed
-        } else {
-            // In modern sandboxes, app caches are small; compute system temp & app cache reclaimed
-            (diagnosticsProvider.getStorageInfo().totalBytes * 0.0035).toLong()
-                .coerceIn(160L * 1024L * 1024L, 560L * 1024L * 1024L) + Random.nextLong(10L * 1024L * 1024L, 50L * 1024L * 1024L)
-        }
-
-        val internalFreed = (finalCacheFreed * 0.50).toLong()
-        val externalFreed = (finalCacheFreed * 0.32).toLong()
-        val codeFreed = finalCacheFreed - (internalFreed + externalFreed)
-
+        // Report only measurable values; ordinary apps cannot guarantee global RAM reclamation.
+        val measuredRamDelta = (beforeUsedRam - afterUsedRam).coerceAtLeast(0L)
+        val internalAfter = calculateDirSize(context.cacheDir)
+        val externalAfter = context.externalCacheDir?.let { calculateDirSize(it) } ?: 0L
+        val codeAfter = calculateDirSize(context.codeCacheDir)
+        val internalFreed = (internalBefore - internalAfter).coerceAtLeast(0L)
+        val externalFreed = (externalBefore - externalAfter).coerceAtLeast(0L)
+        val codeFreed = (codeBefore - codeAfter).coerceAtLeast(0L)
+        val finalCacheFreed = internalFreed + externalFreed + codeFreed
         val duration = SystemClock.elapsedRealtime() - startTime
-        val effectiveProcessesTrimmed = processesKilled.coerceAtLeast(Random.nextInt(4, 12))
 
         val result = SystemOptimizationResult(
             initialUsedRamBytes = beforeUsedRam,
-            postUsedRamBytes = (beforeUsedRam - finalRamFreed).coerceAtLeast(0L),
-            ramBytesReclaimed = finalRamFreed,
+            postUsedRamBytes = afterUsedRam,
+            ramBytesReclaimed = measuredRamDelta,
             cacheBytesFreed = finalCacheFreed,
             internalCacheFreed = internalFreed,
             externalCacheFreed = externalFreed,
             codeCacheFreed = codeFreed,
-            backgroundProcessesTrimmed = effectiveProcessesTrimmed,
-            durationMs = duration.coerceAtLeast(420L)
+            backgroundProcessesTrimmed = processesKilled,
+            durationMs = duration
         )
 
         // 6. Record to EventLogger
         EventLogger.log(
             severity = LogSeverity.INFO,
             category = LogCategory.SYSTEM,
-            message = "System Optimizer completed: Freed ${result.formattedCacheFreed} cache and released ${result.formattedRamReclaimed} RAM in ${result.durationMs}ms."
+            message = "Smart Boost completed: removed ${result.formattedCacheFreed} from this app cache; observed system used-RAM decrease ${result.formattedRamReclaimed} (not guaranteed reclaimed memory) in ${result.durationMs}ms."
         )
 
         // 7. Persist to Room Database
@@ -157,9 +141,9 @@ object SystemOptimizer {
                 OptimizationLogEntity(
                     timestamp = result.timestamp,
                     boosterType = "SYSTEM_OPTIMIZER",
-                    title = "Deep System Optimization",
-                    details = "Cleared ${result.formattedCacheFreed} application cache and reclaimed ${result.formattedRamReclaimed} RAM headroom (${result.backgroundProcessesTrimmed} background processes trimmed).",
-                    metricFreed = "+${result.formattedTotalFreed} Reclaimed",
+                    title = "Smart Boost",
+                    details = "Removed ${result.formattedCacheFreed} from this app cache. Observed system used-RAM decrease: ${result.formattedRamReclaimed}; process termination requests attempted: ${result.backgroundProcessesTrimmed}. These are measurements, not guaranteed system-wide gains.",
+                    metricFreed = "${result.formattedCacheFreed} app cache removed",
                     success = true
                 )
             )
