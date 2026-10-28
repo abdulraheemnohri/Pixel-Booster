@@ -12,179 +12,98 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.io.File
 
+/**
+ * Conservative storage view: only lists app-owned cache folders for cleanup.
+ * It never scans or deletes filesDir, Downloads, photos, documents, or other apps' data.
+ */
 class StorageAnalyzerRepository(private val context: Context) {
-
-    fun getStorageVolumes(): List<StorageVolumeInfo> {
-        return StorageVolumeType.values().map { getVolumeInfo(it) }
-    }
+    fun getStorageVolumes(): List<StorageVolumeInfo> = StorageVolumeType.values().map(::getVolumeInfo)
 
     fun getVolumeInfo(volumeType: StorageVolumeType): StorageVolumeInfo {
         val targetDir = when (volumeType) {
             StorageVolumeType.INTERNAL -> Environment.getDataDirectory()
-            StorageVolumeType.EXTERNAL -> Environment.getDataDirectory() // Exclusive to internal storage
-            StorageVolumeType.APP_SANDBOX -> context.filesDir ?: context.cacheDir
+            StorageVolumeType.EXTERNAL -> Environment.getExternalStorageDirectory()
+            StorageVolumeType.APP_SANDBOX -> context.cacheDir
         }
-
         return try {
             val stat = StatFs(targetDir.path)
-            val totalBytes = stat.totalBytes
-            val availableBytes = stat.availableBytes
-            val usedBytes = (totalBytes - availableBytes).coerceAtLeast(0L)
-
+            val total = stat.totalBytes.coerceAtLeast(0L)
+            val available = stat.availableBytes.coerceIn(0L, total)
             StorageVolumeInfo(
-                volumeType = volumeType,
-                path = targetDir.absolutePath,
-                totalBytes = totalBytes,
-                availableBytes = availableBytes,
-                usedBytes = usedBytes,
-                isRemovable = false,
-                fileSystem = "ext4/f2fs (Internal Only)"
+                volumeType = volumeType, path = targetDir.absolutePath,
+                totalBytes = total, availableBytes = available,
+                usedBytes = (total - available).coerceAtLeast(0L),
+                isRemovable = volumeType == StorageVolumeType.EXTERNAL && Environment.isExternalStorageRemovable(),
+                fileSystem = "Reported by Android"
             )
-        } catch (_: Throwable) {
-            StorageVolumeInfo(
-                volumeType = volumeType,
-                path = targetDir.absolutePath,
-                totalBytes = 64L * 1024L * 1024L * 1024L,
-                availableBytes = 32L * 1024L * 1024L * 1024L,
-                usedBytes = 32L * 1024L * 1024L * 1024L
-            )
+        } catch (_: Exception) {
+            // Unknown means unknown; never display fabricated 64 GB / 32 GB capacities.
+            StorageVolumeInfo(volumeType, targetDir.absolutePath, 0L, 0L, 0L,
+                isRemovable = false, fileSystem = "Unavailable")
         }
     }
 
-    suspend fun scanStorage(activeVolumeType: StorageVolumeType = StorageVolumeType.INTERNAL): StorageAnalyzerReport = withContext(Dispatchers.IO) {
-        val items = mutableListOf<JunkCategoryItem>()
-        val allVolumes = getStorageVolumes()
-        val activeVolume = allVolumes.find { it.volumeType == activeVolumeType } ?: allVolumes.first()
-
-        // 1. Exclusive to Internal Storage App Cache Scan
-        var cacheBytes = 0L
-        val internalCache = context.cacheDir
-        if (internalCache != null && internalCache.exists()) {
-            val size = calculateDirSize(internalCache)
-            if (size > 0) {
-                cacheBytes += size
-                items.add(
-                    JunkCategoryItem(
-                        id = "cache_internal",
-                        category = JunkCategoryType.APP_CACHE,
-                        name = "Internal App Memory & Web Cache",
-                        sizeBytes = size,
-                        filePath = internalCache.absolutePath
-                    )
-                )
+    suspend fun scanStorage(activeVolumeType: StorageVolumeType = StorageVolumeType.INTERNAL): StorageAnalyzerReport =
+        withContext(Dispatchers.IO) {
+            val volumes = getStorageVolumes()
+            val active = volumes.find { it.volumeType == activeVolumeType } ?: volumes.first()
+            val items = mutableListOf<JunkCategoryItem>()
+            addCacheItem(items, context.cacheDir, "cache_internal", "This app's internal cache", JunkCategoryType.APP_CACHE)
+            context.externalCacheDir?.let {
+                addCacheItem(items, it, "cache_external", "This app's external cache", JunkCategoryType.APP_CACHE)
             }
+            addCacheItem(items, context.codeCacheDir, "cache_code", "This app's code cache", JunkCategoryType.TEMP_FILES)
+
+            val cacheBytes = items.filter { it.category == JunkCategoryType.APP_CACHE }.sumOf { it.sizeBytes }
+            val tempBytes = items.filter { it.category == JunkCategoryType.TEMP_FILES }.sumOf { it.sizeBytes }
+            StorageAnalyzerReport(
+                totalJunkBytes = cacheBytes + tempBytes,
+                cacheBytes = cacheBytes,
+                largeFilesBytes = 0L,
+                tempFilesBytes = tempBytes,
+                redundantApksBytes = 0L,
+                items = items,
+                activeVolume = active,
+                availableVolumes = volumes
+            )
         }
-
-        val codeCache = context.codeCacheDir
-        if (codeCache != null && codeCache.exists()) {
-            val size = calculateDirSize(codeCache)
-            if (size > 0) {
-                cacheBytes += size
-                items.add(
-                    JunkCategoryItem(
-                        id = "cache_code_jit",
-                        category = JunkCategoryType.APP_CACHE,
-                        name = "JIT Code Cache & Dex Buffers",
-                        sizeBytes = size,
-                        filePath = codeCache.absolutePath
-                    )
-                )
-            }
-        }
-
-        // 2. Exclusive to Internal Storage Files Scan (Large Unused Files > 5MB & Temp files)
-        var largeFilesBytes = 0L
-        var tempBytes = 0L
-        val internalFilesDir = context.filesDir
-
-        if (internalFilesDir != null && internalFilesDir.exists()) {
-            internalFilesDir.walkTopDown().maxDepth(4).forEach { f ->
-                if (f.isFile) {
-                    val length = f.length()
-                    if (length > 5L * 1024L * 1024L) {
-                        largeFilesBytes += length
-                        items.add(
-                            JunkCategoryItem(
-                                id = "large_internal_${f.name}_${f.lastModified()}",
-                                category = JunkCategoryType.LARGE_FILES,
-                                name = f.name,
-                                sizeBytes = length,
-                                filePath = f.absolutePath
-                            )
-                        )
-                    } else if (f.extension.equals("tmp", ignoreCase = true) ||
-                               f.extension.equals("log", ignoreCase = true) ||
-                               f.extension.equals("bak", ignoreCase = true) ||
-                               f.name.endsWith(".temp", ignoreCase = true)) {
-                        tempBytes += length
-                        items.add(
-                            JunkCategoryItem(
-                                id = "temp_internal_${f.name}_${f.lastModified()}",
-                                category = JunkCategoryType.TEMP_FILES,
-                                name = f.name,
-                                sizeBytes = length,
-                                filePath = f.absolutePath
-                            )
-                        )
-                    }
-                }
-            }
-        }
-
-        val totalJunk = cacheBytes + largeFilesBytes + tempBytes
-
-        StorageAnalyzerReport(
-            totalJunkBytes = totalJunk,
-            cacheBytes = cacheBytes,
-            largeFilesBytes = largeFilesBytes,
-            tempFilesBytes = tempBytes,
-            redundantApksBytes = 0L,
-            items = items,
-            activeVolume = activeVolume,
-            availableVolumes = allVolumes
-        )
-    }
 
     suspend fun cleanSelectedJunk(selectedItems: List<JunkCategoryItem>): Long = withContext(Dispatchers.IO) {
         var cleaned = 0L
+        // Strict allow-list: path must resolve inside one of this app's disposable cache directories.
+        val allowedRoots = listOfNotNull(context.cacheDir, context.externalCacheDir, context.codeCacheDir)
+            .map { it.canonicalFile }
         selectedItems.forEach { item ->
-            try {
-                val f = File(item.filePath)
-                if (f.exists()) {
-                    val size = if (f.isDirectory) calculateDirSize(f) else f.length()
-                    val deleted = if (f.isDirectory) {
-                        f.listFiles()?.forEach { child -> child.deleteRecursively() }
-                        true
-                    } else {
-                        f.delete()
-                    }
-                    if (deleted) {
-                        cleaned += if (size > 0) size else item.sizeBytes
-                    }
-                } else {
-                    cleaned += item.sizeBytes
-                }
-            } catch (_: Throwable) {
-                cleaned += item.sizeBytes
+            val target = runCatching { File(item.filePath).canonicalFile }.getOrNull() ?: return@forEach
+            val isAllowed = allowedRoots.any { root ->
+                target == root || target.path.startsWith(root.path + File.separator)
             }
+            if (!isAllowed || target == context.filesDir.canonicalFile) return@forEach
+            if (!target.exists()) return@forEach
+            val before = if (target.isDirectory) calculateDirSize(target) else target.length().coerceAtLeast(0L)
+            val deleted = runCatching { target.deleteRecursively() }.getOrDefault(false)
+            if (deleted && !target.exists()) cleaned += before
         }
-
-        // Also clean internal cache dir securely
-        try {
-            context.cacheDir?.listFiles()?.forEach { it.deleteRecursively() }
-            context.codeCacheDir?.listFiles()?.forEach { it.deleteRecursively() }
-        } catch (_: Throwable) {}
-
         cleaned
+    }
+
+    private fun addCacheItem(
+        items: MutableList<JunkCategoryItem>,
+        dir: File?,
+        id: String,
+        label: String,
+        category: JunkCategoryType
+    ) {
+        if (dir == null || !dir.exists()) return
+        val size = calculateDirSize(dir)
+        if (size <= 0L) return
+        items.add(JunkCategoryItem(id, category, label, size, dir.absolutePath))
     }
 
     private fun calculateDirSize(dir: File?): Long {
         if (dir == null || !dir.exists()) return 0L
-        var size = 0L
-        val files = dir.listFiles() ?: return 0L
-        for (f in files) {
-            size += if (f.isDirectory) calculateDirSize(f) else f.length()
+        return (dir.listFiles() ?: return 0L).sumOf {
+            if (it.isDirectory) calculateDirSize(it) else it.length().coerceAtLeast(0L)
         }
-        return size
     }
 }
