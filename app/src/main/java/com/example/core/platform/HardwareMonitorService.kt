@@ -264,7 +264,7 @@ class HardwareMonitorService(
                     isOverheating = true,
                     statusName = "Overheating Warning",
                     warningMessage = "Device temperature is elevated (>42°C). Thermal mitigation active.",
-                    coolingAdvice = "Remove heavy cases, avoid direct sunshine, and run the 1-Tap CPU Cooler to trim background processes."
+                    coolingAdvice = "Remove heavy cases, avoid direct sunlight, pause demanding tasks, and unplug charging if the device is unusually hot."
                 )
             }
             currentTemp >= 38.0f || powerManagerStatus >= PowerManager.THERMAL_STATUS_LIGHT -> {
@@ -282,7 +282,7 @@ class HardwareMonitorService(
                     isOverheating = false,
                     statusName = "Nominal",
                     warningMessage = null,
-                    coolingAdvice = "Hardware operating within optimal thermal tolerances."
+                    coolingAdvice = "No elevated thermal status reported by Android; temperature sensor availability may vary."
                 )
             }
         }
