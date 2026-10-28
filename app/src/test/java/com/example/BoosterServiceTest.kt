@@ -110,6 +110,27 @@ class BoosterServiceTest {
     }
 
     @Test
+    fun `network latency marks partial failures unavailable`() {
+        val partial = com.example.core.booster.NetworkPingResult(
+            host = "test host",
+            initialLatencyMs = -1L,
+            optimizedLatencyMs = 42L,
+            isOnline = true
+        )
+        assertEquals(-1L, partial.initialLatencyMs)
+        assertEquals(42L, partial.optimizedLatencyMs)
+        assertEquals(-1L, partial.latencyImprovementMs)
+
+        val bothSuccessful = com.example.core.booster.NetworkPingResult(
+            host = "test host",
+            initialLatencyMs = 55L,
+            optimizedLatencyMs = 42L,
+            isOnline = true
+        )
+        assertEquals(13L, bothSuccessful.latencyImprovementMs)
+    }
+
+    @Test
     fun `test Screen Booster route exists and items contain it`() {
         assertNotNull(Screen.Booster)
         assertEquals("booster", Screen.Booster.route)
