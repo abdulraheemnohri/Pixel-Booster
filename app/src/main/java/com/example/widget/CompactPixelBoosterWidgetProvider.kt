@@ -33,12 +33,12 @@ class CompactPixelBoosterWidgetProvider : AppWidgetProvider() {
                 val views = RemoteViews(context.packageName, R.layout.widget_pixel_booster_compact)
                 val diagnostics = DeviceDiagnosticsProvider(context)
                 val battery = diagnostics.getBatteryInfo()
-                val tempCelsius = battery.temperatureCelsius ?: 31.5f
+                val tempCelsius = battery.temperatureCelsius
 
                 views.setTextViewText(R.id.widget_battery_text, "🔋 ${battery.levelPercentage}%")
                 views.setTextViewText(
                     R.id.widget_temp_text,
-                    "❄️ ${String.format(Locale.US, "%.1f", tempCelsius)}°C"
+                    if (tempCelsius != null) "🌡 ${String.format(Locale.US, "%.1f", tempCelsius)}°C" else "🌡 Temp N/A"
                 )
 
                 val openAppIntent = Intent(context, MainActivity::class.java).apply {
