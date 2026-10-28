@@ -52,14 +52,14 @@ data class BoosterUiState(
     val networkPingResult: NetworkPingResult? = null,
     val gameTurboActive: Boolean = false,
     val recentLogs: List<OptimizationLogEntity> = emptyList(),
-    val optimizationScore: Int = 80,
+    val optimizationScore: Int = 0,
     val isClearingCache: Boolean = false,
     val cacheClearProgress: Float = 0f,
     val cacheClearStageText: String = "",
     val lastCacheClearReport: CacheClearReport? = null,
     val showCacheClearDialog: Boolean = false,
-    val detectedCacheBytes: Long = 485L * 1024L * 1024L,
-    val detectedCacheFormatted: String = "485 MB",
+    val detectedCacheBytes: Long = 0L,
+    val detectedCacheFormatted: String = "Scanning app cache…",
     val isSystemOptimizing: Boolean = false,
     val systemOptimizationResult: com.example.core.optimizer.SystemOptimizationResult? = null,
     val showSystemOptimizerDialog: Boolean = false
@@ -108,7 +108,7 @@ class BoosterViewModel(application: Application) : AndroidViewModel(application)
         if (thermal.statusCode >= 2) score -= 15
         if (battery.levelPercentage <= 20) score -= 10
 
-        val finalScore = score.coerceIn(40, 100)
+        val finalScore = score.coerceIn(0, 100)
 
         _uiState.update {
             it.copy(
@@ -535,7 +535,7 @@ class BoosterViewModel(application: Application) : AndroidViewModel(application)
                     showCacheClearDialog = true,
                     detectedCacheBytes = 0L,
                     detectedCacheFormatted = "0 B (Clean)",
-                    optimizationScore = (it.optimizationScore + 12).coerceAtMost(100)
+                    optimizationScore = it.optimizationScore
                 )
             }
         }
@@ -559,7 +559,7 @@ class BoosterViewModel(application: Application) : AndroidViewModel(application)
                     showSystemOptimizerDialog = true,
                     detectedCacheBytes = 0L,
                     detectedCacheFormatted = "0 B (Clean)",
-                    optimizationScore = (it.optimizationScore + 18).coerceAtMost(100)
+                    optimizationScore = it.optimizationScore
                 )
             }
         }
