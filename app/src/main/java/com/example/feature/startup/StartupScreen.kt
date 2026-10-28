@@ -345,13 +345,13 @@ fun StartupScreen(
                         modifier = Modifier.size(24.dp)
                     )
                     Spacer(modifier = Modifier.width(8.dp))
-                    Text("Boot Optimization Complete", fontWeight = FontWeight.Bold)
+                    Text("Startup Review Saved", fontWeight = FontWeight.Bold)
                 }
             },
             text = {
                 Column {
                     Text(
-                        text = "Successfully restricted non-essential startup processes from initializing during boot:",
+                        text = "Saved local review preferences for non-essential apps. This no-root app cannot block other apps from starting automatically; use Android-supported app settings where available.",
                         style = MaterialTheme.typography.bodyMedium
                     )
                     Spacer(modifier = Modifier.height(14.dp))
@@ -366,7 +366,7 @@ fun StartupScreen(
                                 modifier = Modifier.fillMaxWidth(),
                                 horizontalArrangement = Arrangement.SpaceBetween
                             ) {
-                                Text("Apps Restricted:", style = MaterialTheme.typography.bodySmall, color = TextSecondaryDark)
+                                Text("Apps marked:", style = MaterialTheme.typography.bodySmall, color = TextSecondaryDark)
                                 Text("${result.appsOptimizedCount} apps", fontWeight = FontWeight.Bold, color = TextPrimaryDark)
                             }
                             Spacer(modifier = Modifier.height(6.dp))
@@ -374,7 +374,7 @@ fun StartupScreen(
                                 modifier = Modifier.fillMaxWidth(),
                                 horizontalArrangement = Arrangement.SpaceBetween
                             ) {
-                                Text("Estimated Boot Time Saved:", style = MaterialTheme.typography.bodySmall, color = TextSecondaryDark)
+                                Text("Estimated boot delay (not measured):", style = MaterialTheme.typography.bodySmall, color = TextSecondaryDark)
                                 Text("-${result.formattedTimeSaved}", fontWeight = FontWeight.Bold, color = PositiveMint)
                             }
                             Spacer(modifier = Modifier.height(6.dp))
@@ -455,7 +455,7 @@ fun StartupHeroCard(
                             fontWeight = FontWeight.Bold
                         )
                         Text(
-                            text = "Boot Process Profiler",
+                            text = "Startup App Review",
                             style = MaterialTheme.typography.titleMedium,
                             fontWeight = FontWeight.Bold,
                             color = MaterialTheme.colorScheme.onSurface
@@ -472,7 +472,7 @@ fun StartupHeroCard(
                     )
                 ) {
                     Text(
-                        text = if (summary.restrictedCount > 0) "${summary.restrictedCount} RESTRICTED" else "OPTIMIZE READY",
+                        text = if (summary.restrictedCount > 0) "${summary.restrictedCount} MARKED" else "READY TO REVIEW",
                         style = MaterialTheme.typography.labelSmall,
                         color = if (summary.restrictedCount > 0) PositiveMint else WarningAmber,
                         fontWeight = FontWeight.ExtraBold,
@@ -508,7 +508,7 @@ fun StartupHeroCard(
                     modifier = Modifier.weight(1f)
                 ) {
                     Column(modifier = Modifier.padding(12.dp)) {
-                        Text("Startup RAM Load", style = MaterialTheme.typography.labelSmall, color = TextSecondaryDark, fontSize = 9.sp)
+                        Text("Per-app RAM usage", style = MaterialTheme.typography.labelSmall, color = TextSecondaryDark, fontSize = 9.sp)
                         Text(summary.formattedTotalRam, style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.Bold, color = CyberCyan)
                     }
                 }
@@ -549,7 +549,7 @@ fun StartupHeroCard(
                         color = Color(0xFF022C1C)
                     )
                     Spacer(modifier = Modifier.width(8.dp))
-                    Text("Optimizing Startup Profiles...", fontWeight = FontWeight.Bold)
+                    Text("Saving Review Preferences...", fontWeight = FontWeight.Bold)
                 } else {
                     Icon(
                         imageVector = Icons.Filled.RocketLaunch,
@@ -558,7 +558,7 @@ fun StartupHeroCard(
                     )
                     Spacer(modifier = Modifier.width(8.dp))
                     Text(
-                        text = "Optimize Boot Time (Disable Non-Essential)",
+                        text = "Mark Non-Essential Apps for Review",
                         style = MaterialTheme.typography.labelLarge,
                         fontWeight = FontWeight.Bold
                     )
