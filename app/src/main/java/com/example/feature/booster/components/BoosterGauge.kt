@@ -52,13 +52,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.ui.theme.CyberCyan
 import com.example.ui.theme.ElectricIndigo
-import com.example.ui.theme.HighElevationDark
 import com.example.ui.theme.ModernDesignTokens
-import com.example.ui.theme.OutlineDark
 import com.example.ui.theme.PositiveMint
-import com.example.ui.theme.PrimaryBlue
-import com.example.ui.theme.TextPrimaryDark
-import com.example.ui.theme.TextSecondaryDark
 import com.example.ui.theme.WarningAmber
 import kotlin.math.cos
 import kotlin.math.sin
@@ -182,7 +177,7 @@ fun BoosterGauge(
                             (center.y + tickRadius * sin(rad)).toFloat()
                         )
                         drawLine(
-                            color = if (i % 3 == 0) CyberCyan.copy(alpha = 0.4f) else TextSecondaryDark.copy(alpha = 0.15f),
+                            color = if (i % 3 == 0) CyberCyan.copy(alpha = 0.4f) else MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.15f),
                             start = p1,
                             end = p2,
                             strokeWidth = 1.5.dp.toPx()
@@ -191,7 +186,7 @@ fun BoosterGauge(
 
                     // Background track arc (240 degrees)
                     drawArc(
-                        color = HighElevationDark,
+                        color = MaterialTheme.colorScheme.surfaceContainerHigh,
                         startAngle = 150f,
                         sweepAngle = 240f,
                         useCenter = false,
