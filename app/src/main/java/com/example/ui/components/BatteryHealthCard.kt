@@ -57,7 +57,6 @@ import com.example.core.model.BatteryPluggedSource
 import com.example.ui.theme.CriticalRed
 import com.example.ui.theme.CyberCyan
 import com.example.ui.theme.ModernDesignTokens
-import com.example.ui.theme.OutlineDark
 import com.example.ui.theme.PositiveMint
 import com.example.ui.theme.WarningAmber
 
@@ -205,7 +204,7 @@ fun BatteryHealthCard(
                     color = if (battery.isCharging) PositiveMint.copy(alpha = 0.14f) else MaterialTheme.colorScheme.surfaceContainer,
                     border = androidx.compose.foundation.BorderStroke(
                         1.dp,
-                        if (battery.isCharging) PositiveMint.copy(alpha = 0.5f) else OutlineDark
+                        if (battery.isCharging) PositiveMint.copy(alpha = 0.5f) else MaterialTheme.colorScheme.outline
                     )
                 ) {
                     Row(
