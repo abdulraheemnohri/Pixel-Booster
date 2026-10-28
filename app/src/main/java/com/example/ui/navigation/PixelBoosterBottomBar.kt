@@ -8,7 +8,6 @@ import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -22,8 +21,9 @@ import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.weight
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.windowInsetsPadding
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
@@ -54,7 +54,6 @@ fun PixelBoosterBottomBar(
     modifier: Modifier = Modifier
 ) {
     val haptic = LocalHapticFeedback.current
-    val scrollState = rememberScrollState()
 
     Surface(
         modifier = modifier
@@ -75,13 +74,12 @@ fun PixelBoosterBottomBar(
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .horizontalScroll(scrollState)
-                .padding(horizontal = 10.dp, vertical = 8.dp),
-            horizontalArrangement = Arrangement.spacedBy(6.dp),
+                .padding(horizontal = 6.dp, vertical = 6.dp),
+            horizontalArrangement = Arrangement.spacedBy(2.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
             Screen.items.forEach { screen ->
-                val isSelected = currentRoute == screen.route || (screen == Screen.More && currentRoute in setOf(Screen.Health.route, Screen.Startup.route, Screen.SpeedTest.route, Screen.History.route, Screen.Privacy.route, Screen.Settings.route))
+                val isSelected = currentRoute == screen.route || (screen == Screen.More && Screen.isSecondaryRoute(currentRoute))
                 val animatedIconColor by animateColorAsState(
                     targetValue = if (isSelected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurfaceVariant,
                     animationSpec = tween(220),
@@ -100,6 +98,8 @@ fun PixelBoosterBottomBar(
 
                 Box(
                     modifier = Modifier
+                        .weight(1f)
+                        .heightIn(min = 48.dp)
                         .clip(RoundedCornerShape(18.dp))
                         .background(animatedBgColor)
                         .then(
@@ -122,7 +122,7 @@ fun PixelBoosterBottomBar(
                                 onNavigate(screen)
                             }
                         }
-                        .padding(horizontal = 13.dp, vertical = 6.dp)
+                        .padding(horizontal = 2.dp, vertical = 4.dp)
                         .testTag(screen.testTag),
                     contentAlignment = Alignment.Center
                 ) {
