@@ -133,8 +133,20 @@ sealed class Screen(
 
     companion object {
         // Keep the primary navigation focused; secondary tools remain available from More.
+        // Five destinations fit compact phone navigation without horizontal scrolling.
+        // Diagnostics and other secondary destinations are reachable from More.
         val items: List<Screen>
-            get() = listOf(Home, Booster, Storage, Usage, Diagnostics, More)
+            get() = listOf(Home, Booster, Storage, Usage, More)
+
+        fun isSecondaryRoute(route: String): Boolean = route in setOf(
+            Health.route,
+            Startup.route,
+            SpeedTest.route,
+            History.route,
+            Privacy.route,
+            Diagnostics.route,
+            Settings.route
+        )
     }
 
 }
