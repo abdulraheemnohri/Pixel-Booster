@@ -10,32 +10,32 @@ enum class BoosterToolType(
     RAM_BOOSTER(
         title = "RAM Booster",
         subtitle = "Memory Reclaim",
-        description = "Trims inactive memory buffers, cleans runtime heap, and releases background memory headroom."
+        description = "Shows measured system memory and requests garbage collection for this app only; Android manages system-wide RAM."
     ),
     JUNK_CLEANER(
         title = "Junk Cleaner",
         subtitle = "Cache & Temp Purge",
-        description = "Deep scans application cache, obsolete temporary files, thumbnail cache, and debug logs."
+        description = "Scans and clears only this app’s disposable cache folders; other apps and personal files are not touched."
     ),
     CPU_COOLER(
         title = "CPU Cooler",
         subtitle = "Thermal Relief",
-        description = "Identifies overheating thermal pressure, eases processor load, and aids thermal dissipation."
+        description = "Reads available thermal and battery sensors and offers safe cooling advice; it cannot force-cool the CPU."
     ),
     BATTERY_SAVER(
         title = "Battery Saver",
         subtitle = "Power Profiles",
-        description = "Configures intelligent power management profiles to maximize battery endurance."
+        description = "Provides supported power-setting guidance; it cannot unlock CPU frequencies or guarantee battery gains."
     ),
     NETWORK_TURBO(
         title = "Network Turbo",
         subtitle = "Ping & Latency",
-        description = "Refreshes network socket buffers, checks packet round-trip latency, and minimizes game lag."
+        description = "Measures connection latency only; it does not flush system sockets or guarantee lower ping."
     ),
     GAME_TURBO(
         title = "Game Turbo",
         subtitle = "Maximum FPS Priority",
-        description = "Optimizes runtime focus, releases RAM locks, and eliminates frame drops during heavy loads."
+        description = "Provides game-use guidance; Android does not expose a general no-root FPS boost switch."
     )
 }
 
