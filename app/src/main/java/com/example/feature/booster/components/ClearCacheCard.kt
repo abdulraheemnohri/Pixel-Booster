@@ -53,13 +53,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.ui.theme.CyberCyan
-import com.example.ui.theme.HighElevationDark
 import com.example.ui.theme.ModernDesignTokens
-import com.example.ui.theme.OutlineDark
 import com.example.ui.theme.PositiveMint
-import com.example.ui.theme.PrimaryBlue
-import com.example.ui.theme.TextPrimaryDark
-import com.example.ui.theme.TextSecondaryDark
 import com.example.ui.theme.WarningAmber
 
 @Composable
@@ -219,7 +214,7 @@ fun ClearCacheCard(
                             .height(6.dp)
                             .clip(RoundedCornerShape(3.dp)),
                         color = PositiveMint,
-                        trackColor = HighElevationDark,
+                        trackColor = MaterialTheme.colorScheme.surfaceContainerHigh,
                         strokeCap = StrokeCap.Round
                     )
                 }
@@ -298,7 +293,7 @@ private fun CacheCategoryTile(
     Surface(
         modifier = modifier,
         shape = RoundedCornerShape(14.dp),
-        color = HighElevationDark.copy(alpha = 0.8f),
+        color = MaterialTheme.colorScheme.surfaceContainerHigh.copy(alpha = 0.8f),
         border = androidx.compose.foundation.BorderStroke(1.dp, Color(0x1538BDF8))
     ) {
         Column(
@@ -315,7 +310,7 @@ private fun CacheCategoryTile(
                 Text(
                     text = title,
                     style = MaterialTheme.typography.labelSmall,
-                    color = TextSecondaryDark,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
                     fontSize = 10.sp
                 )
             }
@@ -324,7 +319,7 @@ private fun CacheCategoryTile(
                 text = size,
                 style = MaterialTheme.typography.bodyMedium,
                 fontWeight = FontWeight.Bold,
-                color = TextPrimaryDark
+                color = MaterialTheme.colorScheme.onSurface
             )
         }
     }
