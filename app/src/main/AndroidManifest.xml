@@ -75,18 +75,6 @@
                 android:resource="@xml/pixel_booster_storage_widget_info" />
         </receiver>
 
-        <!-- Compact Cyber AppWidget Provider -->
-        <receiver
-            android:name=".widget.CompactPixelBoosterWidgetProvider"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
-            </intent-filter>
-            <meta-data
-                android:name="android.appwidget.provider"
-                android:resource="@xml/pixel_booster_compact_widget_info" />
-        </receiver>
-
         <!-- Processor Cyber AppWidget Provider -->
         <receiver
             android:name=".widget.ProcessorPixelBoosterWidgetProvider"
