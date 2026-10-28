@@ -88,7 +88,7 @@ fun PixelBoosterBottomBar(
             verticalAlignment = Alignment.CenterVertically
         ) {
             Screen.items.forEach { screen ->
-                val isSelected = currentRoute == screen.route
+                val isSelected = currentRoute == screen.route || (screen == Screen.More && currentRoute in setOf(Screen.Health.route, Screen.Startup.route, Screen.SpeedTest.route, Screen.History.route, Screen.Privacy.route, Screen.Settings.route))
                 val animatedIconColor by animateColorAsState(
                     targetValue = if (isSelected) CyberCyan else TextSecondaryDark,
                     animationSpec = tween(220),
