@@ -145,7 +145,7 @@ fun BatteryHealthCard(
                             fontWeight = FontWeight.Bold
                         )
                         Text(
-                            text = "Charge Cycles & Coulomb Capacity Tracker",
+                            text = "Battery readings exposed by Android",
                             style = MaterialTheme.typography.bodySmall,
                             color = TextSecondaryDark,
                             fontSize = 11.sp
@@ -197,7 +197,7 @@ fun BatteryHealthCard(
                         )
                     }
                     Text(
-                        text = "${battery.formattedCurrentCapacity} currently stored",
+                        text = "${battery.formattedCurrentCapacity} remaining charge (if exposed)",
                         style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
@@ -260,7 +260,7 @@ fun BatteryHealthCard(
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            // Capacity Progress Bar (Current mAh vs Designed mAh)
+            // Remaining charge counter compared with design capacity; this is NOT battery health.
             val capacityProgress = if (battery.currentCapacityMah > 0 && battery.designedCapacityMah > 0) (battery.currentCapacityMah.toFloat() / battery.designedCapacityMah.toFloat()).coerceIn(0f, 1f) else 0f
             val animatedCapacityProgress by animateFloatAsState(
                 targetValue = capacityProgress,
@@ -273,7 +273,7 @@ fun BatteryHealthCard(
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 Text(
-                    text = "Current vs Design Capacity (${battery.formattedCapacityPercentage})",
+                    text = "Remaining charge counter vs design capacity (${battery.formattedCapacityPercentage})",
                     style = MaterialTheme.typography.labelSmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
@@ -329,9 +329,9 @@ fun BatteryHealthCard(
                             modifier = Modifier.weight(1f)
                         )
                         BatteryBreakdownItem(
-                            title = "CAPACITY RATIO",
+                            title = "ESTIMATED BATTERY HEALTH",
                             value = battery.formattedHealthPercentage,
-                            subtitle = if (battery.designedCapacityMah > 0) "${battery.designedCapacityMah} mAh Design" else "Design capacity unavailable",
+                            subtitle = if (battery.healthGrade.startsWith("Unavailable")) "Full-charge/design ratio not exposed by Android" else "Based on readable battery full/design values",
                             modifier = Modifier.weight(1f)
                         )
                     }
