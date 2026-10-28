@@ -57,12 +57,9 @@ import com.example.core.model.PrivacySensorState
 import com.example.core.model.PrivacySensorType
 import com.example.ui.theme.CriticalRed
 import com.example.ui.theme.CyberCyan
-import com.example.ui.theme.HighElevationDark
 import com.example.ui.theme.ModernDesignTokens
 import com.example.ui.theme.PositiveMint
 import com.example.ui.theme.SpaceGrotesk
-import com.example.ui.theme.TextPrimaryDark
-import com.example.ui.theme.TextSecondaryDark
 import com.example.ui.theme.WarningAmber
 import com.example.ui.theme.modernCard
 
@@ -176,14 +173,14 @@ fun PrivacyScreen(
                                         Text(
                                             text = "HARDWARE SHIELD STATUS",
                                             style = MaterialTheme.typography.labelSmall,
-                                            color = TextSecondaryDark,
+                                            color = MaterialTheme.colorScheme.onSurfaceVariant,
                                             letterSpacing = 1.2.sp,
                                             fontWeight = FontWeight.Bold
                                         )
                                         Text(
                                             text = "All Sensors Locked & Audited",
                                             style = MaterialTheme.typography.bodySmall,
-                                            color = TextPrimaryDark,
+                                            color = MaterialTheme.colorScheme.onSurface,
                                             fontWeight = FontWeight.SemiBold
                                         )
                                     }
@@ -191,7 +188,7 @@ fun PrivacyScreen(
 
                                 Surface(
                                     shape = RoundedCornerShape(9999.dp),
-                                    color = HighElevationDark,
+                                    color = MaterialTheme.colorScheme.surfaceContainer,
                                     border = androidx.compose.foundation.BorderStroke(1.dp, PositiveMint.copy(alpha = 0.4f))
                                 ) {
                                     Text(
@@ -213,7 +210,7 @@ fun PrivacyScreen(
                                 // Active Sensors Tile
                                 Surface(
                                     shape = RoundedCornerShape(16.dp),
-                                    color = HighElevationDark,
+                                    color = MaterialTheme.colorScheme.surfaceContainer,
                                     border = androidx.compose.foundation.BorderStroke(1.dp, Color(0x2538BDF8)),
                                     modifier = Modifier.weight(1f)
                                 ) {
@@ -221,7 +218,7 @@ fun PrivacyScreen(
                                         Text(
                                             text = "ACTIVE HOOKS",
                                             style = MaterialTheme.typography.labelSmall,
-                                            color = TextSecondaryDark,
+                                            color = MaterialTheme.colorScheme.onSurfaceVariant,
                                             fontSize = 10.sp,
                                             fontWeight = FontWeight.Bold
                                         )
@@ -238,7 +235,7 @@ fun PrivacyScreen(
                                 // Blocked Trackers Tile
                                 Surface(
                                     shape = RoundedCornerShape(16.dp),
-                                    color = HighElevationDark,
+                                    color = MaterialTheme.colorScheme.surfaceContainer,
                                     border = androidx.compose.foundation.BorderStroke(1.dp, Color(0x2534D399)),
                                     modifier = Modifier.weight(1f)
                                 ) {
@@ -246,7 +243,7 @@ fun PrivacyScreen(
                                         Text(
                                             text = "BLOCKED TRACKERS",
                                             style = MaterialTheme.typography.labelSmall,
-                                            color = TextSecondaryDark,
+                                            color = MaterialTheme.colorScheme.onSurfaceVariant,
                                             fontSize = 10.sp,
                                             fontWeight = FontWeight.Bold
                                         )
@@ -370,7 +367,7 @@ fun PrivacySwitchRow(
         ) {
             Surface(
                 shape = CircleShape,
-                color = if (checked) CriticalRed.copy(alpha = 0.15f) else HighElevationDark,
+                color = if (checked) CriticalRed.copy(alpha = 0.15f) else MaterialTheme.colorScheme.surfaceContainer,
                 modifier = Modifier.size(38.dp)
             ) {
                 Box(contentAlignment = Alignment.Center) {
@@ -393,7 +390,7 @@ fun PrivacySwitchRow(
                 Text(
                     text = subtitle,
                     style = MaterialTheme.typography.bodySmall,
-                    color = TextSecondaryDark,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
                     fontSize = 11.sp
                 )
             }
@@ -405,7 +402,7 @@ fun PrivacySwitchRow(
             colors = SwitchDefaults.colors(
                 checkedThumbColor = Color(0xFF070B14),
                 checkedTrackColor = CriticalRed,
-                uncheckedTrackColor = HighElevationDark
+                uncheckedTrackColor = MaterialTheme.colorScheme.surfaceContainer
             ),
             modifier = Modifier.testTag(testTag)
         )
@@ -458,7 +455,7 @@ fun SensorAuditCard(sensor: PrivacySensorState) {
             Text(
                 text = sensor.description,
                 style = MaterialTheme.typography.bodySmall,
-                color = TextSecondaryDark
+                color = MaterialTheme.colorScheme.onSurfaceVariant
             )
             Spacer(modifier = Modifier.height(8.dp))
             Text(
