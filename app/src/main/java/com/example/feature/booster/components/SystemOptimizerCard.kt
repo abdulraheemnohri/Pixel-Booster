@@ -100,7 +100,7 @@ fun SystemOptimizerCard(
                     Column {
                         Row(verticalAlignment = Alignment.CenterVertically) {
                             Text(
-                                text = "SYSTEM OPTIMIZER",
+                                text = "DEVICE CHECKS",
                                 style = MaterialTheme.typography.titleMedium,
                                 fontWeight = FontWeight.Bold,
                                 fontFamily = SpaceGrotesk,
@@ -124,7 +124,7 @@ fun SystemOptimizerCard(
                             }
                         }
                         Text(
-                            text = "Clears app cache files & releases background memory",
+                            text = "Measures memory and clears this app’s cache only",
                             style = MaterialTheme.typography.bodySmall,
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
@@ -172,7 +172,7 @@ fun SystemOptimizerCard(
                 ) {
                     Column(modifier = Modifier.padding(12.dp)) {
                         Text(
-                            text = "RAM ACTION",
+                            text = "MEMORY DATA",
                             style = MaterialTheme.typography.labelSmall,
                             color = MaterialTheme.colorScheme.onSurfaceVariant,
                             fontFamily = SpaceGrotesk,
@@ -180,7 +180,7 @@ fun SystemOptimizerCard(
                         )
                         Spacer(modifier = Modifier.height(4.dp))
                         Text(
-                            text = "Trim & Flush",
+                            text = "Measured only",
                             style = MaterialTheme.typography.titleMedium,
                             fontFamily = SpaceGrotesk,
                             fontWeight = FontWeight.Bold,
@@ -214,7 +214,7 @@ fun SystemOptimizerCard(
                     )
                     Spacer(modifier = Modifier.width(10.dp))
                     Text(
-                        text = "OPTIMIZING SYSTEM...",
+                        text = "CHECKING DEVICE...",
                         style = MaterialTheme.typography.labelLarge,
                         fontFamily = SpaceGrotesk,
                         fontWeight = FontWeight.Bold
@@ -227,7 +227,7 @@ fun SystemOptimizerCard(
                     )
                     Spacer(modifier = Modifier.width(8.dp))
                     Text(
-                        text = "RUN SYSTEM OPTIMIZER",
+                        text = "RUN DEVICE CHECK",
                         style = MaterialTheme.typography.labelLarge,
                         fontFamily = SpaceGrotesk,
                         fontWeight = FontWeight.Bold
