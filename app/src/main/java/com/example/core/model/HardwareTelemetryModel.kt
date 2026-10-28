@@ -103,10 +103,10 @@ data class ProcessorTelemetryData(
         get() = String.format(Locale.US, "%.0f%%", overallCpuUsage)
 
     val formattedGpuUsage: String
-        get() = String.format(Locale.US, "%.0f%%", gpuUsage)
+        get() = if (gpuUsage < 0f) "Unavailable" else String.format(Locale.US, "%.0f%%", gpuUsage)
 
     val formattedTpuUsage: String
-        get() = String.format(Locale.US, "%.0f%%", tpuUsage)
+        get() = if (tpuUsage < 0f) "Unavailable" else String.format(Locale.US, "%.0f%%", tpuUsage)
 }
 
 data class NetworkInterfaceInfo(
@@ -166,13 +166,13 @@ data class NetworkTelemetryData(
         get() = formatSpeed(uploadSpeedBytesPerSec)
 
     val formattedSessionTotalRx: String
-        get() = MemoryInfoData.formatBytes(sessionTotalRxBytes)
+        get() = MemoryInfoData.formatBytes(sessionTotalRxBytes.coerceAtLeast(0L))
 
     val formattedSessionTotalTx: String
-        get() = MemoryInfoData.formatBytes(sessionTotalTxBytes)
+        get() = MemoryInfoData.formatBytes(sessionTotalTxBytes.coerceAtLeast(0L))
 
     val formattedRssiDbm: String
-        get() = "$wifiRssiDbm dBm"
+        get() = if (wifiRssiDbm == 0) "Unavailable" else "$wifiRssiDbm dBm"
 
     val formattedFrequencyBand: String
         get() = when {
