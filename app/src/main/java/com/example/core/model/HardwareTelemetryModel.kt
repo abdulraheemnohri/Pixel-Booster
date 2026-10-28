@@ -58,28 +58,29 @@ data class BatteryHealthData(
     val isFull: Boolean get() = chargingState == BatteryChargingState.FULL
 
     val formattedCurrentCapacity: String
-        get() = "$currentCapacityMah mAh"
+        get() = if (currentCapacityMah > 0) "$currentCapacityMah mAh" else "Unavailable"
 
     val formattedDesignedCapacity: String
-        get() = "$designedCapacityMah mAh"
+        get() = if (designedCapacityMah > 0) "$designedCapacityMah mAh" else "Unavailable"
 
     val formattedHealthPercentage: String
-        get() = String.format(Locale.US, "%.1f%%", healthPercentage)
+        get() = if (healthGrade.startsWith("Unavailable")) "Unavailable" else String.format(Locale.US, "%.1f%%", healthPercentage)
 
     val formattedCapacityPercentage: String
-        get() = String.format(Locale.US, "%.1f%%", capacityPercentage)
+        get() = if (currentCapacityMah <= 0 || designedCapacityMah <= 0) "Unavailable" else String.format(Locale.US, "%.1f%%", capacityPercentage)
 
     val formattedVoltage: String
-        get() = voltageMilliVolts?.let { String.format(Locale.US, "%.2f V", it / 1000f) } ?: "Nominal"
+        get() = voltageMilliVolts?.takeIf { it > 0 }?.let { String.format(Locale.US, "%.2f V", it / 1000f) } ?: "Unavailable"
 
     val formattedWattage: String
-        get() = estimatedWattage?.let { String.format(Locale.US, "%.1f W", it) } ?: "Normal"
+        get() = estimatedWattage?.let { String.format(Locale.US, "%.1f W", it) } ?: "Unavailable"
 
     val formattedCurrentFlow: String
         get() = if (currentFlowMa > 0) "+$currentFlowMa mA" else "$currentFlowMa mA"
 
     val cycleHealthAssessment: String
         get() = when {
+            chargeCycles <= 0 -> "Unavailable (cycle count not exposed)"
             chargeCycles < 300 -> "Peak Endurance (Cycle < 300)"
             chargeCycles < 600 -> "Optimal Chemistry (Cycle < 600)"
             chargeCycles < 900 -> "Normal Aging (Cycle < 900)"
