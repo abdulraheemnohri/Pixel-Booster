@@ -75,7 +75,6 @@ import com.example.core.model.StartupSummary
 import com.example.ui.theme.CriticalRed
 import com.example.ui.theme.CyberCyan
 import com.example.ui.theme.ModernDesignTokens
-import com.example.ui.theme.OutlineDark
 import com.example.ui.theme.PositiveMint
 import com.example.ui.theme.WarningAmber
 
@@ -192,7 +191,7 @@ fun StartupScreen(
                             shape = RoundedCornerShape(16.dp),
                             colors = OutlinedTextFieldDefaults.colors(
                                 focusedBorderColor = CyberCyan,
-                                unfocusedBorderColor = OutlineDark,
+                                unfocusedBorderColor = MaterialTheme.colorScheme.outline,
                                 focusedContainerColor = MaterialTheme.colorScheme.surfaceContainer,
                                 unfocusedContainerColor = MaterialTheme.colorScheme.surfaceContainer
                             ),
@@ -734,7 +733,7 @@ fun StartupGuidanceCard() {
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .border(1.dp, OutlineDark, RoundedCornerShape(18.dp)),
+            .border(1.dp, MaterialTheme.colorScheme.outline, RoundedCornerShape(18.dp)),
         shape = RoundedCornerShape(18.dp),
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainer.copy(alpha = 0.45f))
     ) {
