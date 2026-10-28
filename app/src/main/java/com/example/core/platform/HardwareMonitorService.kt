@@ -632,17 +632,7 @@ class HardwareMonitorService(
         return Triple(ipv4, ipv6, interfaceName)
     }
 
-    private fun resolveGatewayIp(localIp: String): String {
-        return try {
-            val parts = localIp.split(".")
-            if (parts.size == 4) {
-                "${parts[0]}.${parts[1]}.${parts[2]}.1"
-            } else "Unavailable"
-        } catch (_: Throwable) {
-            "Unavailable"
-        }
-    }
-
+    private fun resolveGatewayIp(localIp: String): String = "Unavailable"
     private fun sampleWifiInfo(): WifiTelemetryInfo {
         try {
             val info = wifiManager?.connectionInfo
