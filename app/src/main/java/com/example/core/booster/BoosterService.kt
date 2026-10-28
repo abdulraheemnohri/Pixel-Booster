@@ -73,11 +73,11 @@ class BoosterService(private val context: Context) {
     suspend fun cleanJunk(junkScanResult: JunkScanResult): Long =
         clearNonEssentialCache().totalFreedBytes
 
-    /** Measured battery-temperature change in °C: positive means the sensor reading fell. */
-    suspend fun coolCpu(): Float = withContext(Dispatchers.Default) {
-        val before = diagnosticsProvider.getBatteryInfo().temperatureCelsius ?: return@withContext 0f
+    /** Measured battery-temperature change in °C; null means a required sensor reading was unavailable. */
+    suspend fun coolCpu(): Float? = withContext(Dispatchers.Default) {
+        val before = diagnosticsProvider.getBatteryInfo().temperatureCelsius ?: return@withContext null
         delay(3000)
-        val after = diagnosticsProvider.getBatteryInfo().temperatureCelsius ?: return@withContext 0f
+        val after = diagnosticsProvider.getBatteryInfo().temperatureCelsius ?: return@withContext null
         before - after
     }
 
