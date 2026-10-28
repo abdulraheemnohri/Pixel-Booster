@@ -119,7 +119,7 @@ class BoosterServiceTest {
         )
         assertEquals(-1L, partial.initialLatencyMs)
         assertEquals(42L, partial.optimizedLatencyMs)
-        assertEquals(-1L, partial.latencyImprovementMs)
+        assertEquals(Long.MIN_VALUE, partial.latencyImprovementMs)
 
         val bothSuccessful = com.example.core.booster.NetworkPingResult(
             host = "test host",
@@ -128,6 +128,11 @@ class BoosterServiceTest {
             isOnline = true
         )
         assertEquals(13L, bothSuccessful.latencyImprovementMs)
+
+        val slowerSecondAttempt = com.example.core.booster.NetworkPingResult(
+            host = "test host", initialLatencyMs = 55L, optimizedLatencyMs = 65L, isOnline = true
+        )
+        assertEquals(-10L, slowerSecondAttempt.latencyImprovementMs)
     }
 
     @Test
