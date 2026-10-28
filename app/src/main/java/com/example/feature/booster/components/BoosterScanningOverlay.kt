@@ -41,12 +41,7 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.example.core.booster.BoosterStage
-import com.example.ui.theme.HighElevationDark
-import com.example.ui.theme.OutlineDark
 import com.example.ui.theme.PositiveMint
-import com.example.ui.theme.PrimaryBlue
-import com.example.ui.theme.TextPrimaryDark
-import com.example.ui.theme.TextSecondaryDark
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -75,7 +70,7 @@ fun BoosterScanningOverlay(
         Surface(
             shape = RoundedCornerShape(24.dp),
             color = MaterialTheme.colorScheme.surfaceContainer,
-            border = androidx.compose.foundation.BorderStroke(1.dp, OutlineDark)
+            border = androidx.compose.foundation.BorderStroke(1.dp, MaterialTheme.colorScheme.outline)
         ) {
             Column(
                 modifier = Modifier
@@ -87,8 +82,8 @@ fun BoosterScanningOverlay(
                 Box(
                     modifier = Modifier
                         .size(80.dp)
-                        .background(HighElevationDark, CircleShape)
-                        .border(2.dp, PrimaryBlue, CircleShape),
+                        .background(MaterialTheme.colorScheme.surfaceContainerHigh, CircleShape)
+                        .border(2.dp, MaterialTheme.colorScheme.primary, CircleShape),
                     contentAlignment = Alignment.Center
                 ) {
                     Icon(
@@ -106,7 +101,7 @@ fun BoosterScanningOverlay(
                 Text(
                     text = "HARDWARE ACCELERATION",
                     style = MaterialTheme.typography.labelSmall,
-                    color = PrimaryBlue,
+                    color = MaterialTheme.colorScheme.primary,
                     fontWeight = FontWeight.Bold
                 )
 
@@ -127,7 +122,7 @@ fun BoosterScanningOverlay(
                         .fillMaxWidth()
                         .height(8.dp),
                     color = PositiveMint,
-                    trackColor = HighElevationDark,
+                    trackColor = MaterialTheme.colorScheme.surfaceContainerHigh,
                     strokeCap = StrokeCap.Round
                 )
 
@@ -185,13 +180,13 @@ private fun StageItemRow(
             CircularProgressIndicator(
                 modifier = Modifier.size(16.dp),
                 strokeWidth = 2.dp,
-                color = PrimaryBlue
+                color = MaterialTheme.colorScheme.primary
             )
         } else {
             Box(
                 modifier = Modifier
                     .size(16.dp)
-                    .background(HighElevationDark, CircleShape)
+                    .background(MaterialTheme.colorScheme.surfaceContainerHigh, CircleShape)
             )
         }
 
@@ -200,7 +195,7 @@ private fun StageItemRow(
         Text(
             text = title,
             style = MaterialTheme.typography.bodySmall,
-            color = if (isDone) PositiveMint else if (isActive) TextPrimaryDark else TextSecondaryDark,
+            color = if (isDone) PositiveMint else if (isActive) MaterialTheme.colorScheme.onSurface else MaterialTheme.colorScheme.onSurfaceVariant,
             fontWeight = if (isActive || isDone) FontWeight.Bold else FontWeight.Normal
         )
     }
