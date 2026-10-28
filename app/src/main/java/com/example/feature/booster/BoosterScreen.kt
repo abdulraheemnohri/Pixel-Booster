@@ -59,7 +59,6 @@ import com.example.feature.booster.components.RamUsageMonitorCard
 import com.example.feature.booster.components.ToolDetailSheets
 import com.example.ui.theme.CyberCyan
 import com.example.ui.theme.ModernDesignTokens
-import com.example.ui.theme.OutlineDark
 import com.example.ui.theme.PositiveMint
 import com.example.ui.theme.WarningAmber
 
