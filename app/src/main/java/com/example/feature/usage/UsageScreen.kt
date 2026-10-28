@@ -70,14 +70,10 @@ import com.example.core.model.AppUsageData
 import com.example.core.model.UsagePeriod
 import com.example.ui.theme.CyberCyan
 import com.example.ui.theme.ElectricIndigo
-import com.example.ui.theme.HighElevationDark
 import com.example.ui.theme.ModernDesignTokens
 import com.example.ui.theme.OutlineDark
 import com.example.ui.theme.PositiveMint
-import com.example.ui.theme.PrimaryBlue
 import com.example.ui.theme.SpaceGrotesk
-import com.example.ui.theme.TextPrimaryDark
-import com.example.ui.theme.TextSecondaryDark
 import com.example.ui.theme.modernCard
 import com.example.ui.theme.pulsingGlow
 
@@ -191,7 +187,7 @@ fun UsageScreen(
 
                     TabRow(
                         selectedTabIndex = selectedIndex,
-                        containerColor = HighElevationDark,
+                        containerColor = MaterialTheme.colorScheme.surfaceContainer,
                         indicator = { tabPositions ->
                             SecondaryIndicator(
                                 modifier = Modifier.tabIndicatorOffset(tabPositions[selectedIndex]),
@@ -213,7 +209,7 @@ fun UsageScreen(
                                         style = MaterialTheme.typography.labelMedium,
                                         fontFamily = SpaceGrotesk,
                                         fontWeight = if (selectedIndex == index) FontWeight.Bold else FontWeight.Medium,
-                                        color = if (selectedIndex == index) CyberCyan else TextSecondaryDark
+                                        color = if (selectedIndex == index) CyberCyan else MaterialTheme.colorScheme.onSurfaceVariant
                                     )
                                 },
                                 modifier = Modifier.testTag("tab_usage_${period.name.lowercase()}")
@@ -262,7 +258,7 @@ fun UsageScreen(
 
                                 Surface(
                                     shape = RoundedCornerShape(9999.dp),
-                                    color = HighElevationDark,
+                                    color = MaterialTheme.colorScheme.surfaceContainer,
                                     border = androidx.compose.foundation.BorderStroke(1.dp, Color(0x2538BDF8))
                                 ) {
                                     Text(
@@ -307,7 +303,7 @@ fun UsageScreen(
                                 ) {
                                     Surface(
                                         shape = CircleShape,
-                                        color = HighElevationDark,
+                                        color = MaterialTheme.colorScheme.surfaceContainer,
                                         border = androidx.compose.foundation.BorderStroke(2.dp, ModernDesignTokens.PrimaryGlowBrush),
                                         modifier = Modifier.size(52.dp)
                                     ) {
@@ -329,7 +325,7 @@ fun UsageScreen(
                                 Spacer(modifier = Modifier.height(16.dp))
                                 Surface(
                                     shape = RoundedCornerShape(12.dp),
-                                    color = HighElevationDark.copy(alpha = 0.6f),
+                                    color = MaterialTheme.colorScheme.surfaceContainer.copy(alpha = 0.6f),
                                     border = androidx.compose.foundation.BorderStroke(1.dp, Color(0x1538BDF8)),
                                     modifier = Modifier.fillMaxWidth()
                                 ) {
@@ -397,8 +393,8 @@ fun UsageScreen(
                                 colors = FilterChipDefaults.filterChipColors(
                                     selectedContainerColor = CyberCyan,
                                     selectedLabelColor = Color(0xFF070B14),
-                                    containerColor = HighElevationDark,
-                                    labelColor = TextPrimaryDark
+                                    containerColor = MaterialTheme.colorScheme.surfaceContainer,
+                                    labelColor = MaterialTheme.colorScheme.onSurface
                                 ),
                                 border = FilterChipDefaults.filterChipBorder(
                                     enabled = true,
@@ -422,8 +418,8 @@ fun UsageScreen(
                                 colors = FilterChipDefaults.filterChipColors(
                                     selectedContainerColor = CyberCyan,
                                     selectedLabelColor = Color(0xFF070B14),
-                                    containerColor = HighElevationDark,
-                                    labelColor = TextPrimaryDark
+                                    containerColor = MaterialTheme.colorScheme.surfaceContainer,
+                                    labelColor = MaterialTheme.colorScheme.onSurface
                                 ),
                                 border = FilterChipDefaults.filterChipBorder(
                                     enabled = true,
@@ -455,7 +451,7 @@ fun UsageScreen(
                             ) {
                                 Surface(
                                     shape = CircleShape,
-                                    color = HighElevationDark,
+                                    color = MaterialTheme.colorScheme.surfaceContainer,
                                     border = androidx.compose.foundation.BorderStroke(1.dp, Color(0x2538BDF8)),
                                     modifier = Modifier.size(52.dp)
                                 ) {
@@ -463,7 +459,7 @@ fun UsageScreen(
                                         Icon(
                                             imageVector = Icons.Filled.HourglassTop,
                                             contentDescription = null,
-                                            tint = TextSecondaryDark,
+                                            tint = MaterialTheme.colorScheme.onSurfaceVariant,
                                             modifier = Modifier.size(24.dp)
                                         )
                                     }
@@ -530,7 +526,7 @@ fun AppUsageItemCard(appUsage: AppUsageData) {
                     val initial = appUsage.appLabel.firstOrNull()?.uppercase() ?: "A"
                     Surface(
                         shape = CircleShape,
-                        color = HighElevationDark,
+                        color = MaterialTheme.colorScheme.surfaceContainer,
                         border = androidx.compose.foundation.BorderStroke(1.5.dp, CyberCyan.copy(alpha = 0.5f)),
                         modifier = Modifier.size(42.dp)
                     ) {
@@ -570,7 +566,7 @@ fun AppUsageItemCard(appUsage: AppUsageData) {
                         style = MaterialTheme.typography.titleMedium,
                         fontWeight = FontWeight.Bold,
                         fontFamily = SpaceGrotesk,
-                        color = TextPrimaryDark
+                        color = MaterialTheme.colorScheme.onSurface
                     )
                     Surface(
                         shape = RoundedCornerShape(9999.dp),
@@ -597,7 +593,7 @@ fun AppUsageItemCard(appUsage: AppUsageData) {
                     .fillMaxWidth()
                     .height(6.dp)
                     .clip(RoundedCornerShape(9999.dp))
-                    .background(HighElevationDark)
+                    .background(MaterialTheme.colorScheme.surfaceContainer)
             ) {
                 val fraction = (appUsage.percentageOfTotal / 100f).coerceIn(0f, 1f)
                 Box(
@@ -607,7 +603,7 @@ fun AppUsageItemCard(appUsage: AppUsageData) {
                         .clip(RoundedCornerShape(9999.dp))
                         .background(
                             Brush.horizontalGradient(
-                                colors = listOf(CyberCyan, PrimaryBlue, ElectricIndigo)
+                                colors = listOf(CyberCyan, MaterialTheme.colorScheme.primary, ElectricIndigo)
                             )
                         )
                 )
@@ -635,7 +631,7 @@ fun UsagePermissionDeniedContent(
         ) {
             Surface(
                 shape = CircleShape,
-                color = HighElevationDark,
+                color = MaterialTheme.colorScheme.surfaceContainer,
                 border = androidx.compose.foundation.BorderStroke(2.dp, ModernDesignTokens.PrimaryGlowBrush),
                 modifier = Modifier.size(72.dp)
             ) {
