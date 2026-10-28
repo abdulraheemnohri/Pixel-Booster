@@ -174,10 +174,13 @@ class HardwareMonitorService(
             peakRecordedTemp = currentTemp
         }
 
-        synchronized(temperatureHistory) {
-            temperatureHistory.add(currentTemp)
-            if (temperatureHistory.size > 20) {
-                temperatureHistory.removeAt(0)
+        // Do not pollute the temperature trend with zero values used to mean unavailable.
+        if (currentTemp > 0f) {
+            synchronized(temperatureHistory) {
+                temperatureHistory.add(currentTemp)
+                if (temperatureHistory.size > 20) {
+                    temperatureHistory.removeAt(0)
+                }
             }
         }
 
@@ -469,7 +472,7 @@ class HardwareMonitorService(
             } catch (_: Throwable) {}
         }
 
-        // 3. Persistent battery wear cycle tracker
+        // 3. No persistent cycle tracker is implemented; report unavailable when no hardware counter exists.
         return Pair(0, "Unavailable (hardware counter not exposed)")
     }
 
