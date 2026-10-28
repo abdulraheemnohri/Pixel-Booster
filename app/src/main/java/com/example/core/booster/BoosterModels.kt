@@ -97,7 +97,7 @@ data class JunkScanResult(
         get() = MemoryInfoData.formatBytes(residualLogsBytes)
 }
 
-/** A latency of -1 means that individual connection attempt failed; zero is not used for missing data. */
+/** Each latency uses -1 for a failed attempt; latencyImprovementMs uses Long.MIN_VALUE when either attempt is unavailable. */
 data class NetworkPingResult(
     val host: String,
     val initialLatencyMs: Long,
