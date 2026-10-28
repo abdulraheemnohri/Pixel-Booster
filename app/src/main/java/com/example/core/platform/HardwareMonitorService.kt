@@ -199,10 +199,22 @@ class HardwareMonitorService(
             else -> "Nominal"
         }
 
-        val (severity, isOverheating, statusName, warningMsg, advice) = evaluateThermals(
-            currentTemp = currentTemp,
-            powerManagerStatus = powerManagerStatus
-        )
+        val evaluation = if (currentTemp <= 0f && powerManagerStatus == PowerManager.THERMAL_STATUS_NONE) {
+            ThermalEvaluation(
+                severity = ThermalSeverityLevel.NOMINAL,
+                isOverheating = false,
+                statusName = "Sensor unavailable",
+                warningMessage = null,
+                coolingAdvice = "Temperature sensor readings are not exposed to this app on this device."
+            )
+        } else {
+            evaluateThermals(currentTemp = currentTemp, powerManagerStatus = powerManagerStatus)
+        }
+        val severity = evaluation.severity
+        val isOverheating = evaluation.isOverheating
+        val statusName = evaluation.statusName
+        val warningMsg = evaluation.warningMessage
+        val advice = evaluation.coolingAdvice
 
         return ThermalTelemetryData(
             currentTempCelsius = currentTemp,
