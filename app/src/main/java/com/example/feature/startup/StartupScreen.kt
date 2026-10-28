@@ -74,13 +74,9 @@ import com.example.core.model.StartupAppInfo
 import com.example.core.model.StartupSummary
 import com.example.ui.theme.CriticalRed
 import com.example.ui.theme.CyberCyan
-import com.example.ui.theme.HighElevationDark
 import com.example.ui.theme.ModernDesignTokens
 import com.example.ui.theme.OutlineDark
 import com.example.ui.theme.PositiveMint
-import com.example.ui.theme.PrimaryBlue
-import com.example.ui.theme.TextPrimaryDark
-import com.example.ui.theme.TextSecondaryDark
 import com.example.ui.theme.WarningAmber
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -197,8 +193,8 @@ fun StartupScreen(
                             colors = OutlinedTextFieldDefaults.colors(
                                 focusedBorderColor = CyberCyan,
                                 unfocusedBorderColor = OutlineDark,
-                                focusedContainerColor = HighElevationDark,
-                                unfocusedContainerColor = HighElevationDark
+                                focusedContainerColor = MaterialTheme.colorScheme.surfaceContainer,
+                                unfocusedContainerColor = MaterialTheme.colorScheme.surfaceContainer
                             ),
                             modifier = Modifier
                                 .fillMaxWidth()
@@ -215,8 +211,8 @@ fun StartupScreen(
                                     colors = FilterChipDefaults.filterChipColors(
                                         selectedContainerColor = CyberCyan,
                                         selectedLabelColor = Color(0xFF031628),
-                                        containerColor = HighElevationDark,
-                                        labelColor = TextPrimaryDark
+                                        containerColor = MaterialTheme.colorScheme.surfaceContainer,
+                                        labelColor = MaterialTheme.colorScheme.onSurface
                                     ),
                                     modifier = Modifier.testTag("filter_startup_all")
                                 )
@@ -230,8 +226,8 @@ fun StartupScreen(
                                     colors = FilterChipDefaults.filterChipColors(
                                         selectedContainerColor = CyberCyan,
                                         selectedLabelColor = Color(0xFF031628),
-                                        containerColor = HighElevationDark,
-                                        labelColor = TextPrimaryDark
+                                        containerColor = MaterialTheme.colorScheme.surfaceContainer,
+                                        labelColor = MaterialTheme.colorScheme.onSurface
                                     ),
                                     modifier = Modifier.testTag("filter_startup_non_essential")
                                 )
@@ -245,8 +241,8 @@ fun StartupScreen(
                                     colors = FilterChipDefaults.filterChipColors(
                                         selectedContainerColor = CyberCyan,
                                         selectedLabelColor = Color(0xFF031628),
-                                        containerColor = HighElevationDark,
-                                        labelColor = TextPrimaryDark
+                                        containerColor = MaterialTheme.colorScheme.surfaceContainer,
+                                        labelColor = MaterialTheme.colorScheme.onSurface
                                     ),
                                     modifier = Modifier.testTag("filter_startup_high_impact")
                                 )
@@ -260,8 +256,8 @@ fun StartupScreen(
                                     colors = FilterChipDefaults.filterChipColors(
                                         selectedContainerColor = CyberCyan,
                                         selectedLabelColor = Color(0xFF031628),
-                                        containerColor = HighElevationDark,
-                                        labelColor = TextPrimaryDark
+                                        containerColor = MaterialTheme.colorScheme.surfaceContainer,
+                                        labelColor = MaterialTheme.colorScheme.onSurface
                                     ),
                                     modifier = Modifier.testTag("filter_startup_system")
                                 )
@@ -357,7 +353,7 @@ fun StartupScreen(
                     Spacer(modifier = Modifier.height(14.dp))
                     Surface(
                         shape = RoundedCornerShape(14.dp),
-                        color = HighElevationDark,
+                        color = MaterialTheme.colorScheme.surfaceContainer,
                         border = androidx.compose.foundation.BorderStroke(1.dp, Color(0x2538BDF8)),
                         modifier = Modifier.fillMaxWidth()
                     ) {
@@ -366,15 +362,15 @@ fun StartupScreen(
                                 modifier = Modifier.fillMaxWidth(),
                                 horizontalArrangement = Arrangement.SpaceBetween
                             ) {
-                                Text("Apps marked:", style = MaterialTheme.typography.bodySmall, color = TextSecondaryDark)
-                                Text("${result.appsOptimizedCount} apps", fontWeight = FontWeight.Bold, color = TextPrimaryDark)
+                                Text("Apps marked:", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                                Text("${result.appsOptimizedCount} apps", fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.onSurface)
                             }
                             Spacer(modifier = Modifier.height(6.dp))
                             Row(
                                 modifier = Modifier.fillMaxWidth(),
                                 horizontalArrangement = Arrangement.SpaceBetween
                             ) {
-                                Text("Estimated boot delay (not measured):", style = MaterialTheme.typography.bodySmall, color = TextSecondaryDark)
+                                Text("Estimated boot delay (not measured):", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
                                 Text(result.formattedTimeSaved, fontWeight = FontWeight.Bold, color = PositiveMint)
                             }
                             Spacer(modifier = Modifier.height(6.dp))
@@ -382,7 +378,7 @@ fun StartupScreen(
                                 modifier = Modifier.fillMaxWidth(),
                                 horizontalArrangement = Arrangement.SpaceBetween
                             ) {
-                                Text("RAM reclaim measurement:", style = MaterialTheme.typography.bodySmall, color = TextSecondaryDark)
+                                Text("RAM reclaim measurement:", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
                                 Text(result.formattedRamReclaimed, fontWeight = FontWeight.Bold, color = CyberCyan)
                             }
                         }
@@ -491,37 +487,37 @@ fun StartupHeroCard(
             ) {
                 Surface(
                     shape = RoundedCornerShape(14.dp),
-                    color = HighElevationDark,
+                    color = MaterialTheme.colorScheme.surfaceContainer,
                     border = androidx.compose.foundation.BorderStroke(1.dp, Color(0x1538BDF8)),
                     modifier = Modifier.weight(1f)
                 ) {
                     Column(modifier = Modifier.padding(12.dp)) {
-                        Text("Est. Boot Delay", style = MaterialTheme.typography.labelSmall, color = TextSecondaryDark, fontSize = 9.sp)
+                        Text("Est. Boot Delay", style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 9.sp)
                         Text(summary.formattedTotalBootDelay, style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.Bold, color = WarningAmber)
                     }
                 }
 
                 Surface(
                     shape = RoundedCornerShape(14.dp),
-                    color = HighElevationDark,
+                    color = MaterialTheme.colorScheme.surfaceContainer,
                     border = androidx.compose.foundation.BorderStroke(1.dp, Color(0x1538BDF8)),
                     modifier = Modifier.weight(1f)
                 ) {
                     Column(modifier = Modifier.padding(12.dp)) {
-                        Text("Per-app RAM usage", style = MaterialTheme.typography.labelSmall, color = TextSecondaryDark, fontSize = 9.sp)
+                        Text("Per-app RAM usage", style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 9.sp)
                         Text(summary.formattedTotalRam, style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.Bold, color = CyberCyan)
                     }
                 }
 
                 Surface(
                     shape = RoundedCornerShape(14.dp),
-                    color = HighElevationDark,
+                    color = MaterialTheme.colorScheme.surfaceContainer,
                     border = androidx.compose.foundation.BorderStroke(1.dp, Color(0x1538BDF8)),
                     modifier = Modifier.weight(1f)
                 ) {
                     Column(modifier = Modifier.padding(12.dp)) {
-                        Text("Non-Essential", style = MaterialTheme.typography.labelSmall, color = TextSecondaryDark, fontSize = 9.sp)
-                        Text("${summary.nonEssentialCount} Apps", style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.Bold, color = TextPrimaryDark)
+                        Text("Non-Essential", style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 9.sp)
+                        Text("${summary.nonEssentialCount} Apps", style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.onSurface)
                     }
                 }
             }
@@ -607,7 +603,7 @@ fun StartupAppItemCard(
                     // App Avatar
                     Surface(
                         shape = CircleShape,
-                        color = HighElevationDark,
+                        color = MaterialTheme.colorScheme.surfaceContainer,
                         border = androidx.compose.foundation.BorderStroke(1.dp, Color(0x2538BDF8)),
                         modifier = Modifier.size(42.dp)
                     ) {
@@ -648,8 +644,8 @@ fun StartupAppItemCard(
                     colors = SwitchDefaults.colors(
                         checkedThumbColor = Color(0xFF031628),
                         checkedTrackColor = PositiveMint,
-                        uncheckedThumbColor = TextSecondaryDark,
-                        uncheckedTrackColor = HighElevationDark
+                        uncheckedThumbColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                        uncheckedTrackColor = MaterialTheme.colorScheme.surfaceContainer
                     ),
                     modifier = Modifier.testTag("switch_startup_${app.packageName}")
                 )
@@ -679,13 +675,13 @@ fun StartupAppItemCard(
 
                 Surface(
                     shape = RoundedCornerShape(ModernDesignTokens.RadiusFull),
-                    color = HighElevationDark,
+                    color = MaterialTheme.colorScheme.surfaceContainer,
                     border = androidx.compose.foundation.BorderStroke(1.dp, Color(0x1538BDF8))
                 ) {
                     Text(
                         text = "RAM: ${app.formattedRamFootprint}",
                         style = MaterialTheme.typography.labelSmall,
-                        color = TextPrimaryDark,
+                        color = MaterialTheme.colorScheme.onSurface,
                         modifier = Modifier.padding(horizontal = 8.dp, vertical = 2.dp)
                     )
                 }
@@ -715,7 +711,7 @@ fun StartupAppItemCard(
                     Icon(
                         imageVector = Icons.Filled.OpenInNew,
                         contentDescription = "App Details",
-                        tint = TextSecondaryDark,
+                        tint = MaterialTheme.colorScheme.onSurfaceVariant,
                         modifier = Modifier.size(16.dp)
                     )
                 }
@@ -726,7 +722,7 @@ fun StartupAppItemCard(
             Text(
                 text = "Trigger: ${app.bootTriggerReason}",
                 style = MaterialTheme.typography.bodySmall,
-                color = TextSecondaryDark,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
                 fontSize = 11.sp
             )
         }
@@ -740,7 +736,7 @@ fun StartupGuidanceCard() {
             .fillMaxWidth()
             .border(1.dp, OutlineDark, RoundedCornerShape(18.dp)),
         shape = RoundedCornerShape(18.dp),
-        colors = CardDefaults.cardColors(containerColor = HighElevationDark.copy(alpha = 0.45f))
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainer.copy(alpha = 0.45f))
     ) {
         Column(modifier = Modifier.padding(18.dp)) {
             Text(
