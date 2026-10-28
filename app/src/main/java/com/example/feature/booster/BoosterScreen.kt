@@ -161,7 +161,7 @@ fun BoosterScreen(
                 )
             }
 
-            // Dedicated Background Non-Essential Cache Purge
+            // Guided cache cleanup: only app-owned cache is eligible for deletion
             item {
                 ClearCacheCard(
                     detectedCacheFormatted = uiState.detectedCacheFormatted,
@@ -172,7 +172,7 @@ fun BoosterScreen(
                 )
             }
 
-            // Dedicated System Optimizer: Clears app cache files & releases background memory
+            // System maintenance summary: report only operations actually supported by Android
             item {
                 com.example.feature.booster.components.SystemOptimizerCard(
                     isOptimizing = uiState.isSystemOptimizing,
@@ -194,9 +194,9 @@ fun BoosterScreen(
 
             // RAM Booster Card
             item {
-                val ramPercentage = uiState.memoryInfo?.usedPercentage?.toInt() ?: 70
-                val ramBadge = "$ramPercentage% Used"
-                val ramBadgeColor = if (ramPercentage > 85) WarningAmber else CyberCyan
+                val ramPercentage = uiState.memoryInfo?.usedPercentage?.toInt()
+                val ramBadge = ramPercentage?.let { "$it% Used" } ?: "Unavailable"
+                val ramBadgeColor = if (ramPercentage != null && ramPercentage > 85) WarningAmber else CyberCyan
                 BoosterToolCard(
                     tool = BoosterToolType.RAM_BOOSTER,
                     icon = Icons.Filled.Memory,
@@ -212,7 +212,7 @@ fun BoosterScreen(
                 BoosterToolCard(
                     tool = BoosterToolType.JUNK_CLEANER,
                     icon = Icons.Filled.CleaningServices,
-                    statusBadge = "685 MB Found",
+                    statusBadge = uiState.detectedCacheFormatted,
                     badgeColor = PositiveMint,
                     onOpenTool = { viewModel.openTool(BoosterToolType.JUNK_CLEANER) },
                     onDirectBoost = { viewModel.runJunkClean() }
@@ -221,7 +221,7 @@ fun BoosterScreen(
 
             // CPU Cooler Card
             item {
-                val tempText = uiState.batteryInfo?.formattedTemperature ?: "31.5°C"
+                val tempText = uiState.batteryInfo?.formattedTemperature ?: "Unavailable"
                 BoosterToolCard(
                     tool = BoosterToolType.CPU_COOLER,
                     icon = Icons.Filled.Thermostat,
