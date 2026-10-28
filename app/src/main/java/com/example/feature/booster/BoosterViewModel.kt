@@ -251,7 +251,7 @@ class BoosterViewModel(application: Application) : AndroidViewModel(application)
                 it.copy(
                     isBoosting = true,
                     currentStage = BoosterStage.OPTIMIZING_RAM,
-                    currentStageText = "Releasing memory buffers & purging heap...",
+                    currentStageText = "Requesting garbage collection in this app and measuring system memory...",
                     boostProgress = 0.5f
                 )
             }
@@ -261,7 +261,7 @@ class BoosterViewModel(application: Application) : AndroidViewModel(application)
             val freedMb = freedBytes / (1024L * 1024L)
             val summary = BoostResultSummary(
                 toolType = BoosterToolType.RAM_BOOSTER,
-                title = "RAM Boosted",
+                title = "Memory Measurement Complete",
                 headlineMetric = "$freedMb MB observed RAM decrease",
                 details = listOf(
                     "Observed RAM change" to "$freedMb MB decrease; system-wide reclaim is not guaranteed",
@@ -272,7 +272,7 @@ class BoosterViewModel(application: Application) : AndroidViewModel(application)
 
             repository.recordLog(
                 boosterType = BoosterToolType.RAM_BOOSTER.name,
-                title = "RAM Memory Booster",
+                title = "Memory Measurement",
                 details = "Observed system used-RAM decrease: $freedMb MB after requesting garbage collection in this app. This is not a guaranteed system-wide reclaim.",
                 metricFreed = "$freedMb MB observed RAM delta"
             )
@@ -345,7 +345,7 @@ class BoosterViewModel(application: Application) : AndroidViewModel(application)
                 it.copy(
                     isBoosting = true,
                     currentStage = BoosterStage.COOLING_HARDWARE,
-                    currentStageText = "Easing thermal load on Tensor/SoC cores...",
+                    currentStageText = "Observing battery temperature; this app cannot control processor cooling...",
                     boostProgress = 0.5f
                 )
             }
@@ -357,7 +357,7 @@ class BoosterViewModel(application: Application) : AndroidViewModel(application)
                 title = "Temperature Observation Complete",
                 headlineMetric = String.format(Locale.US, "%.1f°C observed battery-temperature decrease", drop),
                 details = listOf(
-                    "Thermal State" to (_uiState.value.thermalStatus?.statusName ?: "Nominal"),
+                    "Thermal State" to (_uiState.value.thermalStatus?.statusName ?: "Unavailable"),
                     "Processor throttling" to "Not changed by this app",
                     "Safe guidance" to "Pause demanding tasks, remove direct sunlight, and unplug charging if hot"
                 )
@@ -405,7 +405,7 @@ class BoosterViewModel(application: Application) : AndroidViewModel(application)
                 it.copy(
                     isBoosting = true,
                     currentStage = BoosterStage.ACCELERATING_NETWORK,
-                    currentStageText = "Pinging Google DNS & refreshing socket stack...",
+                    currentStageText = "Measuring two connection latencies; network settings will not be changed...",
                     boostProgress = 0.5f
                 )
             }
@@ -414,21 +414,21 @@ class BoosterViewModel(application: Application) : AndroidViewModel(application)
 
             val summary = BoostResultSummary(
                 toolType = BoosterToolType.NETWORK_TURBO,
-                title = "Network Accelerated",
-                headlineMetric = "${res.optimizedLatencyMs}ms Ping",
+                title = if (res.isOnline) "Network Test Complete" else "Network Test Unavailable",
+                headlineMetric = if (res.isOnline) "${res.optimizedLatencyMs} ms measured latency" else "No latency result available",
                 details = listOf(
                     "Target" to res.host,
-                    "Previous Latency" to "${res.initialLatencyMs}ms",
-                    "Optimized Latency" to "${res.optimizedLatencyMs}ms",
-                    "Ping Improvement" to "-${res.latencyImprovementMs}ms"
+                    "First measurement" to if (res.isOnline) "${res.initialLatencyMs} ms" else "Unavailable",
+                    "Second measurement" to if (res.isOnline) "${res.optimizedLatencyMs} ms" else "Unavailable",
+                    "Difference" to if (res.isOnline) "${res.latencyImprovementMs} ms (observed, not optimized)" else "Unavailable"
                 )
             )
 
             repository.recordLog(
                 boosterType = BoosterToolType.NETWORK_TURBO.name,
                 title = "Network Turbo Accelerator",
-                details = "Pings lowered from ${res.initialLatencyMs}ms to ${res.optimizedLatencyMs}ms (${res.host})",
-                metricFreed = "-${res.latencyImprovementMs}ms"
+                details = if (res.isOnline) "Measured two connection latencies: ${res.initialLatencyMs}ms then ${res.optimizedLatencyMs}ms (${res.host}); no network settings were changed." else "Connection test failed for ${res.host}; no latency result is available and no network settings were changed.",
+                metricFreed = if (res.isOnline) "${res.latencyImprovementMs} ms observed difference" else "Unavailable"
             )
 
             _uiState.update {
