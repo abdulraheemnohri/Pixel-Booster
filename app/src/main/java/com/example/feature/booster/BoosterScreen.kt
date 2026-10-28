@@ -58,13 +58,9 @@ import com.example.feature.booster.components.ClearCacheCard
 import com.example.feature.booster.components.RamUsageMonitorCard
 import com.example.feature.booster.components.ToolDetailSheets
 import com.example.ui.theme.CyberCyan
-import com.example.ui.theme.HighElevationDark
 import com.example.ui.theme.ModernDesignTokens
 import com.example.ui.theme.OutlineDark
 import com.example.ui.theme.PositiveMint
-import com.example.ui.theme.PrimaryBlue
-import com.example.ui.theme.TextPrimaryDark
-import com.example.ui.theme.TextSecondaryDark
 import com.example.ui.theme.WarningAmber
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -414,7 +410,7 @@ fun OptimizationLogItemCard(log: OptimizationLogEntity) {
             Text(
                 text = "${log.formattedDate} at ${log.formattedTime}",
                 style = MaterialTheme.typography.bodySmall,
-                color = TextSecondaryDark,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
                 fontSize = 11.sp
             )
         }
