@@ -41,5 +41,14 @@ class StorageAnalyzerSafetyTest {
         assertTrue("Cache cleanup should report actual bytes removed", cacheCleaned > 0L)
         assertFalse("Selected disposable cache file should be removed", cacheFile.exists())
         assertTrue("Private file must still exist after cache cleanup", privateFile.exists())
+
+        // A stale or manually crafted selection must not delete the cache directory itself.
+        val cacheRootItem = JunkCategoryItem(
+            id = "cache-root", category = JunkCategoryType.APP_CACHE,
+            name = "Cache root", sizeBytes = 0L, filePath = context.cacheDir.absolutePath
+        )
+        repository.cleanSelectedJunk(listOf(cacheRootItem))
+        assertTrue("The app cache root directory must remain available", context.cacheDir.exists())
+        assertTrue("Private file must remain untouched", privateFile.exists())
     }
 }
