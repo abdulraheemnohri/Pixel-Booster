@@ -426,7 +426,7 @@ class HardwareMonitorService(
                     val full = fullF.readText().trim().toFloatOrNull() ?: continue
                     val design = designF.readText().trim().toFloatOrNull() ?: continue
                     if (full > 0f && design > 0f) {
-                        return (full / design).coerceIn(0.5f, 1.0f)
+                        return (full / design).coerceIn(0f, 1.0f)
                     }
                 }
             } catch (_: Throwable) {}
