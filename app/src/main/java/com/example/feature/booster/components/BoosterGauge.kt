@@ -249,7 +249,7 @@ fun BoosterGauge(
                 enabled = !isBoosting,
                 colors = ButtonDefaults.buttonColors(
                     containerColor = PositiveMint,
-                    contentColor = MaterialTheme.colorScheme.onPrimary
+                    contentColor = Color(0xFF022C1C)
                 ),
                 shape = RoundedCornerShape(16.dp),
                 modifier = Modifier
