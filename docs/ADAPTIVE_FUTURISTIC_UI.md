@@ -7,6 +7,9 @@
 - The existing breakpoint keeps bottom navigation on compact screens and a navigation rail on screens at least 600 dp wide.
 - Compact navigation now presents five evenly sized destinations without horizontal scrolling; secondary destinations, including Diagnostics, are available from More.
 - Expanded content respects safe drawing insets and is constrained to a readable maximum width instead of stretching across wide displays.
+- The More Tools catalogue uses an adaptive grid (one column on narrow phones, additional columns as space allows) while its heading spans the grid.
+- Feature screens and booster sheets use active Material 3 color roles rather than hard-coded dark-only foreground/surface colors.
+- Network and gaming controls describe only what an ordinary non-root Android app can actually do; they do not promise GPU scheduling, system DNS flushing, or prevention of frame drops.
 
 ## Design direction
 
@@ -45,6 +48,8 @@ Pixel Booster uses a restrained futuristic style: deep surfaces, cool cyan/blue 
 - [ ] Tablet / emulator width >= 600 dp: navigation rail and constrained content.
 - [ ] Switch among Home, Smart Boost, Storage, Usage, and More; selection remains correct.
 - [ ] Open Diagnostics from More and confirm More stays selected on secondary destinations.
+- [ ] Confirm More Tools changes from one to multiple columns at the adaptive width and the heading spans all columns.
+- [ ] Check all screens in light, dark, and dynamic-color modes for contrast, overflow, and hard-coded dark-only colors.
 - [ ] Verify edge-to-edge layout and system-bar insets.
 
 ### Theme and accessibility
