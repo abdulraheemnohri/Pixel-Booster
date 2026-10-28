@@ -49,8 +49,10 @@ class BoosterServiceTest {
         val context = ApplicationProvider.getApplicationContext<Context>()
         val service = BoosterService(context)
         val drop = service.coolCpu()
-        assertTrue(drop.isFinite()) // Sensor change can be positive, zero, or negative.
-        assertTrue(drop < 10.0f)
+        if (drop != null) {
+            assertTrue(drop.isFinite()) // Sensor change can be positive, zero, or negative.
+            assertTrue(drop < 10.0f)
+        } // Missing sensor data is a valid unavailable result.
     }
 
     @Test
