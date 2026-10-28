@@ -12,7 +12,7 @@
         android:id="@+id/widget_battery_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="🔋 85%"
+        android:text="🔋 —"
         android:textColor="#34D399"
         android:textSize="14sp"
         android:textStyle="bold" />
@@ -21,7 +21,7 @@
         android:id="@+id/widget_temp_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="❄️ 31.5°C"
+        android:text="🌡️ —"
         android:textColor="#818CF8"
         android:textSize="12sp"
         android:textStyle="bold" />
