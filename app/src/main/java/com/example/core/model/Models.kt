@@ -36,9 +36,9 @@ data class MemoryInfoData(
     val availablePercentage: Float
         get() = (100f - usedPercentage).coerceIn(0f, 100f)
 
-    val formattedTotal: String get() = formatBytes(totalRamBytes)
-    val formattedAvailable: String get() = formatBytes(availableRamBytes)
-    val formattedUsed: String get() = formatBytes(usedRamBytes)
+    val formattedTotal: String get() = if (totalRamBytes > 0L) formatBytes(totalRamBytes) else "Unavailable"
+    val formattedAvailable: String get() = if (totalRamBytes > 0L && availableRamBytes >= 0L) formatBytes(availableRamBytes) else "Unavailable"
+    val formattedUsed: String get() = if (totalRamBytes > 0L) formatBytes(usedRamBytes) else "Unavailable"
 
     companion object {
         fun formatBytes(bytes: Long): String {
