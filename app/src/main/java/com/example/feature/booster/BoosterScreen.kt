@@ -246,11 +246,11 @@ fun BoosterScreen(
 
             // Network Turbo Card
             item {
-                val ping = uiState.networkPingResult?.optimizedLatencyMs ?: 38L
+                val ping = uiState.networkPingResult?.optimizedLatencyMs?.takeIf { it > 0L }
                 BoosterToolCard(
                     tool = BoosterToolType.NETWORK_TURBO,
                     icon = Icons.Filled.NetworkCheck,
-                    statusBadge = "${ping}ms Ping",
+                    statusBadge = ping?.let { "${it}ms measured" } ?: "Run test",
                     badgeColor = CyberCyan,
                     onOpenTool = { viewModel.openTool(BoosterToolType.NETWORK_TURBO) },
                     onDirectBoost = { viewModel.runNetworkTurbo() }
