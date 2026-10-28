@@ -141,7 +141,7 @@ class BoosterViewModel(application: Application) : AndroidViewModel(application)
                 it.copy(
                     isBoosting = true,
                     currentStage = BoosterStage.SCANNING,
-                    currentStageText = "Scanning processes & active system caches...",
+                    currentStageText = "Measuring device memory and this app’s disposable cache...",
                     boostProgress = 0.1f
                 )
             }
@@ -151,7 +151,7 @@ class BoosterViewModel(application: Application) : AndroidViewModel(application)
             _uiState.update {
                 it.copy(
                     currentStage = BoosterStage.OPTIMIZING_RAM,
-                    currentStageText = "Reclaiming RAM headroom & trimming JVM heap...",
+                    currentStageText = "Measuring memory before and after this app’s garbage collection...",
                     boostProgress = 0.35f
                 )
             }
@@ -162,7 +162,7 @@ class BoosterViewModel(application: Application) : AndroidViewModel(application)
             _uiState.update {
                 it.copy(
                     currentStage = BoosterStage.CLEANING_CACHE,
-                    currentStageText = "Purging obsolete temporary files & app cache...",
+                    currentStageText = "Clearing only this app’s cache folders...",
                     boostProgress = 0.60f
                 )
             }
@@ -174,7 +174,7 @@ class BoosterViewModel(application: Application) : AndroidViewModel(application)
             _uiState.update {
                 it.copy(
                     currentStage = BoosterStage.COOLING_HARDWARE,
-                    currentStageText = "Mitigating processor throttle & easing heat load...",
+                    currentStageText = "Observing battery temperature; no forced CPU cooling...",
                     boostProgress = 0.80f
                 )
             }
@@ -185,7 +185,7 @@ class BoosterViewModel(application: Application) : AndroidViewModel(application)
             _uiState.update {
                 it.copy(
                     currentStage = BoosterStage.ACCELERATING_NETWORK,
-                    currentStageText = "Optimizing socket buffers & ping latency...",
+                    currentStageText = "Measuring two network connection attempts; no network settings changed...",
                     boostProgress = 0.95f
                 )
             }
@@ -208,12 +208,12 @@ class BoosterViewModel(application: Application) : AndroidViewModel(application)
             val summary = BoostResultSummary(
                 toolType = null,
                 title = "Turbo Boost Complete",
-                headlineMetric = "+$freedRamMb MB RAM Freed",
+                headlineMetric = "$freedRamMb MB observed RAM decrease",
                 details = listOf(
-                    "RAM Reclaimed" to "+$freedRamMb MB headroom",
+                    "Observed RAM change" to "$freedRamMb MB decrease (not guaranteed reclaimed RAM)",
                     "Junk Purged" to "$freedJunkMb MB cache cleared",
-                    "Thermal Relief" to String.format(Locale.US, "-%.1f°C cooled", tempDrop),
-                    "Ping Optimization" to "-${networkResult.latencyImprovementMs}ms latency"
+                    "Battery temperature change" to String.format(Locale.US, "%.1f°C decrease (positive means cooler)", tempDrop),
+                    "Connection test" to if (networkResult.isOnline) "${networkResult.initialLatencyMs} ms then ${networkResult.optimizedLatencyMs} ms (measured; not optimized)" else "Unavailable; connection test failed"
                 )
             )
 
@@ -221,14 +221,14 @@ class BoosterViewModel(application: Application) : AndroidViewModel(application)
             repository.recordLog(
                 boosterType = "QUICK_BOOST",
                 title = "One-Tap Quick Boost",
-                details = "Freed $freedRamMb MB RAM, cleaned $freedJunkMb MB junk, lowered heat by ${String.format(Locale.US, "%.1f", tempDrop)}°C",
-                metricFreed = "+$freedRamMb MB"
+                details = "Observed RAM-used decrease: $freedRamMb MB (not guaranteed reclaimed). Removed $freedJunkMb MB from this app cache. Battery sensor temperature change: ${String.format(Locale.US, "%.1f", tempDrop)}°C; no active CPU cooling was performed.",
+                metricFreed = "$freedRamMb MB observed RAM delta"
             )
 
             EventLogger.log(
                 severity = LogSeverity.INFO,
                 category = LogCategory.SYSTEM,
-                message = "One-Tap Quick Boost completed: +$freedRamMb MB RAM, $freedJunkMb MB junk cleared"
+                message = "Quick maintenance completed: observed RAM-used decrease $freedRamMb MB; removed $freedJunkMb MB from app-owned cache. No system-wide RAM/CPU optimization is claimed."
             )
 
             refreshHardwareTelemetry()
@@ -238,7 +238,7 @@ class BoosterViewModel(application: Application) : AndroidViewModel(application)
                     isBoosting = false,
                     lastResultSummary = summary,
                     showResultDialog = true,
-                    optimizationScore = (it.optimizationScore + 15).coerceAtMost(100)
+                    optimizationScore = it.optimizationScore
                 )
             }
         }
@@ -262,19 +262,19 @@ class BoosterViewModel(application: Application) : AndroidViewModel(application)
             val summary = BoostResultSummary(
                 toolType = BoosterToolType.RAM_BOOSTER,
                 title = "RAM Boosted",
-                headlineMetric = "+$freedMb MB Headroom",
+                headlineMetric = "$freedMb MB observed RAM decrease",
                 details = listOf(
-                    "Available Memory" to "Expanded by $freedMb MB",
-                    "Background Apps" to "Trimmed inactive caches",
-                    "Garbage Collector" to "Heap defragmented"
+                    "Observed RAM change" to "$freedMb MB decrease; system-wide reclaim is not guaranteed",
+                    "Background apps" to "Not terminated (Android controls other apps)",
+                    "Garbage collector" to "Requested GC for this app only"
                 )
             )
 
             repository.recordLog(
                 boosterType = BoosterToolType.RAM_BOOSTER.name,
                 title = "RAM Memory Booster",
-                details = "Reclaimed $freedMb MB of memory headroom through GC invocation and buffer clearing",
-                metricFreed = "+$freedMb MB RAM"
+                details = "Observed system used-RAM decrease: $freedMb MB after requesting garbage collection in this app. This is not a guaranteed system-wide reclaim.",
+                metricFreed = "$freedMb MB observed RAM delta"
             )
 
             refreshHardwareTelemetry()
@@ -354,20 +354,20 @@ class BoosterViewModel(application: Application) : AndroidViewModel(application)
 
             val summary = BoostResultSummary(
                 toolType = BoosterToolType.CPU_COOLER,
-                title = "CPU Cooldown Applied",
-                headlineMetric = String.format(Locale.US, "-%.1f°C Cooled", drop),
+                title = "Temperature Observation Complete",
+                headlineMetric = String.format(Locale.US, "%.1f°C observed battery-temperature decrease", drop),
                 details = listOf(
                     "Thermal State" to (_uiState.value.thermalStatus?.statusName ?: "Nominal"),
-                    "Processor Throttling" to "Mitigated",
-                    "Cooldown Advice" to "Avoid intensive multi-window 3D tasks for 5 minutes"
+                    "Processor throttling" to "Not changed by this app",
+                    "Safe guidance" to "Pause demanding tasks, remove direct sunlight, and unplug charging if hot"
                 )
             )
 
             repository.recordLog(
                 boosterType = BoosterToolType.CPU_COOLER.name,
                 title = "CPU Thermal Cooler",
-                details = "Relieved background processor load, estimated ${String.format(Locale.US, "%.1f", drop)}°C temperature drop",
-                metricFreed = String.format(Locale.US, "-%.1f°C", drop)
+                details = "Observed battery-sensor temperature change: ${String.format(Locale.US, "%.1f", drop)}°C. No CPU frequency or thermal controls were changed.",
+                metricFreed = String.format(Locale.US, "%.1f°C observed sensor change", drop)
             )
 
             refreshHardwareTelemetry()
