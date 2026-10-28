@@ -58,6 +58,11 @@ jobs:
             echo "::error::Release tag must look like v2.0.0."
             exit 1
           fi
+          APP_VERSION="$(sed -nE 's/.*versionName = "([^"]+)".*/\1/p' app/build.gradle.kts | head -n 1)"
+          if [[ -z "$APP_VERSION" || "$RELEASE_TAG" != "v$APP_VERSION" ]]; then
+            echo "::error::Release tag ($RELEASE_TAG) must match app/build.gradle.kts versionName (v$APP_VERSION)."
+            exit 1
+          fi
           mkdir -p "$RUNNER_TEMP/pixel-booster-signing"
           printf '%s' "$KEYSTORE_BASE64" | base64 --decode > "$RUNNER_TEMP/pixel-booster-signing/upload.jks"
           chmod 600 "$RUNNER_TEMP/pixel-booster-signing/upload.jks"
