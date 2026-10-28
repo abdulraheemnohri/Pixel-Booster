@@ -92,9 +92,10 @@ class BoosterService(private val context: Context) {
     suspend fun optimizeNetworkSocketsAndDns(): NetworkOptimizationReport = withContext(Dispatchers.IO) {
         val start = SystemClock.elapsedRealtime()
         val ping = testAndOptimizeNetwork()
-        NetworkOptimizationReport(0, ping.latencyImprovementMs, false,
+        NetworkOptimizationReport(0, ping.latencyImprovementMs.takeIf { it != Long.MIN_VALUE } ?: -1L, false,
             (SystemClock.elapsedRealtime() - start).coerceAtLeast(0L),
-            if (ping.isOnline) "Measured two connection latencies; system sockets and DNS cache were not changed."
+            if (ping.initialLatencyMs > 0L && ping.optimizedLatencyMs > 0L) "Measured both connection attempts; latency difference is observational only. System sockets and DNS cache were not changed."
+            else if (ping.isOnline) "Only one connection attempt succeeded; comparison is unavailable. No network settings were changed."
             else "Connection test failed; no latency result is available. No network settings were changed.")
     }
 
