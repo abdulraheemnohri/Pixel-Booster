@@ -305,10 +305,10 @@ fun NetworkUsageCard(
 
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Text(
-                        text = "${network.latencyMs} ms",
+                        text = if (network.latencyMs >= 0L) "${network.latencyMs} ms" else "Not measured",
                         style = MaterialTheme.typography.titleSmall,
                         fontWeight = FontWeight.Bold,
-                        color = if (network.latencyMs < 60L) PositiveMint else CyberCyan
+                        color = if (network.latencyMs >= 0L && network.latencyMs < 60L) PositiveMint else CyberCyan
                     )
                     Spacer(modifier = Modifier.width(8.dp))
                     Surface(
