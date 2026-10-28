@@ -102,13 +102,8 @@ class StartupAppsProvider(
                 pkg
             }
 
-            val apkFile = java.io.File(appInfo.sourceDir)
-            val apkSizeBytes = if (apkFile.exists()) apkFile.length() else 25L * 1024L * 1024L
-            val impact = when {
-                apkSizeBytes > 80L * 1024L * 1024L -> BootImpactLevel.HIGH
-                apkSizeBytes > 35L * 1024L * 1024L -> BootImpactLevel.MEDIUM
-                else -> BootImpactLevel.LOW
-            }
+            // APK size is not a measurement of startup impact or runtime RAM.
+            val impact = evaluateBootImpact(pkg, isSystem)
             val delayMs = calculateDelayMs(impact)
             val ramFootprint = (30L * 1024L * 1024L + (apkSizeBytes / 5L)).coerceIn(24L * 1024L * 1024L, 250L * 1024L * 1024L)
             val isEnabled = !restrictedSet.contains(pkg)
@@ -162,22 +157,6 @@ class StartupAppsProvider(
                 )
             }
         } catch (_: Throwable) {}
-
-        // Ensure a high-impact app entry exists for categorization & tests in minimal sandboxes
-        if (discoveredPackages.values.none { it.bootImpact == BootImpactLevel.HIGH }) {
-            val highImpactPkg = "com.google.android.apps.photos"
-            discoveredPackages[highImpactPkg] = StartupAppInfo(
-                packageName = highImpactPkg,
-                appLabel = "Photos & Media Indexer",
-                isSystemApp = true,
-                isEssential = false,
-                isEnabledAtBoot = !restrictedSet.contains(highImpactPkg),
-                bootImpact = BootImpactLevel.HIGH,
-                estimatedBootDelayMs = 620,
-                estimatedRamBytes = 95L * 1024L * 1024L,
-                bootTriggerReason = "Background Media Indexer Service"
-            )
-        }
 
         discoveredPackages.values.sortedWith(
             compareBy<StartupAppInfo> { it.isEssential }
@@ -260,11 +239,6 @@ class StartupAppsProvider(
         }
     }
 
-    private fun calculateRamFootprint(impact: BootImpactLevel): Long {
-        return when (impact) {
-            BootImpactLevel.HIGH -> 98L * 1024L * 1024L
-            BootImpactLevel.MEDIUM -> 55L * 1024L * 1024L
-            BootImpactLevel.LOW -> 28L * 1024L * 1024L
-        }
-    }
+    // Android does not expose reliable per-app RAM usage here. Zero means unavailable, not zero actual use.
+    private fun calculateRamFootprint(impact: BootImpactLevel): Long = 0L
 }
