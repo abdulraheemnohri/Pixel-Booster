@@ -203,7 +203,7 @@ private fun RamBoosterContent(
 
         Button(
             onClick = onBoost,
-            colors = ButtonDefaults.buttonColors(containerColor = PrimaryBlue, contentColor = MaterialTheme.colorScheme.onPrimary),
+            colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary, contentColor = MaterialTheme.colorScheme.onPrimary),
             shape = RoundedCornerShape(14.dp),
             modifier = Modifier.fillMaxWidth().height(48.dp).testTag("btn_boost_ram_confirm")
         ) {
@@ -276,7 +276,7 @@ private fun JunkCleanerContent(
 private fun JunkItemTile(title: String, size: String, description: String) {
     Surface(
         shape = RoundedCornerShape(12.dp),
-        color = HighElevationDark,
+        color = MaterialTheme.colorScheme.surfaceContainer,
         modifier = Modifier.fillMaxWidth()
     ) {
         Row(
@@ -285,8 +285,8 @@ private fun JunkItemTile(title: String, size: String, description: String) {
             verticalAlignment = Alignment.CenterVertically
         ) {
             Column(modifier = Modifier.weight(1f)) {
-                Text(text = title, style = MaterialTheme.typography.titleSmall, fontWeight = FontWeight.Bold, color = TextPrimaryDark)
-                Text(text = description, style = MaterialTheme.typography.bodySmall, color = TextSecondaryDark)
+                Text(text = title, style = MaterialTheme.typography.titleSmall, fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.onSurface)
+                Text(text = description, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
             }
             Text(text = size, style = MaterialTheme.typography.titleSmall, fontWeight = FontWeight.Bold, color = PositiveMint)
         }
@@ -320,14 +320,14 @@ private fun CpuCoolerContent(
 
         Card(
             modifier = Modifier.fillMaxWidth().border(1.dp, OutlineDark, RoundedCornerShape(16.dp)),
-            colors = CardDefaults.cardColors(containerColor = HighElevationDark)
+            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainer)
         ) {
             Column(modifier = Modifier.padding(16.dp)) {
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
-                    Text(text = "Sensor Telemetry", style = MaterialTheme.typography.labelSmall, color = TextSecondaryDark)
+                    Text(text = "Sensor Telemetry", style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
                     Text(
                         text = "Status: ${thermalStatus?.statusName ?: "Unavailable"}",
                         style = MaterialTheme.typography.labelSmall,
@@ -340,7 +340,7 @@ private fun CpuCoolerContent(
                     text = "Battery Temp: ${batteryInfo?.formattedTemperature ?: "Unavailable"}",
                     style = MaterialTheme.typography.titleLarge,
                     fontWeight = FontWeight.Bold,
-                    color = TextPrimaryDark
+                    color = MaterialTheme.colorScheme.onSurface
                 )
                 Spacer(modifier = Modifier.height(4.dp))
                 Text(
@@ -355,7 +355,7 @@ private fun CpuCoolerContent(
 
         Button(
             onClick = onCool,
-            colors = ButtonDefaults.buttonColors(containerColor = PrimaryBlue, contentColor = Color(0xFF0A1020)),
+            colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary, contentColor = MaterialTheme.colorScheme.onPrimary),
             shape = RoundedCornerShape(14.dp),
             modifier = Modifier.fillMaxWidth().height(48.dp).testTag("btn_cool_cpu_confirm")
         ) {
@@ -393,14 +393,14 @@ private fun BatterySaverContent(
             val isSelected = activeProfile == profile
             Surface(
                 shape = RoundedCornerShape(14.dp),
-                color = if (isSelected) PrimaryBlue.copy(alpha = 0.15f) else HighElevationDark,
+                color = if (isSelected) MaterialTheme.colorScheme.primary.copy(alpha = 0.15f) else MaterialTheme.colorScheme.surfaceContainer,
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(vertical = 4.dp)
                     .clickable { onSelectProfile(profile) }
                     .border(
                         1.dp,
-                        if (isSelected) PrimaryBlue else OutlineDark,
+                        if (isSelected) MaterialTheme.colorScheme.primary else OutlineDark,
                         RoundedCornerShape(14.dp)
                     )
             ) {
@@ -412,8 +412,8 @@ private fun BatterySaverContent(
                         selected = isSelected,
                         onClick = { onSelectProfile(profile) },
                         colors = RadioButtonDefaults.colors(
-                            selectedColor = PrimaryBlue,
-                            unselectedColor = TextSecondaryDark
+                            selectedColor = MaterialTheme.colorScheme.primary,
+                            unselectedColor = MaterialTheme.colorScheme.onSurfaceVariant
                         )
                     )
                     Spacer(modifier = Modifier.width(8.dp))
@@ -422,12 +422,12 @@ private fun BatterySaverContent(
                             text = profile.label,
                             style = MaterialTheme.typography.titleSmall,
                             fontWeight = FontWeight.Bold,
-                            color = if (isSelected) PrimaryBlue else TextPrimaryDark
+                            color = if (isSelected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurface
                         )
                         Text(
                             text = profile.description,
                             style = MaterialTheme.typography.bodySmall,
-                            color = TextSecondaryDark
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
                     }
                 }
@@ -442,17 +442,17 @@ private fun NetworkTurboContent(
 ) {
     Column {
         Row(verticalAlignment = Alignment.CenterVertically) {
-            Icon(Icons.Filled.NetworkCheck, contentDescription = null, tint = PrimaryBlue, modifier = Modifier.size(28.dp))
+            Icon(Icons.Filled.NetworkCheck, contentDescription = null, tint = MaterialTheme.colorScheme.primary, modifier = Modifier.size(28.dp))
             Spacer(modifier = Modifier.width(10.dp))
             Text(
-                text = "Network Turbo Accelerator",
+                text = "Network Diagnostics",
                 style = MaterialTheme.typography.titleLarge,
                 fontWeight = FontWeight.Bold
             )
         }
         Spacer(modifier = Modifier.height(8.dp))
         Text(
-            text = "Pings Google DNS servers, refreshes socket buffers, flushes DNS cache buffers, and minimizes packet round-trip delay.",
+            text = "Runs a basic connectivity/latency check. Android does not expose general controls for flushing system DNS or prioritizing network packets to ordinary apps.",
             style = MaterialTheme.typography.bodyMedium,
             color = MaterialTheme.colorScheme.onSurfaceVariant
         )
@@ -461,11 +461,11 @@ private fun NetworkTurboContent(
 
         Button(
             onClick = onBoost,
-            colors = ButtonDefaults.buttonColors(containerColor = PrimaryBlue, contentColor = Color(0xFF0A1020)),
+            colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary, contentColor = MaterialTheme.colorScheme.onPrimary),
             shape = RoundedCornerShape(14.dp),
             modifier = Modifier.fillMaxWidth().height(48.dp).testTag("btn_accelerate_network_confirm")
         ) {
-            Text(text = "Accelerate & Flush Latency", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
+            Text(text = "Run Connectivity Check", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
         }
     }
 }
@@ -487,7 +487,7 @@ private fun GameTurboContent(
         }
         Spacer(modifier = Modifier.height(8.dp))
         Text(
-            text = "Locks hardware focus on the active foreground 3D game, prioritizes GPU rendering pipelines, and prevents frame drops.",
+            text = "A shortcut and preference panel for gaming. Android does not let an ordinary app lock GPU scheduling or guarantee fewer frame drops.",
             style = MaterialTheme.typography.bodyMedium,
             color = MaterialTheme.colorScheme.onSurfaceVariant
         )
@@ -496,7 +496,7 @@ private fun GameTurboContent(
 
         Card(
             modifier = Modifier.fillMaxWidth().border(1.dp, OutlineDark, RoundedCornerShape(16.dp)),
-            colors = CardDefaults.cardColors(containerColor = HighElevationDark)
+            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainer)
         ) {
             Row(
                 modifier = Modifier.fillMaxWidth().padding(16.dp),
@@ -505,15 +505,15 @@ private fun GameTurboContent(
             ) {
                 Column(modifier = Modifier.weight(1f)) {
                     Text(
-                        text = if (isActive) "Game Turbo ACTIVE" else "Game Turbo Inactive",
+                        text = if (isActive) "Gaming preference enabled" else "Gaming preference disabled",
                         style = MaterialTheme.typography.titleMedium,
                         fontWeight = FontWeight.Bold,
-                        color = if (isActive) PositiveMint else TextPrimaryDark
+                        color = if (isActive) PositiveMint else MaterialTheme.colorScheme.onSurface
                     )
                     Text(
-                        text = if (isActive) "Memory headroom locked for active games" else "Standard Android background scheduling",
+                        text = if (isActive) "Preference saved in this app; system scheduling is unchanged" else "Android retains control of background scheduling",
                         style = MaterialTheme.typography.bodySmall,
-                        color = TextSecondaryDark
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                 }
 
@@ -523,7 +523,7 @@ private fun GameTurboContent(
                     colors = SwitchDefaults.colors(
                         checkedThumbColor = MaterialTheme.colorScheme.onPrimary,
                         checkedTrackColor = PositiveMint,
-                        uncheckedThumbColor = TextSecondaryDark,
+                        uncheckedThumbColor = MaterialTheme.colorScheme.onSurfaceVariant,
                         uncheckedTrackColor = MaterialTheme.colorScheme.surface
                     ),
                     modifier = Modifier.testTag("switch_game_turbo")
