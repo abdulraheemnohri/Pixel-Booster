@@ -46,10 +46,7 @@ import com.example.feature.usage.UsageScreen
 import com.example.feature.usage.UsageViewModel
 import com.example.ui.navigation.PixelBoosterBottomBar
 import com.example.ui.navigation.Screen
-import com.example.ui.theme.HighElevationDark
 import com.example.ui.theme.PixelBoosterTheme
-import com.example.ui.theme.PrimaryBlue
-import com.example.ui.theme.TextSecondaryDark
 
 @Composable
 fun PixelBoosterApp(
@@ -103,11 +100,11 @@ fun PixelBoosterApp(
                             },
                             label = { Text(screen.title) },
                             colors = NavigationRailItemDefaults.colors(
-                                selectedIconColor = PrimaryBlue,
-                                selectedTextColor = PrimaryBlue,
-                                unselectedIconColor = TextSecondaryDark,
-                                unselectedTextColor = TextSecondaryDark,
-                                indicatorColor = HighElevationDark
+                                selectedIconColor = MaterialTheme.colorScheme.primary,
+                                selectedTextColor = MaterialTheme.colorScheme.primary,
+                                unselectedIconColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                                unselectedTextColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                                indicatorColor = MaterialTheme.colorScheme.secondaryContainer
                             ),
                             modifier = Modifier.testTag(screen.testTag)
                         )
