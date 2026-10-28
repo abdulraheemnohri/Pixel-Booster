@@ -86,8 +86,7 @@ class BoosterService(private val context: Context) {
         val first = measureLatency(host, 53)
         delay(200)
         val second = measureLatency(host, 53)
-        NetworkPingResult("Google DNS ($host)", first.coerceAtLeast(0L),
-            second.coerceAtLeast(0L), first > 0L || second > 0L)
+        NetworkPingResult("Google DNS ($host)", first, second, first > 0L || second > 0L)
     }
 
     suspend fun optimizeNetworkSocketsAndDns(): NetworkOptimizationReport = withContext(Dispatchers.IO) {
