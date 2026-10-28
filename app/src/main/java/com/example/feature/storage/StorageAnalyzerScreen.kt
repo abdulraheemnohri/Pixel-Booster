@@ -73,13 +73,8 @@ import com.example.core.model.StorageVolumeInfo
 import com.example.core.model.StorageVolumeType
 import com.example.ui.theme.CriticalRed
 import com.example.ui.theme.CyberCyan
-import com.example.ui.theme.HighElevationDark
 import com.example.ui.theme.ModernDesignTokens
-import com.example.ui.theme.OutlineDark
 import com.example.ui.theme.PositiveMint
-import com.example.ui.theme.PrimaryBlue
-import com.example.ui.theme.TextPrimaryDark
-import com.example.ui.theme.TextSecondaryDark
 import com.example.ui.theme.WarningAmber
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -154,7 +149,7 @@ fun StorageAnalyzerScreen(
                     Text(
                         text = "Analyzing real device storage volumes & cache...",
                         style = MaterialTheme.typography.bodyMedium,
-                        color = TextSecondaryDark
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                 }
             }
@@ -225,7 +220,7 @@ fun StorageAnalyzerScreen(
                                     Text(
                                         text = uiState.cleaningSuccessMessage!!,
                                         style = MaterialTheme.typography.bodySmall,
-                                        color = TextPrimaryDark
+                                        color = MaterialTheme.colorScheme.onSurface
                                     )
                                 }
                             }
@@ -267,7 +262,7 @@ fun StorageAnalyzerScreen(
                         Card(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .border(1.dp, OutlineDark, RoundedCornerShape(18.dp)),
+                                .border(1.dp, MaterialTheme.colorScheme.outline, RoundedCornerShape(18.dp)),
                             shape = RoundedCornerShape(18.dp),
                             colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainer)
                         ) {
@@ -370,7 +365,7 @@ fun StorageVolumeSwitcherBar(
                                     StorageVolumeType.APP_SANDBOX -> Icons.Filled.FolderOpen
                                 },
                                 contentDescription = null,
-                                tint = if (isSelected) CyberCyan else TextSecondaryDark,
+                                tint = if (isSelected) CyberCyan else MaterialTheme.colorScheme.onSurfaceVariant,
                                 modifier = Modifier.size(18.dp)
                             )
                             Spacer(modifier = Modifier.height(4.dp))
@@ -462,7 +457,7 @@ fun ActiveStorageVolumeCard(
                         Text(
                             text = volume.path,
                             style = MaterialTheme.typography.bodySmall,
-                            color = TextSecondaryDark,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
                             fontSize = 11.sp
                         )
                     }
@@ -540,7 +535,7 @@ fun ActiveStorageVolumeCard(
                     .height(8.dp)
                     .clip(RoundedCornerShape(4.dp)),
                 color = usageColor,
-                trackColor = HighElevationDark,
+                trackColor = MaterialTheme.colorScheme.surfaceContainerHigh,
                 strokeCap = StrokeCap.Round
             )
 
@@ -553,13 +548,13 @@ fun ActiveStorageVolumeCard(
                 Text(
                     text = "Filesystem: ${volume.fileSystem}",
                     style = MaterialTheme.typography.bodySmall,
-                    color = TextSecondaryDark,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
                     fontSize = 11.sp
                 )
                 Text(
                     text = if (volume.isRemovable) "Removable Media" else "Internal Flash Block",
                     style = MaterialTheme.typography.bodySmall,
-                    color = TextSecondaryDark,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
                     fontSize = 11.sp
                 )
             }
@@ -733,8 +728,8 @@ fun StorageMiniPill(
     Surface(
         modifier = modifier,
         shape = RoundedCornerShape(12.dp),
-        color = HighElevationDark,
-        border = androidx.compose.foundation.BorderStroke(1.dp, OutlineDark)
+        color = MaterialTheme.colorScheme.surfaceContainerHigh,
+        border = androidx.compose.foundation.BorderStroke(1.dp, MaterialTheme.colorScheme.outline)
     ) {
         Column(
             modifier = Modifier.padding(horizontal = 8.dp, vertical = 6.dp),
@@ -787,7 +782,7 @@ fun JunkItemRowCard(
                 colors = CheckboxDefaults.colors(
                     checkedColor = CyberCyan,
                     checkmarkColor = Color(0xFF031024),
-                    uncheckedColor = OutlineDark
+                    uncheckedColor = MaterialTheme.colorScheme.outline
                 )
             )
 
@@ -804,7 +799,7 @@ fun JunkItemRowCard(
                 Text(
                     text = item.filePath,
                     style = MaterialTheme.typography.bodySmall,
-                    color = TextSecondaryDark,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
                     fontSize = 10.sp,
                     maxLines = 1
                 )
@@ -814,7 +809,7 @@ fun JunkItemRowCard(
 
             Surface(
                 shape = RoundedCornerShape(10.dp),
-                color = HighElevationDark
+                color = MaterialTheme.colorScheme.surfaceContainerHigh
             ) {
                 Text(
                     text = item.formattedSize,
