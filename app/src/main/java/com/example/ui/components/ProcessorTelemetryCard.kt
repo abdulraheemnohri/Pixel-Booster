@@ -158,6 +158,13 @@ fun ProcessorTelemetryCard(
                 accentColor = cpuColor,
                 icon = Icons.Filled.Memory
             )
+            
+            // Real-time CPU Trend Graph
+            LiveTrendGraph(
+                currentValue = processor.overallCpuUsage,
+                lineColor = cpuColor,
+                modifier = Modifier.padding(top = 8.dp)
+            )
 
             // Multi-Core Bar Distribution
             Spacer(modifier = Modifier.height(8.dp))

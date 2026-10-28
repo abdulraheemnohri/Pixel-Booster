@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/widget_root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/widget_bg"
+    android:orientation="vertical"
+    android:padding="12dp">
+
+    <TextView
+        android:id="@+id/widget_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="💻 PROCESSOR LOAD"
+        android:textColor="#9CC7FF"
+        android:textSize="11sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/widget_cpu_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="CPU: 45% | GPU: 20%"
+        android:textColor="#F1F5F9"
+        android:textSize="13sp"
+        android:textStyle="bold"
+        android:layout_marginTop="8dp" />
+
+    <ProgressBar
+        android:id="@+id/widget_cpu_progress"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="match_parent"
+        android:layout_height="6dp"
+        android:layout_marginTop="6dp"
+        android:max="100"
+        android:progress="45"
+        android:progressDrawable="@drawable/widget_progress_bar" />
+</LinearLayout>

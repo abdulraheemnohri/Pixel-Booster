@@ -50,6 +50,66 @@
                 android:name="android.appwidget.provider"
                 android:resource="@xml/pixel_booster_widget_info" />
         </receiver>
+
+        <!-- Compact Cyber AppWidget Provider -->
+        <receiver
+            android:name=".widget.CompactPixelBoosterWidgetProvider"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/pixel_booster_compact_widget_info" />
+        </receiver>
+
+        <!-- Storage Cyber AppWidget Provider -->
+        <receiver
+            android:name=".widget.StoragePixelBoosterWidgetProvider"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/pixel_booster_storage_widget_info" />
+        </receiver>
+
+        <!-- Compact Cyber AppWidget Provider -->
+        <receiver
+            android:name=".widget.CompactPixelBoosterWidgetProvider"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/pixel_booster_compact_widget_info" />
+        </receiver>
+
+        <!-- Processor Cyber AppWidget Provider -->
+        <receiver
+            android:name=".widget.ProcessorPixelBoosterWidgetProvider"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/pixel_booster_processor_widget_info" />
+        </receiver>
+
+        <!-- Health Cyber AppWidget Provider -->
+        <receiver
+            android:name=".widget.HealthPixelBoosterWidgetProvider"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/pixel_booster_health_widget_info" />
+        </receiver>
     </application>
 
 </manifest>
