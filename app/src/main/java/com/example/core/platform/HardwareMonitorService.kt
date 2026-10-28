@@ -117,7 +117,7 @@ class HardwareMonitorService(
             sessionTotalRxBytes = 0L,
             sessionTotalTxBytes = 0L,
             connectionType = determineConnectionType(),
-            latencyMs = 0L,
+            latencyMs = -1L, // Initial state: no latency probe has run.
             isConnected = connectivityManager?.activeNetwork != null
         )
         val memory = boosterService.getLiveRamMetrics()
