@@ -119,10 +119,12 @@ class StartupManagerTest {
     }
 
     @Test
-    fun `test Screen Startup exists in navigation items`() {
+    fun `test secondary Startup screen remains available outside primary navigation`() {
         assertNotNull(Screen.Startup)
         assertEquals("startup", Screen.Startup.route)
         assertEquals("Startup", Screen.Startup.title)
-        assertTrue(Screen.items.contains(Screen.Startup))
+        assertFalse(Screen.items.contains(Screen.Startup))
+        assertTrue(Screen.items.contains(Screen.More))
+        assertEquals(6, Screen.items.size)
     }
 }
