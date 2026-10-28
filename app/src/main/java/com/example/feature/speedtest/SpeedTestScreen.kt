@@ -62,13 +62,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.ui.theme.CyberCyan
-import com.example.ui.theme.HighElevationDark
 import com.example.ui.theme.ModernDesignTokens
-import com.example.ui.theme.OutlineDark
 import com.example.ui.theme.PositiveMint
-import com.example.ui.theme.PrimaryBlue
-import com.example.ui.theme.TextPrimaryDark
-import com.example.ui.theme.TextSecondaryDark
 import com.example.ui.theme.WarningAmber
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -169,7 +164,7 @@ fun SpeedTestScreen(
                                 Text(
                                     text = "Accelerates TCP socket headroom and flushes stale DNS resolver cache",
                                     style = MaterialTheme.typography.bodySmall,
-                                    color = TextSecondaryDark
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant
                                 )
                             }
                             Button(
@@ -230,11 +225,11 @@ fun SpeedTestScreen(
                                 ) {
                                     Column {
                                         Text(target.label, style = MaterialTheme.typography.bodyMedium, fontWeight = FontWeight.Bold)
-                                        Text(target.host, style = MaterialTheme.typography.bodySmall, color = TextSecondaryDark)
+                                        Text(target.host, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
                                     }
                                     Surface(
                                         shape = RoundedCornerShape(9999.dp),
-                                        color = HighElevationDark,
+                                        color = MaterialTheme.colorScheme.surfaceContainerHigh,
                                         border = androidx.compose.foundation.BorderStroke(1.dp, Color(0x3038BDF8))
                                     ) {
                                         Text(
@@ -279,18 +274,18 @@ fun SpeedTestScreen(
                                 ) {
                                     Column {
                                         Text(iface.displayName, style = MaterialTheme.typography.bodyMedium, fontWeight = FontWeight.Bold)
-                                        Text("IP: ${iface.ipAddress} • MTU: ${iface.mtu}", style = MaterialTheme.typography.bodySmall, color = TextSecondaryDark)
+                                        Text("IP: ${iface.ipAddress} • MTU: ${iface.mtu}", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
                                     }
                                     Surface(
                                         shape = RoundedCornerShape(9999.dp),
-                                        color = if (iface.isUp) PositiveMint.copy(alpha = 0.15f) else HighElevationDark,
+                                        color = if (iface.isUp) PositiveMint.copy(alpha = 0.15f) else MaterialTheme.colorScheme.surfaceContainerHigh,
                                         border = androidx.compose.foundation.BorderStroke(1.dp, if (iface.isUp) PositiveMint else Color(0x3038BDF8))
                                     ) {
                                         Text(
                                             text = if (iface.isUp) "ACTIVE" else "DOWN",
                                             style = MaterialTheme.typography.labelSmall,
                                             fontWeight = FontWeight.Bold,
-                                            color = if (iface.isUp) PositiveMint else TextSecondaryDark,
+                                            color = if (iface.isUp) PositiveMint else MaterialTheme.colorScheme.onSurfaceVariant,
                                             modifier = Modifier.padding(horizontal = 8.dp, vertical = 2.dp)
                                         )
                                     }
@@ -406,7 +401,7 @@ fun SpeedGaugeHeroCard(
 
                 Surface(
                     shape = RoundedCornerShape(ModernDesignTokens.RadiusFull),
-                    color = HighElevationDark,
+                    color = MaterialTheme.colorScheme.surfaceContainerHigh,
                     border = androidx.compose.foundation.BorderStroke(1.dp, Color(0x3038BDF8))
                 ) {
                     Text(
@@ -433,7 +428,7 @@ fun SpeedGaugeHeroCard(
                     val arcSize = Size(diameter, diameter)
 
                     drawArc(
-                        color = HighElevationDark,
+                        color = MaterialTheme.colorScheme.surfaceContainerHigh,
                         startAngle = 150f,
                         sweepAngle = 240f,
                         useCenter = false,
@@ -496,7 +491,7 @@ fun SpeedGaugeHeroCard(
                         Text(
                             text = "DOWNLOAD",
                             style = MaterialTheme.typography.labelSmall,
-                            color = TextSecondaryDark,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
                             fontWeight = FontWeight.Bold
                         )
                     }
@@ -532,7 +527,7 @@ fun SpeedGaugeHeroCard(
                         Text(
                             text = "UPLOAD",
                             style = MaterialTheme.typography.labelSmall,
-                            color = TextSecondaryDark,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
                             fontWeight = FontWeight.Bold
                         )
                     }
@@ -568,7 +563,7 @@ fun SpeedGaugeHeroCard(
                         Text(
                             text = "${(animatedProgress * 100).toInt()}%",
                             style = MaterialTheme.typography.bodySmall,
-                            color = TextSecondaryDark
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
                     }
                     Spacer(modifier = Modifier.height(8.dp))
@@ -579,7 +574,7 @@ fun SpeedGaugeHeroCard(
                             .height(8.dp)
                             .clip(RoundedCornerShape(4.dp)),
                         color = CyberCyan,
-                        trackColor = HighElevationDark
+                        trackColor = MaterialTheme.colorScheme.surfaceContainerHigh
                     )
                 }
             } else {
@@ -653,7 +648,7 @@ fun SpeedHistoryCard(item: SpeedTestResultItem) {
                 Text(
                     text = "Ping: ${item.pingMs}ms",
                     style = MaterialTheme.typography.bodySmall,
-                    color = TextSecondaryDark
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
             }
 
