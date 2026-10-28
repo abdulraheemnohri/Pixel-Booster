@@ -3,7 +3,6 @@ package com.example.widget
 import android.app.PendingIntent
 import android.appwidget.AppWidgetManager
 import android.appwidget.AppWidgetProvider
-import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.widget.RemoteViews
@@ -79,8 +78,7 @@ class PixelBoosterWidgetProvider : AppWidgetProvider() {
                 )
                 views.setOnClickPendingIntent(R.id.widget_root, openAppPendingIntent)
 
-                // 1-Tap Optimize Broadcast Trigger
-                // Open the guided Smart Boost flow; Android does not allow apps to guarantee
+                // Smart Boost action opens the app; Android does not allow apps to guarantee
                 // system-wide RAM cleanup from a home-screen button.
                 views.setOnClickPendingIntent(R.id.widget_btn_optimize, openAppPendingIntent)
                 views.setTextViewText(R.id.widget_btn_optimize, "OPEN SMART BOOST")
