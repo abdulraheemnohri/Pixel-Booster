@@ -66,13 +66,9 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.core.database.DiagnosticSampleEntity
 import com.example.ui.theme.CriticalRed
 import com.example.ui.theme.CyberCyan
-import com.example.ui.theme.HighElevationDark
 import com.example.ui.theme.ModernDesignTokens
 import com.example.ui.theme.OutlineDark
 import com.example.ui.theme.PositiveMint
-import com.example.ui.theme.PrimaryBlue
-import com.example.ui.theme.TextPrimaryDark
-import com.example.ui.theme.TextSecondaryDark
 import com.example.ui.theme.WarningAmber
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -139,7 +135,7 @@ fun HistoryScreen(
 
                 ScrollableTabRow(
                     selectedTabIndex = selectedIndex,
-                    containerColor = HighElevationDark,
+                    containerColor = MaterialTheme.colorScheme.surfaceContainer,
                     edgePadding = 8.dp,
                     indicator = { tabPositions ->
                         SecondaryIndicator(
@@ -161,7 +157,7 @@ fun HistoryScreen(
                                     text = "${metric.label} (${metric.unit})",
                                     style = MaterialTheme.typography.labelMedium,
                                     fontWeight = if (selectedIndex == index) FontWeight.Bold else FontWeight.Medium,
-                                    color = if (selectedIndex == index) CyberCyan else TextSecondaryDark
+                                    color = if (selectedIndex == index) CyberCyan else MaterialTheme.colorScheme.onSurfaceVariant
                                 )
                             },
                             modifier = Modifier.testTag("tab_metric_${metric.name.lowercase()}")
@@ -184,8 +180,8 @@ fun HistoryScreen(
                                 colors = FilterChipDefaults.filterChipColors(
                                     selectedContainerColor = CyberCyan,
                                     selectedLabelColor = Color(0xFF031628),
-                                    containerColor = HighElevationDark,
-                                    labelColor = TextPrimaryDark
+                                    containerColor = MaterialTheme.colorScheme.surfaceContainer,
+                                    labelColor = MaterialTheme.colorScheme.onSurface
                                 ),
                                 border = FilterChipDefaults.filterChipBorder(
                                     enabled = true,
@@ -232,7 +228,7 @@ fun HistoryScreen(
                     StatMetricSummaryCard(
                         label = "MAXIMUM",
                         value = "${String.format(Locale.US, "%.1f", uiState.maxVal)}${uiState.selectedMetric.unit}",
-                        color = if (uiState.maxVal > 85f) WarningAmber else TextPrimaryDark,
+                        color = if (uiState.maxVal > 85f) WarningAmber else MaterialTheme.colorScheme.onSurface,
                         modifier = Modifier.weight(1f)
                     )
                 }
@@ -419,7 +415,7 @@ fun HistoryLineChartCard(
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(180.dp)
-                        .background(HighElevationDark.copy(alpha = 0.5f), RoundedCornerShape(14.dp)),
+                        .background(MaterialTheme.colorScheme.surfaceContainer.copy(alpha = 0.5f), RoundedCornerShape(14.dp)),
                     contentAlignment = Alignment.Center
                 ) {
                     Text(
@@ -597,7 +593,7 @@ fun HistorySampleItemCard(sample: DiagnosticSampleEntity) {
                 )
                 Surface(
                     shape = RoundedCornerShape(ModernDesignTokens.RadiusFull),
-                    color = HighElevationDark,
+                    color = MaterialTheme.colorScheme.surfaceContainer,
                     border = androidx.compose.foundation.BorderStroke(1.dp, Color(0x2538BDF8))
                 ) {
                     Text(
@@ -619,17 +615,17 @@ fun HistorySampleItemCard(sample: DiagnosticSampleEntity) {
                 Text(
                     text = "RAM: ${String.format(Locale.US, "%.0f", sample.usedRamPercentage)}%",
                     style = MaterialTheme.typography.bodySmall,
-                    color = TextSecondaryDark
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
                 Text(
                     text = "Battery: ${sample.batteryPercentage}% (${sample.batteryTemperatureCelsius?.let { "${String.format(Locale.US, "%.1f", it)}°C" } ?: "N/A"})",
                     style = MaterialTheme.typography.bodySmall,
-                    color = TextSecondaryDark
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
                 Text(
                     text = "State: ${sample.chargingState}",
                     style = MaterialTheme.typography.bodySmall,
-                    color = TextSecondaryDark
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
             }
         }
