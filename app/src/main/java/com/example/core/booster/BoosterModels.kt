@@ -52,15 +52,15 @@ enum class BoosterStage {
 enum class PowerProfile(val label: String, val description: String) {
     BALANCED(
         label = "Balanced Smart",
-        description = "Default adaptive tuning for all-day reliability and smooth responsiveness."
+        description = "A neutral guidance profile; Android’s system adaptive policies remain in control."
     ),
     PERFORMANCE(
         label = "Performance Turbo",
-        description = "Unlocks maximum CPU frequency and zero-throttle display refresh rate."
+        description = "Shows performance-oriented guidance only; this app cannot unlock CPU frequencies or override thermal throttling."
     ),
     EXTREME_SAVER(
         label = "Ultra Power Saver",
-        description = "Limits background sync and launches system Battery Saver for emergency endurance."
+        description = "Offers battery-saving guidance and can open Android Battery Saver settings; background sync limits are controlled by Android and individual apps."
     )
 }
 
@@ -108,9 +108,9 @@ data class NetworkPingResult(
 }
 
 enum class MemoryPressureLevel(val label: String, val description: String) {
-    NOMINAL("Optimal Headroom", "Substantial RAM headroom available for foreground apps"),
-    MODERATE("Moderate Buffer Load", "Active background buffers and cached processes in memory"),
-    CRITICAL("High Pressure", "System memory paging under load; cache purge and RAM trim recommended")
+    NOMINAL("Normal Memory Pressure", "Reported system memory pressure is not currently high"),
+    MODERATE("Moderate Memory Pressure", "Reported memory usage is elevated; Android manages cached processes"),
+    CRITICAL("High Memory Pressure", "Android reports low-memory pressure; closing unused apps may help workload management")
 }
 
 data class LiveRamMetrics(
