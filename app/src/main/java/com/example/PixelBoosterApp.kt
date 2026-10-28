@@ -37,6 +37,7 @@ import com.example.feature.health.HealthScreen
 import com.example.feature.health.HealthViewModel
 import com.example.feature.history.HistoryScreen
 import com.example.feature.history.HistoryViewModel
+import com.example.feature.more.MoreToolsScreen
 import com.example.feature.settings.SettingsScreen
 import com.example.feature.settings.SettingsViewModel
 import com.example.feature.startup.StartupScreen
@@ -80,7 +81,7 @@ fun PixelBoosterApp(
                     containerColor = MaterialTheme.colorScheme.surface
                 ) {
                     Screen.items.forEach { screen ->
-                        val isSelected = currentRoute == screen.route
+                        val isSelected = currentRoute == screen.route || (screen == Screen.More && currentRoute in setOf(Screen.Health.route, Screen.Startup.route, Screen.SpeedTest.route, Screen.History.route, Screen.Privacy.route, Screen.Settings.route))
                         NavigationRailItem(
                             selected = isSelected,
                             onClick = {
@@ -241,6 +242,16 @@ fun AppNavHost(
         composable(Screen.Settings.route) {
             val settingsViewModel: SettingsViewModel = viewModel()
             SettingsScreen(viewModel = settingsViewModel)
+        }
+
+        composable(Screen.More.route) {
+            MoreToolsScreen(
+                onNavigate = { screen ->
+                    navController.navigate(screen.route) {
+                        launchSingleTop = true
+                    }
+                }
+            )
         }
 
     }
