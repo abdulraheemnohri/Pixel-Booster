@@ -104,8 +104,10 @@ class BoosterViewModel(application: Application) : AndroidViewModel(application)
             else if (mem.usedPercentage > 65f) score -= 8
         }
 
-        if (storage.freePercentage < 15f) score -= 15
-        else if (storage.freePercentage < 25f) score -= 8
+        if (storage.isAvailable) {
+            if (storage.freePercentage < 15f) score -= 15
+            else if (storage.freePercentage < 25f) score -= 8
+        }
 
         if (thermal.statusCode >= 2) score -= 15
         if (battery.levelPercentage <= 20) score -= 10
