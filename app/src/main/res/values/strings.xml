@@ -1,5 +1,5 @@
 <resources>
     <string name="app_name">Pixel Booster</string>
     <string name="widget_name">Pixel Booster Widget</string>
-    <string name="widget_description">Live RAM, battery, thermal telemetry and 1-tap system optimizer</string>
+    <string name="widget_description">Device status, battery and storage overview with guided settings</string>
 </resources>
