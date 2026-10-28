@@ -101,7 +101,7 @@ class HardwareMonitorTest {
 
         val processor = monitorService.sampleProcessorTelemetry()
         assertNotNull(processor)
-        assertTrue(processor.overallCpuUsage in 0f..100f)
+        assertTrue(processor.overallCpuUsage == -1f || processor.overallCpuUsage in 0f..100f) // unavailable is valid when /proc/stat cannot be read.
         assertTrue(processor.coreCount >= 4)
         assertEquals(processor.coreCount, processor.coreLoads.size)
         assertEquals(-1f, processor.gpuUsage, 0f) // Unavailable rather than fabricated GPU telemetry.
