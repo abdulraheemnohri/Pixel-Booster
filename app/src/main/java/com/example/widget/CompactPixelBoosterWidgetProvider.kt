@@ -38,7 +38,7 @@ class CompactPixelBoosterWidgetProvider : AppWidgetProvider() {
                 views.setTextViewText(R.id.widget_battery_text, "🔋 ${battery.levelPercentage}%")
                 views.setTextViewText(
                     R.id.widget_temp_text,
-                    if (tempCelsius != null) "🌡 ${String.format(Locale.US, "%.1f", tempCelsius)}°C" else "🌡 Temp N/A"
+                    if (tempCelsius != null) "BAT ${String.format(Locale.US, "%.1f", tempCelsius)}°C" else "BAT TEMP N/A"
                 )
 
                 val openAppIntent = Intent(context, MainActivity::class.java).apply {
