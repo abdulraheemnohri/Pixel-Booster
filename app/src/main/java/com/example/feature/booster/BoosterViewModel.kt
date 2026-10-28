@@ -213,7 +213,7 @@ class BoosterViewModel(application: Application) : AndroidViewModel(application)
                     "Observed RAM change" to "$freedRamMb MB decrease (not guaranteed reclaimed RAM)",
                     "Junk Purged" to "$freedJunkMb MB cache cleared",
                     "Battery sensor" to (tempDrop?.let { String.format(Locale.US, "%.1f°C observed change (positive means cooler)", it) } ?: "Unavailable; no valid sensor reading"),
-                    "Connection test" to if (networkResult.isOnline) "${networkResult.initialLatencyMs} ms then ${networkResult.optimizedLatencyMs} ms (measured; not optimized)" else "Unavailable; connection test failed"
+                    "Connection test" to if (networkResult.isOnline) "${networkResult.initialLatencyMs.takeIf { it > 0L }?.let { "$it ms" } ?: "First attempt unavailable"}; ${networkResult.optimizedLatencyMs.takeIf { it > 0L }?.let { "$it ms" } ?: "Second attempt unavailable"} (measured; not optimized)" else "Unavailable; connection test failed"
                 )
             )
 
@@ -415,20 +415,20 @@ class BoosterViewModel(application: Application) : AndroidViewModel(application)
             val summary = BoostResultSummary(
                 toolType = BoosterToolType.NETWORK_TURBO,
                 title = if (res.isOnline) "Network Test Complete" else "Network Test Unavailable",
-                headlineMetric = if (res.isOnline) "${res.optimizedLatencyMs} ms measured latency" else "No latency result available",
+                headlineMetric = res.optimizedLatencyMs.takeIf { it > 0L }?.let { "$it ms measured latency" } ?: "No latency result available",
                 details = listOf(
                     "Target" to res.host,
-                    "First measurement" to if (res.isOnline) "${res.initialLatencyMs} ms" else "Unavailable",
-                    "Second measurement" to if (res.isOnline) "${res.optimizedLatencyMs} ms" else "Unavailable",
-                    "Difference" to if (res.isOnline) "${res.latencyImprovementMs} ms (observed, not optimized)" else "Unavailable"
+                    "First measurement" to res.initialLatencyMs.takeIf { it > 0L }?.let { "$it ms" } ?: "Unavailable",
+                    "Second measurement" to res.optimizedLatencyMs.takeIf { it > 0L }?.let { "$it ms" } ?: "Unavailable",
+                    "Difference" to res.latencyImprovementMs.takeIf { it >= 0L }?.let { "$it ms (observed, not optimized)" } ?: "Unavailable unless both attempts succeed"
                 )
             )
 
             repository.recordLog(
                 boosterType = BoosterToolType.NETWORK_TURBO.name,
                 title = "Network Turbo Accelerator",
-                details = if (res.isOnline) "Measured two connection latencies: ${res.initialLatencyMs}ms then ${res.optimizedLatencyMs}ms (${res.host}); no network settings were changed." else "Connection test failed for ${res.host}; no latency result is available and no network settings were changed.",
-                metricFreed = if (res.isOnline) "${res.latencyImprovementMs} ms observed difference" else "Unavailable"
+                details = "Connection test to ${res.host}: first ${res.initialLatencyMs.takeIf { it > 0L }?.let { "$it ms" } ?: "unavailable"}, second ${res.optimizedLatencyMs.takeIf { it > 0L }?.let { "$it ms" } ?: "unavailable"}. No network settings were changed.",
+                metricFreed = res.latencyImprovementMs.takeIf { it >= 0L }?.let { "$it ms observed difference" } ?: "Unavailable"
             )
 
             _uiState.update {
