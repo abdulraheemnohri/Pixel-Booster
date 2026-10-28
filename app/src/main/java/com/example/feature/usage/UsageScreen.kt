@@ -71,7 +71,6 @@ import com.example.core.model.UsagePeriod
 import com.example.ui.theme.CyberCyan
 import com.example.ui.theme.ElectricIndigo
 import com.example.ui.theme.ModernDesignTokens
-import com.example.ui.theme.OutlineDark
 import com.example.ui.theme.PositiveMint
 import com.example.ui.theme.SpaceGrotesk
 import com.example.ui.theme.modernCard
