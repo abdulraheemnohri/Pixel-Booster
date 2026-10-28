@@ -43,7 +43,6 @@ import androidx.compose.ui.unit.sp
 import com.example.core.model.NetworkTelemetryData
 import com.example.ui.theme.CyberCyan
 import com.example.ui.theme.ModernDesignTokens
-import com.example.ui.theme.OutlineDark
 import com.example.ui.theme.PositiveMint
 
 @Composable
