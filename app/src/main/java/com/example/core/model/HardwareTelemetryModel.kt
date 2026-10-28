@@ -18,22 +18,22 @@ data class ThermalTelemetryData(
     val powerManagerStatusName: String = "Nominal"
 ) {
     val formattedCurrentTemp: String
-        get() = String.format(Locale.US, "%.1f°C", currentTempCelsius)
+        get() = if (currentTempCelsius > 0f) String.format(Locale.US, "%.1f°C", currentTempCelsius) else "Unavailable"
 
     val formattedPeakTemp: String
-        get() = String.format(Locale.US, "%.1f°C", peakTempCelsius)
+        get() = if (peakTempCelsius > 0f) String.format(Locale.US, "%.1f°C", peakTempCelsius) else "Unavailable"
 
     val tempInFahrenheit: Float
-        get() = (currentTempCelsius * 9f / 5f) + 32f
+        get() = if (currentTempCelsius > 0f) (currentTempCelsius * 9f / 5f) + 32f else 0f
 
     val formattedTempFahrenheit: String
-        get() = String.format(Locale.US, "%.1f°F", tempInFahrenheit)
+        get() = if (currentTempCelsius > 0f) String.format(Locale.US, "%.1f°F", tempInFahrenheit) else "Unavailable"
 
     val formattedSocTemp: String
-        get() = String.format(Locale.US, "%.1f°C", socTempCelsius)
+        get() = if (socTempCelsius > 0f) String.format(Locale.US, "%.1f°C", socTempCelsius) else "Unavailable"
 
     val formattedBatteryTemp: String
-        get() = String.format(Locale.US, "%.1f°C", batteryTempCelsius)
+        get() = if (batteryTempCelsius > 0f) String.format(Locale.US, "%.1f°C", batteryTempCelsius) else "Unavailable"
 }
 
 data class BatteryHealthData(
