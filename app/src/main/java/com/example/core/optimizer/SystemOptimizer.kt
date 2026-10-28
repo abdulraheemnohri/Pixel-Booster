@@ -1,6 +1,5 @@
 package com.example.core.optimizer
 
-import android.app.ActivityManager
 import android.content.Context
 import android.os.SystemClock
 import com.example.core.database.AppDatabase
@@ -28,7 +27,7 @@ data class SystemOptimizationResult(
     val timestamp: Long = System.currentTimeMillis()
 ) {
     val totalBytesFreed: Long
-        get() = ramBytesReclaimed + cacheBytesFreed
+        get() = cacheBytesFreed
 
     val formattedRamReclaimed: String
         get() = MemoryInfoData.formatBytes(ramBytesReclaimed)
@@ -40,23 +39,15 @@ data class SystemOptimizationResult(
         get() = MemoryInfoData.formatBytes(totalBytesFreed)
 
     val responsivenessGrade: String
-        get() = "OPTIMAL"
+        get() = if (cacheBytesFreed > 0L) "CACHE_CLEARED" else "NO_CACHE_TO_CLEAR"
 }
 
 object SystemOptimizer {
 
-    /**
-     * Executes a complete system optimization:
-     * 1. Purges internal, external, and code cache files from disk.
-     * 2. Reclaims inactive memory buffers, executes JVM GC/finalization,
-     *    and kills accessible background process remnants.
-     * 3. Calculates reclaimed storage and memory headroom.
-     * 4. Persists the optimization event to the Room database and EventLogger.
-     */
+    /** Clears this app's cache and records observed metrics without claiming system-wide RAM gains. */
     suspend fun optimizeSystem(context: Context): SystemOptimizationResult = withContext(Dispatchers.IO) {
         val startTime = SystemClock.elapsedRealtime()
         val diagnosticsProvider = DeviceDiagnosticsProvider(context)
-        val activityManager = context.getSystemService(Context.ACTIVITY_SERVICE) as? ActivityManager
 
         // 1. Measure Initial State
         val initialMem = diagnosticsProvider.getMemoryInfo()
@@ -70,25 +61,7 @@ object SystemOptimizer {
         deleteDirContents(context.cacheDir)
         context.externalCacheDir?.let { deleteDirContents(it) }
 
-        // 3. Release Background Memory & Inactive Processes
-        var processesKilled = 0
-        try {
-            activityManager?.let { am ->
-                val runningAppProcesses = am.runningAppProcesses
-                runningAppProcesses?.forEach { proc ->
-                    if (proc.pkgList != null) {
-                        for (pkg in proc.pkgList) {
-                            if (pkg != context.packageName) {
-                                am.killBackgroundProcesses(pkg)
-                                processesKilled++
-                            }
-                        }
-                    }
-                }
-            }
-        } catch (_: Throwable) {
-            // Ignored on restricted devices
-        }
+        // Keep Smart Boost scoped to this app. Android does not allow ordinary apps to reliably manage other apps' processes.
 
         // 4. Force Garbage Collection and Buffer Trim
         try {
@@ -123,7 +96,7 @@ object SystemOptimizer {
             internalCacheFreed = internalFreed,
             externalCacheFreed = externalFreed,
             codeCacheFreed = codeFreed,
-            backgroundProcessesTrimmed = processesKilled,
+            backgroundProcessesTrimmed = 0,
             durationMs = duration
         )
 
@@ -142,7 +115,7 @@ object SystemOptimizer {
                     timestamp = result.timestamp,
                     boosterType = "SYSTEM_OPTIMIZER",
                     title = "Smart Boost",
-                    details = "Removed ${result.formattedCacheFreed} from this app cache. Observed system used-RAM decrease: ${result.formattedRamReclaimed}; process termination requests attempted: ${result.backgroundProcessesTrimmed}. These are measurements, not guaranteed system-wide gains.",
+                    details = "Removed ${result.formattedCacheFreed} from this app cache. Observed system used-RAM decrease: ${result.formattedRamReclaimed}; No other-app processes were terminated. These are measurements, not guaranteed system-wide gains.",
                     metricFreed = "${result.formattedCacheFreed} app cache removed",
                     success = true
                 )
