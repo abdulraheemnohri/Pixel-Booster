@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.widthIn
 import androidx.compose.ui.Alignment
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.material3.Icon
@@ -119,7 +118,7 @@ fun PixelBoosterApp(
                 ) {
                     AppNavHost(
                         navController = navController,
-                        modifier = Modifier.fillMaxSize().widthIn(max = 1100.dp)
+                        modifier = Modifier.widthIn(max = 1100.dp).fillMaxWidth().fillMaxHeight()
                     )
                 }
             }
