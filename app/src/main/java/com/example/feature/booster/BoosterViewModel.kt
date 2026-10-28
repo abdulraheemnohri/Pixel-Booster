@@ -99,7 +99,7 @@ class BoosterViewModel(application: Application) : AndroidViewModel(application)
 
         // Compute dynamic optimization health score (0 to 100)
         var score = 100
-        if (mem.totalRamBytes > 0L) {
+        if (mem.isAvailable) {
             if (mem.usedPercentage > 80f) score -= 15
             else if (mem.usedPercentage > 65f) score -= 8
         }
