@@ -175,51 +175,59 @@ fun ProcessorTelemetryCard(
                 )
             }
 
-            // Multi-Core Bar Distribution
-            Spacer(modifier = Modifier.height(8.dp))
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(4.dp)
-            ) {
-                processor.coreLoads.take(8).forEachIndexed { index, load ->
-                    Column(
-                        modifier = Modifier.weight(1f),
-                        horizontalAlignment = Alignment.CenterHorizontally
-                    ) {
-                        val animatedLoad by animateFloatAsState(
-                            targetValue = (load / 100f).coerceIn(0f, 1f),
-                            animationSpec = tween(400),
-                            label = "core_anim_$index"
-                        )
-                        Box(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .height(24.dp)
-                                .clip(RoundedCornerShape(4.dp))
-                                .background(HighElevationDark),
-                            contentAlignment = Alignment.BottomCenter
+            // Per-core values are unavailable unless individually measured.
+            if (processor.coreLoads.isNotEmpty() && processor.coreLoads.all { it >= 0f }) {
+    
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.spacedBy(4.dp)
+                ) {
+                    processor.coreLoads.take(8).forEachIndexed { index, load ->
+                        Column(
+                            modifier = Modifier.weight(1f),
+                            horizontalAlignment = Alignment.CenterHorizontally
                         ) {
+                            val animatedLoad by animateFloatAsState(
+                                targetValue = (load / 100f).coerceIn(0f, 1f),
+                                animationSpec = tween(400),
+                                label = "core_anim_$index"
+                            )
                             Box(
                                 modifier = Modifier
                                     .fillMaxWidth()
-                                    .height(24.dp * animatedLoad)
+                                    .height(24.dp)
                                     .clip(RoundedCornerShape(4.dp))
-                                    .background(
-                                        Brush.verticalGradient(
-                                            listOf(cpuColor, cpuColor.copy(alpha = 0.7f))
+                                    .background(HighElevationDark),
+                                contentAlignment = Alignment.BottomCenter
+                            ) {
+                                Box(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .height(24.dp * animatedLoad)
+                                        .clip(RoundedCornerShape(4.dp))
+                                        .background(
+                                            Brush.verticalGradient(
+                                                listOf(cpuColor, cpuColor.copy(alpha = 0.7f))
+                                            )
                                         )
-                                    )
+                                )
+                            }
+                            Spacer(modifier = Modifier.height(2.dp))
+                            Text(
+                                text = "C$index",
+                                style = MaterialTheme.typography.labelSmall,
+                                fontSize = 9.sp,
+                                color = TextSecondaryDark
                             )
                         }
-                        Spacer(modifier = Modifier.height(2.dp))
-                        Text(
-                            text = "C$index",
-                            style = MaterialTheme.typography.labelSmall,
-                            fontSize = 9.sp,
-                            color = TextSecondaryDark
-                        )
                     }
                 }
+            } else {
+                Text(
+                    text = "Per-core utilization unavailable; only aggregate CPU sampling is attempted.",
+                    style = MaterialTheme.typography.bodySmall,
+                    color = TextSecondaryDark
+                )
             }
 
             Spacer(modifier = Modifier.height(18.dp))
