@@ -212,7 +212,7 @@ class BoosterViewModel(application: Application) : AndroidViewModel(application)
                 details = listOf(
                     "Observed RAM change" to "$freedRamMb MB decrease (not guaranteed reclaimed RAM)",
                     "Junk Purged" to "$freedJunkMb MB cache cleared",
-                    "Battery temperature change" to String.format(Locale.US, "%.1f°C decrease (positive means cooler)", tempDrop),
+                    "Battery sensor" to (tempDrop?.let { String.format(Locale.US, "%.1f°C observed change (positive means cooler)", it) } ?: "Unavailable; no valid sensor reading"),
                     "Connection test" to if (networkResult.isOnline) "${networkResult.initialLatencyMs} ms then ${networkResult.optimizedLatencyMs} ms (measured; not optimized)" else "Unavailable; connection test failed"
                 )
             )
@@ -221,7 +221,7 @@ class BoosterViewModel(application: Application) : AndroidViewModel(application)
             repository.recordLog(
                 boosterType = "QUICK_BOOST",
                 title = "One-Tap Quick Boost",
-                details = "Observed RAM-used decrease: $freedRamMb MB (not guaranteed reclaimed). Removed $freedJunkMb MB from this app cache. Battery sensor temperature change: ${String.format(Locale.US, "%.1f", tempDrop)}°C; no active CPU cooling was performed.",
+                details = "Observed RAM-used decrease: $freedRamMb MB (not guaranteed reclaimed). Removed $freedJunkMb MB from this app cache. Battery sensor: ${tempDrop?.let { String.format(Locale.US, "%.1f°C observed change", it) } ?: "unavailable"}; no active CPU cooling was performed.",
                 metricFreed = "$freedRamMb MB observed RAM delta"
             )
 
@@ -355,7 +355,7 @@ class BoosterViewModel(application: Application) : AndroidViewModel(application)
             val summary = BoostResultSummary(
                 toolType = BoosterToolType.CPU_COOLER,
                 title = "Temperature Observation Complete",
-                headlineMetric = String.format(Locale.US, "%.1f°C observed battery-temperature decrease", drop),
+                headlineMetric = drop?.let { String.format(Locale.US, "%.1f°C observed battery-temperature decrease", it) } ?: "Battery temperature unavailable",
                 details = listOf(
                     "Thermal State" to (_uiState.value.thermalStatus?.statusName ?: "Unavailable"),
                     "Processor throttling" to "Not changed by this app",
@@ -366,8 +366,8 @@ class BoosterViewModel(application: Application) : AndroidViewModel(application)
             repository.recordLog(
                 boosterType = BoosterToolType.CPU_COOLER.name,
                 title = "CPU Thermal Cooler",
-                details = "Observed battery-sensor temperature change: ${String.format(Locale.US, "%.1f", drop)}°C. No CPU frequency or thermal controls were changed.",
-                metricFreed = String.format(Locale.US, "%.1f°C observed sensor change", drop)
+                details = "Observed battery-sensor temperature: ${drop?.let { String.format(Locale.US, "%.1f°C change", it) } ?: "unavailable"}. No CPU frequency or thermal controls were changed.",
+                metricFreed = drop?.let { String.format(Locale.US, "%.1f°C observed sensor change", it) } ?: "Unavailable"
             )
 
             refreshHardwareTelemetry()
