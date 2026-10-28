@@ -5,6 +5,8 @@
 - The expanded-screen navigation rail now reads selected, unselected, and indicator colors from the active Material 3 color scheme instead of fixed dark-theme colors.
 - This fixes contrast and visual consistency when users select the light theme or enable Android dynamic colors.
 - The existing breakpoint keeps bottom navigation on compact screens and a navigation rail on screens at least 600 dp wide.
+- Compact navigation now presents five evenly sized destinations without horizontal scrolling; secondary destinations, including Diagnostics, are available from More.
+- Expanded content respects safe drawing insets and is constrained to a readable maximum width instead of stretching across wide displays.
 
 ## Design direction
 
@@ -41,7 +43,8 @@ Pixel Booster uses a restrained futuristic style: deep surfaces, cool cyan/blue 
 - [ ] Pixel 6 portrait: bottom navigation, no clipped dashboard cards.
 - [ ] Compact device landscape: scrollable content and usable navigation.
 - [ ] Tablet / emulator width >= 600 dp: navigation rail and constrained content.
-- [ ] Switch among Home, Smart Boost, and More destinations; selection remains correct.
+- [ ] Switch among Home, Smart Boost, Storage, Usage, and More; selection remains correct.
+- [ ] Open Diagnostics from More and confirm More stays selected on secondary destinations.
 - [ ] Verify edge-to-edge layout and system-bar insets.
 
 ### Theme and accessibility
