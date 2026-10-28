@@ -39,6 +39,7 @@ fun MoreToolsScreen(onNavigate: (Screen) -> Unit, modifier: Modifier = Modifier)
         ToolLink("Network speed test", "Run an optional network test", Screen.SpeedTest, Icons.Filled.Speed),
         ToolLink("History", "Review locally saved activity and results", Screen.History, Icons.Filled.BarChart),
         ToolLink("Privacy & permissions", "Review permissions and privacy information", Screen.Privacy, Icons.Filled.Lock),
+        ToolLink("Diagnostics", "Run individual device checks and review honest results", Screen.Diagnostics, Icons.Filled.Build),
         ToolLink("Settings", "Theme, monitoring and app preferences", Screen.Settings, Icons.Filled.Settings)
     )
 
