@@ -62,13 +62,9 @@ import com.example.core.model.HealthFinding
 import com.example.core.model.SuggestedActionType
 import com.example.ui.theme.CriticalRed
 import com.example.ui.theme.CyberCyan
-import com.example.ui.theme.HighElevationDark
 import com.example.ui.theme.ModernDesignTokens
 import com.example.ui.theme.OutlineDark
 import com.example.ui.theme.PositiveMint
-import com.example.ui.theme.PrimaryBlue
-import com.example.ui.theme.TextPrimaryDark
-import com.example.ui.theme.TextSecondaryDark
 import com.example.ui.theme.WarningAmber
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -349,7 +345,7 @@ fun HealthScoreCard(
                 Canvas(modifier = Modifier.size(76.dp)) {
                     val stroke = 6.dp.toPx()
                     drawArc(
-                        color = HighElevationDark,
+                        color = MaterialTheme.colorScheme.surfaceContainer,
                         startAngle = 135f,
                         sweepAngle = 270f,
                         useCenter = false,
@@ -405,8 +401,8 @@ fun HealthFilterChip(
         colors = FilterChipDefaults.filterChipColors(
             selectedContainerColor = CyberCyan,
             selectedLabelColor = Color(0xFF031628),
-            containerColor = HighElevationDark,
-            labelColor = TextPrimaryDark
+            containerColor = MaterialTheme.colorScheme.surfaceContainer,
+            labelColor = MaterialTheme.colorScheme.onSurface
         ),
         border = FilterChipDefaults.filterChipBorder(
             enabled = true,
@@ -498,7 +494,7 @@ fun FindingDetailCard(
             // Evidence Box
             Surface(
                 shape = RoundedCornerShape(10.dp),
-                color = HighElevationDark,
+                color = MaterialTheme.colorScheme.surfaceContainer,
                 border = androidx.compose.foundation.BorderStroke(1.dp, Color(0x1538BDF8)),
                 modifier = Modifier.fillMaxWidth()
             ) {
@@ -514,7 +510,7 @@ fun FindingDetailCard(
                     Text(
                         text = finding.evidence,
                         style = MaterialTheme.typography.labelSmall,
-                        color = TextPrimaryDark,
+                        color = MaterialTheme.colorScheme.onSurface,
                         fontWeight = FontWeight.Medium
                     )
                 }
@@ -527,7 +523,7 @@ fun FindingDetailCard(
                     onClick = onAction,
                     shape = RoundedCornerShape(12.dp),
                     colors = ButtonDefaults.buttonColors(
-                        containerColor = if (finding.severity == FindingSeverity.CRITICAL) CriticalRed.copy(alpha = 0.2f) else HighElevationDark,
+                        containerColor = if (finding.severity == FindingSeverity.CRITICAL) CriticalRed.copy(alpha = 0.2f) else MaterialTheme.colorScheme.surfaceContainer,
                         contentColor = if (finding.severity == FindingSeverity.CRITICAL) CriticalRed else CyberCyan
                     ),
                     border = androidx.compose.foundation.BorderStroke(
@@ -607,7 +603,7 @@ fun DiagnosticScopeCard() {
             .fillMaxWidth()
             .border(1.dp, OutlineDark, RoundedCornerShape(18.dp)),
         shape = RoundedCornerShape(18.dp),
-        colors = CardDefaults.cardColors(containerColor = HighElevationDark.copy(alpha = 0.45f))
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainer.copy(alpha = 0.45f))
     ) {
         Column(modifier = Modifier.padding(18.dp)) {
             Text(
