@@ -375,14 +375,14 @@ fun StartupScreen(
                                 horizontalArrangement = Arrangement.SpaceBetween
                             ) {
                                 Text("Estimated boot delay (not measured):", style = MaterialTheme.typography.bodySmall, color = TextSecondaryDark)
-                                Text("-${result.formattedTimeSaved}", fontWeight = FontWeight.Bold, color = PositiveMint)
+                                Text(result.formattedTimeSaved, fontWeight = FontWeight.Bold, color = PositiveMint)
                             }
                             Spacer(modifier = Modifier.height(6.dp))
                             Row(
                                 modifier = Modifier.fillMaxWidth(),
                                 horizontalArrangement = Arrangement.SpaceBetween
                             ) {
-                                Text("Measured RAM reclaimed:", style = MaterialTheme.typography.bodySmall, color = TextSecondaryDark)
+                                Text("RAM reclaim measurement:", style = MaterialTheme.typography.bodySmall, color = TextSecondaryDark)
                                 Text(result.formattedRamReclaimed, fontWeight = FontWeight.Bold, color = CyberCyan)
                             }
                         }
