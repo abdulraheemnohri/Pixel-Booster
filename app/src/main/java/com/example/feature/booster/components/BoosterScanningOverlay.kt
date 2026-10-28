@@ -134,22 +134,22 @@ fun BoosterScanningOverlay(
                     verticalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
                     StageItemRow(
-                        title = "RAM Heap & Buffer Reclaim",
+                        title = "Measure system memory usage",
                         isDone = progress >= 0.45f,
                         isActive = stage == BoosterStage.OPTIMIZING_RAM
                     )
                     StageItemRow(
-                        title = "Residual Junk & Cache Purge",
+                        title = "Clear this app’s cache",
                         isDone = progress >= 0.70f,
                         isActive = stage == BoosterStage.CLEANING_CACHE
                     )
                     StageItemRow(
-                        title = "SoC Thermal Cooldown & Clock Throttle",
+                        title = "Read available thermal sensors",
                         isDone = progress >= 0.90f,
                         isActive = stage == BoosterStage.COOLING_HARDWARE
                     )
                     StageItemRow(
-                        title = "Socket Buffer & Network Latency Tuning",
+                        title = "Measure connection latency",
                         isDone = progress >= 1.0f,
                         isActive = stage == BoosterStage.ACCELERATING_NETWORK
                     )
