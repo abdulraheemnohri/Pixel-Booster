@@ -45,14 +45,7 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.ui.theme.CyberCyan
-import com.example.ui.theme.HighElevationDark
 import com.example.ui.theme.ModernDesignTokens
-import com.example.ui.theme.OutlineDark
-import com.example.ui.theme.PositiveMint
-import com.example.ui.theme.PrimaryBlue
-import com.example.ui.theme.TextPrimaryDark
-import com.example.ui.theme.TextSecondaryDark
 
 @Composable
 fun PixelBoosterBottomBar(
@@ -90,12 +83,12 @@ fun PixelBoosterBottomBar(
             Screen.items.forEach { screen ->
                 val isSelected = currentRoute == screen.route || (screen == Screen.More && currentRoute in setOf(Screen.Health.route, Screen.Startup.route, Screen.SpeedTest.route, Screen.History.route, Screen.Privacy.route, Screen.Settings.route))
                 val animatedIconColor by animateColorAsState(
-                    targetValue = if (isSelected) CyberCyan else TextSecondaryDark,
+                    targetValue = if (isSelected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurfaceVariant,
                     animationSpec = tween(220),
                     label = "icon_color"
                 )
                 val animatedBgColor by animateColorAsState(
-                    targetValue = if (isSelected) Color(0x280284C7) else Color.Transparent,
+                    targetValue = if (isSelected) MaterialTheme.colorScheme.secondaryContainer.copy(alpha = 0.72f) else Color.Transparent,
                     animationSpec = tween(220),
                     label = "pill_color"
                 )
@@ -114,7 +107,7 @@ fun PixelBoosterBottomBar(
                                 Modifier.border(
                                     width = 1.dp,
                                     brush = Brush.horizontalGradient(
-                                        listOf(CyberCyan.copy(alpha = 0.6f), PrimaryBlue.copy(alpha = 0.3f))
+                                        listOf(MaterialTheme.colorScheme.primary.copy(alpha = 0.65f), MaterialTheme.colorScheme.secondary.copy(alpha = 0.35f))
                                     ),
                                     shape = RoundedCornerShape(18.dp)
                                 )
@@ -122,7 +115,7 @@ fun PixelBoosterBottomBar(
                         )
                         .clickable(
                             interactionSource = remember { MutableInteractionSource() },
-                            indication = ripple(bounded = true, color = CyberCyan)
+                            indication = ripple(bounded = true, color = MaterialTheme.colorScheme.primary)
                         ) {
                             if (!isSelected) {
                                 haptic.performHapticFeedback(HapticFeedbackType.TextHandleMove)
@@ -158,7 +151,7 @@ fun PixelBoosterBottomBar(
                                 .height(2.dp)
                                 .width(indicatorWidth)
                                 .clip(RoundedCornerShape(1.dp))
-                                .background(if (isSelected) CyberCyan else Color.Transparent)
+                                .background(if (isSelected) MaterialTheme.colorScheme.primary else Color.Transparent)
                         )
                     }
                 }
