@@ -30,15 +30,16 @@ data class MemoryInfoData(
     val thresholdBytes: Long,
     val isLowMemory: Boolean
 ) {
-    val usedRamBytes: Long get() = (totalRamBytes - availableRamBytes).coerceAtLeast(0L)
+    val isAvailable: Boolean get() = totalRamBytes > 0L && availableRamBytes >= 0L
+    val usedRamBytes: Long get() = if (isAvailable) (totalRamBytes - availableRamBytes).coerceAtLeast(0L) else 0L
     val usedPercentage: Float
-        get() = if (totalRamBytes > 0) ((usedRamBytes.toFloat() / totalRamBytes.toFloat()) * 100f).coerceIn(0f, 100f) else 0f
+        get() = if (isAvailable) ((usedRamBytes.toFloat() / totalRamBytes.toFloat()) * 100f).coerceIn(0f, 100f) else 0f
     val availablePercentage: Float
-        get() = (100f - usedPercentage).coerceIn(0f, 100f)
+        get() = if (isAvailable) (100f - usedPercentage).coerceIn(0f, 100f) else 0f
 
     val formattedTotal: String get() = if (totalRamBytes > 0L) formatBytes(totalRamBytes) else "Unavailable"
-    val formattedAvailable: String get() = if (totalRamBytes > 0L && availableRamBytes >= 0L) formatBytes(availableRamBytes) else "Unavailable"
-    val formattedUsed: String get() = if (totalRamBytes > 0L) formatBytes(usedRamBytes) else "Unavailable"
+    val formattedAvailable: String get() = if (isAvailable) formatBytes(availableRamBytes) else "Unavailable"
+    val formattedUsed: String get() = if (isAvailable) formatBytes(usedRamBytes) else "Unavailable"
 
     companion object {
         fun formatBytes(bytes: Long): String {
