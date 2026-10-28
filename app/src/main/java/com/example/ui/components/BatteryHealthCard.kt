@@ -350,7 +350,7 @@ fun BatteryHealthCard(
                         )
                         BatteryBreakdownItem(
                             title = "CELL TEMPERATURE",
-                            value = String.format(java.util.Locale.US, "%.1f°C", battery.temperatureCelsius),
+                            value = if (battery.temperatureCelsius > 0f) String.format(java.util.Locale.US, "%.1f°C", battery.temperatureCelsius) else "Unavailable",
                             subtitle = if (battery.temperatureCelsius > 0f) "${(battery.temperatureCelsius * 9f / 5f + 32f).toInt()}°F Thermal" else "Sensor not exposed",
                             modifier = Modifier.weight(1f)
                         )
@@ -436,7 +436,7 @@ fun BatteryHealthCard(
                     Spacer(modifier = Modifier.height(6.dp))
                     Text(
                         text = if (battery.levelPercentage >= 85 && battery.isCharging)
-                            "⚠️ Charge reached 85% cutoff threshold! Unplug to preserve battery longevity."
+                            "Battery is at or above 85% while charging. Unplugging is optional; use your preferred charging routine."
                         else
                             "Monitoring thermal and voltage safety. Protects against overcharge and overheating.",
                         style = MaterialTheme.typography.bodySmall,
