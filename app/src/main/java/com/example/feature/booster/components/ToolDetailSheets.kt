@@ -53,12 +53,8 @@ import com.example.core.model.BatteryInfoData
 import com.example.core.model.MemoryInfoData
 import com.example.core.model.StorageInfoData
 import com.example.core.model.ThermalStatusData
-import com.example.ui.theme.HighElevationDark
 import com.example.ui.theme.OutlineDark
 import com.example.ui.theme.PositiveMint
-import com.example.ui.theme.PrimaryBlue
-import com.example.ui.theme.TextPrimaryDark
-import com.example.ui.theme.TextSecondaryDark
 import com.example.ui.theme.WarningAmber
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -150,7 +146,7 @@ private fun RamBoosterContent(
 ) {
     Column {
         Row(verticalAlignment = Alignment.CenterVertically) {
-            Icon(Icons.Filled.Memory, contentDescription = null, tint = PrimaryBlue, modifier = Modifier.size(28.dp))
+            Icon(Icons.Filled.Memory, contentDescription = null, tint = MaterialTheme.colorScheme.primary, modifier = Modifier.size(28.dp))
             Spacer(modifier = Modifier.width(10.dp))
             Text(
                 text = "RAM Memory Booster",
@@ -170,19 +166,19 @@ private fun RamBoosterContent(
         if (memoryInfo != null) {
             Card(
                 modifier = Modifier.fillMaxWidth().border(1.dp, OutlineDark, RoundedCornerShape(16.dp)),
-                colors = CardDefaults.cardColors(containerColor = HighElevationDark)
+                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainer)
             ) {
                 Column(modifier = Modifier.padding(16.dp)) {
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.SpaceBetween
                     ) {
-                        Text(text = "Memory Load", style = MaterialTheme.typography.labelSmall, color = TextSecondaryDark)
+                        Text(text = "Memory Load", style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
                         Text(
                             text = "${memoryInfo.formattedUsed} / ${memoryInfo.formattedTotal}",
                             style = MaterialTheme.typography.labelSmall,
                             fontWeight = FontWeight.Bold,
-                            color = TextPrimaryDark
+                            color = MaterialTheme.colorScheme.onSurface
                         )
                     }
                     Spacer(modifier = Modifier.height(8.dp))
@@ -207,7 +203,7 @@ private fun RamBoosterContent(
 
         Button(
             onClick = onBoost,
-            colors = ButtonDefaults.buttonColors(containerColor = PrimaryBlue, contentColor = Color(0xFF0A1020)),
+            colors = ButtonDefaults.buttonColors(containerColor = PrimaryBlue, contentColor = MaterialTheme.colorScheme.onPrimary),
             shape = RoundedCornerShape(14.dp),
             modifier = Modifier.fillMaxWidth().height(48.dp).testTag("btn_boost_ram_confirm")
         ) {
@@ -226,7 +222,7 @@ private fun JunkCleanerContent(
             Icon(Icons.Filled.CleaningServices, contentDescription = null, tint = PositiveMint, modifier = Modifier.size(28.dp))
             Spacer(modifier = Modifier.width(10.dp))
             Text(
-                text = "Deep Junk & Cache Cleaner",
+                text = "App Cache Cleaner",
                 style = MaterialTheme.typography.titleLarge,
                 fontWeight = FontWeight.Bold
             )
@@ -267,7 +263,7 @@ private fun JunkCleanerContent(
 
         Button(
             onClick = onClean,
-            colors = ButtonDefaults.buttonColors(containerColor = PositiveMint, contentColor = Color(0xFF06140D)),
+            colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.tertiary, contentColor = MaterialTheme.colorScheme.onTertiary),
             shape = RoundedCornerShape(14.dp),
             modifier = Modifier.fillMaxWidth().height(48.dp).testTag("btn_clean_junk_confirm")
         ) {
@@ -525,7 +521,7 @@ private fun GameTurboContent(
                     checked = isActive,
                     onCheckedChange = { onToggle() },
                     colors = SwitchDefaults.colors(
-                        checkedThumbColor = Color(0xFF06140D),
+                        checkedThumbColor = MaterialTheme.colorScheme.onPrimary,
                         checkedTrackColor = PositiveMint,
                         uncheckedThumbColor = TextSecondaryDark,
                         uncheckedTrackColor = MaterialTheme.colorScheme.surface
