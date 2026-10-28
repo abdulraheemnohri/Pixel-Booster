@@ -67,7 +67,6 @@ import com.example.core.database.DiagnosticSampleEntity
 import com.example.ui.theme.CriticalRed
 import com.example.ui.theme.CyberCyan
 import com.example.ui.theme.ModernDesignTokens
-import com.example.ui.theme.OutlineDark
 import com.example.ui.theme.PositiveMint
 import com.example.ui.theme.WarningAmber
 import java.text.SimpleDateFormat
@@ -186,7 +185,7 @@ fun HistoryScreen(
                                 border = FilterChipDefaults.filterChipBorder(
                                     enabled = true,
                                     selected = uiState.selectedWindow == window,
-                                    borderColor = OutlineDark,
+                                    borderColor = MaterialTheme.colorScheme.outline,
                                     selectedBorderColor = CyberCyan
                                 ),
                                 modifier = Modifier.testTag("window_${window.name.lowercase()}")
@@ -262,7 +261,7 @@ fun HistoryScreen(
                     Card(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .border(1.dp, OutlineDark, RoundedCornerShape(18.dp)),
+                            .border(1.dp, MaterialTheme.colorScheme.outline, RoundedCornerShape(18.dp)),
                         shape = RoundedCornerShape(18.dp),
                         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainer)
                     ) {
@@ -473,7 +472,7 @@ fun CanvasLineChart(
         for (i in 0..gridCount) {
             val y = height * (i.toFloat() / gridCount.toFloat())
             drawLine(
-                color = OutlineDark.copy(alpha = 0.6f),
+                color = MaterialTheme.colorScheme.outline.copy(alpha = 0.6f),
                 start = Offset(0f, y),
                 end = Offset(width, y),
                 strokeWidth = 1.dp.toPx()
