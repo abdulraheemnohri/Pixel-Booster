@@ -418,9 +418,9 @@ class BoosterViewModel(application: Application) : AndroidViewModel(application)
                 headlineMetric = res.optimizedLatencyMs.takeIf { it > 0L }?.let { "$it ms measured latency" } ?: "No latency result available",
                 details = listOf(
                     "Target" to res.host,
-                    "First measurement" to res.initialLatencyMs.takeIf { it > 0L }?.let { "$it ms" } ?: "Unavailable",
-                    "Second measurement" to res.optimizedLatencyMs.takeIf { it > 0L }?.let { "$it ms" } ?: "Unavailable",
-                    "Latency difference" to res.latencyImprovementMs.takeIf { it != Long.MIN_VALUE }?.let { "$it ms (positive = second attempt faster; negative = slower)" } ?: "Unavailable unless both attempts succeed"
+                    "First measurement" to (res.initialLatencyMs.takeIf { it > 0L }?.let { "$it ms" } ?: "Unavailable"),
+                    "Second measurement" to (res.optimizedLatencyMs.takeIf { it > 0L }?.let { "$it ms" } ?: "Unavailable"),
+                    "Latency difference" to (res.latencyImprovementMs.takeIf { it != Long.MIN_VALUE }?.let { "$it ms (positive = second attempt faster; negative = slower)" } ?: "Unavailable unless both attempts succeed")
                 )
             )
 
