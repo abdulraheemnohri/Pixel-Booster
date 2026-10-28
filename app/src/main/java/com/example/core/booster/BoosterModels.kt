@@ -105,7 +105,7 @@ data class NetworkPingResult(
     val isOnline: Boolean
 ) {
     val latencyImprovementMs: Long
-        get() = if (initialLatencyMs > 0L && optimizedLatencyMs > 0L) (initialLatencyMs - optimizedLatencyMs).coerceAtLeast(0L) else -1L
+        get() = if (initialLatencyMs > 0L && optimizedLatencyMs > 0L) initialLatencyMs - optimizedLatencyMs else Long.MIN_VALUE
 }
 
 enum class MemoryPressureLevel(val label: String, val description: String) {
