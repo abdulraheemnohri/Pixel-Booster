@@ -32,14 +32,12 @@ class StartupManagerTest {
         assertNotNull(apps)
         assertTrue(apps.isNotEmpty())
 
-        // Verify known apps exist and are appropriately categorized
+        // Discovery reflects packages actually visible to the app; it must not invent entries.
         val nonEssential = apps.filter { !it.isEssential }
         assertTrue(nonEssential.isNotEmpty())
-
-        val highImpactApp = apps.find { it.bootImpact == BootImpactLevel.HIGH }
-        assertNotNull(highImpactApp)
-        assertTrue(highImpactApp!!.estimatedBootDelayMs >= 400)
-        assertTrue(highImpactApp.estimatedRamBytes > 50L * 1024L * 1024L)
+        assertTrue(apps.all { it.estimatedBootDelayMs >= 0 })
+        // Per-app RAM usage is not reliably exposed by Android to ordinary apps.
+        assertTrue(apps.all { it.estimatedRamBytes == 0L })
     }
 
     @Test
@@ -54,7 +52,7 @@ class StartupManagerTest {
         val initialSummary = provider.getStartupSummary()
         assertTrue(initialSummary.totalStartupApps > 0)
         assertTrue(initialSummary.totalBootDelayMs > 0)
-        assertTrue(initialSummary.totalRamFootprintBytes > 0)
+        assertEquals(0L, initialSummary.totalRamFootprintBytes)
 
         // Find a non-essential app to toggle
         val targetApp = provider.getStartupApps().first { !it.isEssential }
@@ -91,7 +89,7 @@ class StartupManagerTest {
         assertNotNull(result)
         assertTrue(result.appsOptimizedCount > 0)
         assertTrue(result.totalDelayReducedMs > 0)
-        assertTrue(result.ramHeadroomReclaimedBytes > 0)
+        assertEquals(0L, result.ramHeadroomReclaimedBytes)
         assertTrue(result.formattedTimeSaved.contains("seconds"))
         assertTrue(result.formattedRamReclaimed.isNotBlank())
 
