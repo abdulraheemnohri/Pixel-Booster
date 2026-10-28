@@ -113,7 +113,7 @@ fun SystemOptimizerCard(
                                 border = androidx.compose.foundation.BorderStroke(1.dp, PositiveMint.copy(alpha = 0.4f))
                             ) {
                                 Text(
-                                    text = "LIVE",
+                                    text = "LOCAL",
                                     style = MaterialTheme.typography.labelSmall,
                                     color = PositiveMint,
                                     fontFamily = SpaceGrotesk,
