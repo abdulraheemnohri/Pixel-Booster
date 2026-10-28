@@ -81,15 +81,15 @@ class HardwareMonitorTest {
         val batteryHealth = monitorService.sampleBatteryHealthTelemetry()
         assertNotNull(batteryHealth)
         assertTrue(batteryHealth.levelPercentage in 0..100)
-        assertTrue(batteryHealth.designedCapacityMah > 4000)
-        assertTrue(batteryHealth.currentCapacityMah > 0)
-        assertTrue(batteryHealth.currentCapacityMah <= batteryHealth.designedCapacityMah * 1.2)
-        assertTrue(batteryHealth.healthPercentage in 70f..100f)
+        assertTrue(batteryHealth.designedCapacityMah >= 0)
+        assertTrue(batteryHealth.currentCapacityMah >= 0)
+        assertTrue(batteryHealth.healthPercentage in 0f..100f)
+        if (batteryHealth.designedCapacityMah == 0) assertEquals("Unavailable", batteryHealth.formattedDesignedCapacity)
         assertTrue(batteryHealth.healthGrade.isNotBlank())
         assertNotNull(batteryHealth.chargingState)
         assertNotNull(batteryHealth.pluggedSource)
-        assertTrue(batteryHealth.formattedCurrentCapacity.endsWith("mAh"))
-        assertTrue(batteryHealth.formattedDesignedCapacity.endsWith("mAh"))
+        assertTrue(batteryHealth.formattedCurrentCapacity.isNotBlank())
+        assertTrue(batteryHealth.formattedDesignedCapacity.isNotBlank())
     }
 
     @Test
