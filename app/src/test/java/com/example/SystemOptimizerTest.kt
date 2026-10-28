@@ -39,7 +39,7 @@ class SystemOptimizerTest {
         val logs = db.optimizationLogDao().getAllLogs().first()
         val optimizerLog = logs.find { it.boosterType == "SYSTEM_OPTIMIZER" }
         assertNotNull(optimizerLog)
-        assertEquals("Deep System Optimization", optimizerLog?.title)
+        assertEquals("Smart Boost", optimizerLog?.title)
     }
 
     @Test
