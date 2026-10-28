@@ -261,7 +261,7 @@ class HealthEngine {
     }
 
     private fun evaluateMemory(memory: MemoryInfoData, out: MutableList<HealthFinding>) {
-        if (memory.totalRamBytes <= 0) return
+        if (!memory.isAvailable) return
 
         if (memory.isLowMemory || memory.availablePercentage < 10f) {
             out.add(
