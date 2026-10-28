@@ -41,11 +41,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.ui.theme.CyberCyan
 import com.example.ui.theme.ElectricIndigo
-import com.example.ui.theme.HighElevationDark
 import com.example.ui.theme.ModernDesignTokens
 import com.example.ui.theme.PositiveMint
 import com.example.ui.theme.SpaceGrotesk
-import com.example.ui.theme.TextPrimaryDark
 import com.example.ui.theme.modernCard
 import com.example.ui.theme.pulsingGlow
 
@@ -82,7 +80,7 @@ fun SystemOptimizerCard(
                     ) {
                         Surface(
                             shape = CircleShape,
-                            color = HighElevationDark,
+                            color = MaterialTheme.colorScheme.surfaceContainerHigh,
                             border = androidx.compose.foundation.BorderStroke(1.5.dp, CyberCyan),
                             modifier = Modifier.size(40.dp)
                         ) {
@@ -143,7 +141,7 @@ fun SystemOptimizerCard(
             ) {
                 Surface(
                     shape = RoundedCornerShape(12.dp),
-                    color = HighElevationDark.copy(alpha = 0.6f),
+                    color = MaterialTheme.colorScheme.surfaceContainerHigh.copy(alpha = 0.6f),
                     border = androidx.compose.foundation.BorderStroke(1.dp, Color(0x1538BDF8)),
                     modifier = Modifier.weight(1f)
                 ) {
@@ -168,7 +166,7 @@ fun SystemOptimizerCard(
 
                 Surface(
                     shape = RoundedCornerShape(12.dp),
-                    color = HighElevationDark.copy(alpha = 0.6f),
+                    color = MaterialTheme.colorScheme.surfaceContainerHigh.copy(alpha = 0.6f),
                     border = androidx.compose.foundation.BorderStroke(1.dp, Color(0x1538BDF8)),
                     modifier = Modifier.weight(1f)
                 ) {
