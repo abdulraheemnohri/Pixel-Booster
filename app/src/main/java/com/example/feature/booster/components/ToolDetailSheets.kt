@@ -251,7 +251,7 @@ private fun JunkCleanerContent(
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
                 Text(
-                    text = storageInfo?.formattedAvailable ?: "Unavailable",
+                    text = storageInfo?.formattedFree ?: "Unavailable",
                     style = MaterialTheme.typography.titleLarge,
                     fontWeight = FontWeight.Bold
                 )
