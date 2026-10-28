@@ -104,10 +104,10 @@ class HardwareMonitorTest {
         assertTrue(processor.overallCpuUsage in 0f..100f)
         assertTrue(processor.coreCount >= 4)
         assertEquals(processor.coreCount, processor.coreLoads.size)
-        assertTrue(processor.gpuUsage in 0f..100f)
+        assertEquals(-1f, processor.gpuUsage, 0f) // Unavailable rather than fabricated GPU telemetry.
         assertTrue(processor.gpuEngineName.isNotBlank())
-        assertTrue(processor.tpuUsage in 0f..100f)
-        assertTrue(processor.tpuTopsRating.contains("TOPS"))
+        assertEquals(-1f, processor.tpuUsage, 0f) // Unavailable rather than fabricated TPU telemetry.
+        assertTrue(processor.tpuTopsRating.contains("not verified"))
         assertTrue(processor.tpuState.isNotBlank())
     }
 
@@ -123,7 +123,7 @@ class HardwareMonitorTest {
         assertTrue(network.downloadSpeedBytesPerSec >= 0L)
         assertTrue(network.uploadSpeedBytesPerSec >= 0L)
         assertTrue(network.connectionType.isNotBlank())
-        assertTrue(network.latencyMs > 0L)
+        assertEquals(-1L, network.latencyMs) // This sampler does not run a latency probe.
 
         // Speed formatting helper test
         assertEquals("0 B/s", NetworkTelemetryData.formatSpeed(0L))
@@ -147,6 +147,6 @@ class HardwareMonitorTest {
         assertNotNull(telemetry.network)
         assertNotNull(telemetry.memory)
         assertNotNull(telemetry.storage)
-        assertTrue(telemetry.systemVitalityScore in 20..100)
+        assertTrue(telemetry.systemVitalityScore in 0..100)
     }
 }
