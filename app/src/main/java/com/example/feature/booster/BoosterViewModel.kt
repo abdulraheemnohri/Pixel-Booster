@@ -220,7 +220,7 @@ class BoosterViewModel(application: Application) : AndroidViewModel(application)
             // Persist to Room
             repository.recordLog(
                 boosterType = "QUICK_BOOST",
-                title = "One-Tap Quick Boost",
+                title = "Quick Device Check",
                 details = "Observed RAM-used decrease: $freedRamMb MB (not guaranteed reclaimed). Removed $freedJunkMb MB from this app cache. Battery sensor: ${tempDrop?.let { String.format(Locale.US, "%.1f°C observed change", it) } ?: "unavailable"}; no active CPU cooling was performed.",
                 metricFreed = "$freedRamMb MB observed RAM delta"
             )
@@ -262,9 +262,9 @@ class BoosterViewModel(application: Application) : AndroidViewModel(application)
             val summary = BoostResultSummary(
                 toolType = BoosterToolType.RAM_BOOSTER,
                 title = "Memory Measurement Complete",
-                headlineMetric = "$freedMb MB observed RAM decrease",
+                headlineMetric = "$freedMb MB observed RAM-used decrease",
                 details = listOf(
-                    "Observed RAM change" to "$freedMb MB decrease; system-wide reclaim is not guaranteed",
+                    "Observed RAM-used change" to "$freedMb MB decrease; system-wide reclaim is not guaranteed",
                     "Background apps" to "Not terminated (Android controls other apps)",
                     "Garbage collector" to "Requested GC for this app only"
                 )
@@ -365,7 +365,7 @@ class BoosterViewModel(application: Application) : AndroidViewModel(application)
 
             repository.recordLog(
                 boosterType = BoosterToolType.CPU_COOLER.name,
-                title = "CPU Thermal Cooler",
+                title = "Thermal Observation",
                 details = "Observed battery-sensor temperature: ${drop?.let { String.format(Locale.US, "%.1f°C change", it) } ?: "unavailable"}. No CPU frequency or thermal controls were changed.",
                 metricFreed = drop?.let { String.format(Locale.US, "%.1f°C observed sensor change", it) } ?: "Unavailable"
             )
@@ -426,7 +426,7 @@ class BoosterViewModel(application: Application) : AndroidViewModel(application)
 
             repository.recordLog(
                 boosterType = BoosterToolType.NETWORK_TURBO.name,
-                title = "Network Turbo Accelerator",
+                title = "Network Diagnostics",
                 details = "Connection test to ${res.host}: first ${res.initialLatencyMs.takeIf { it > 0L }?.let { "$it ms" } ?: "unavailable"}, second ${res.optimizedLatencyMs.takeIf { it > 0L }?.let { "$it ms" } ?: "unavailable"}. No network settings were changed.",
                 metricFreed = res.latencyImprovementMs.takeIf { it != Long.MIN_VALUE }?.let { "$it ms observed latency difference" } ?: "Unavailable"
             )
@@ -452,7 +452,7 @@ class BoosterViewModel(application: Application) : AndroidViewModel(application)
             _uiState.update { it.copy(gameTurboActive = next) }
             repository.recordLog(
                 boosterType = BoosterToolType.GAME_TURBO.name,
-                title = if (next) "Game Turbo Enabled" else "Game Turbo Disabled",
+                title = if (next) "Gaming preference enabled" else "Gaming preference disabled",
                 details = if (next) "Game guidance mode enabled in the app; Android does not grant extra RAM or GPU priority." else "Game guidance mode disabled in the app.",
                 metricFreed = if (next) "GUIDANCE ON" else "OFF"
             )
