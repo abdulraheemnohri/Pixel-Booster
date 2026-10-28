@@ -30,8 +30,8 @@ class HealthPixelBoosterWidgetProvider : AppWidgetProvider() {
         ) {
             try {
                 val views = RemoteViews(context.packageName, R.layout.widget_pixel_booster_health)
-                // Placeholder vitality score logic
-                views.setTextViewText(R.id.widget_vitality_text, "SCORE: 92 PTS")
+                // Do not display a fabricated score. Open the app to run supported diagnostics.
+                views.setTextViewText(R.id.widget_vitality_text, "OPEN APP FOR CHECK")
 
                 val openAppIntent = Intent(context, MainActivity::class.java).apply {
                     flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
