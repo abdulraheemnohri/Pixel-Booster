@@ -196,7 +196,7 @@ class BoosterViewModel(application: Application) : AndroidViewModel(application)
             _uiState.update {
                 it.copy(
                     currentStage = BoosterStage.COMPLETED,
-                    currentStageText = "Optimization Complete!",
+                    currentStageText = "Device checks complete",
                     boostProgress = 1.0f
                 )
             }
@@ -207,11 +207,11 @@ class BoosterViewModel(application: Application) : AndroidViewModel(application)
 
             val summary = BoostResultSummary(
                 toolType = null,
-                title = "Turbo Boost Complete",
-                headlineMetric = "$freedRamMb MB observed RAM decrease",
+                title = "Device Check Complete",
+                headlineMetric = "$freedRamMb MB observed RAM-used decrease",
                 details = listOf(
-                    "Observed RAM change" to "$freedRamMb MB decrease (not guaranteed reclaimed RAM)",
-                    "Junk Purged" to "$freedJunkMb MB cache cleared",
+                    "Observed RAM-used change" to "$freedRamMb MB decrease (system-wide memory may fluctuate; not reclaimed RAM)",
+                    "This app’s cache cleared" to "$freedJunkMb MB measured",
                     "Battery sensor" to (tempDrop?.let { String.format(Locale.US, "%.1f°C observed change (positive means cooler)", it) } ?: "Unavailable; no valid sensor reading"),
                     "Connection test" to if (networkResult.isOnline) "${networkResult.initialLatencyMs.takeIf { it > 0L }?.let { "$it ms" } ?: "First attempt unavailable"}; ${networkResult.optimizedLatencyMs.takeIf { it > 0L }?.let { "$it ms" } ?: "Second attempt unavailable"} (measured; not optimized)" else "Unavailable; connection test failed"
                 )
