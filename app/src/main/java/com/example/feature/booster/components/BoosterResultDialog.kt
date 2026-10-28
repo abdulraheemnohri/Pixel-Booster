@@ -33,12 +33,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.core.booster.BoostResultSummary
-import com.example.ui.theme.HighElevationDark
 import com.example.ui.theme.OutlineDark
 import com.example.ui.theme.PositiveMint
-import com.example.ui.theme.PrimaryBlue
-import com.example.ui.theme.TextPrimaryDark
-import com.example.ui.theme.TextSecondaryDark
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -99,7 +95,7 @@ fun BoosterResultDialog(
                 // Breakdown list
                 Surface(
                     shape = RoundedCornerShape(16.dp),
-                    color = HighElevationDark,
+                    color = MaterialTheme.colorScheme.surfaceContainer,
                     modifier = Modifier.fillMaxWidth()
                 ) {
                     Column(
@@ -115,13 +111,13 @@ fun BoosterResultDialog(
                                 Text(
                                     text = label,
                                     style = MaterialTheme.typography.bodySmall,
-                                    color = TextSecondaryDark
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant
                                 )
                                 Text(
                                     text = value,
                                     style = MaterialTheme.typography.bodySmall,
                                     fontWeight = FontWeight.Bold,
-                                    color = TextPrimaryDark
+                                    color = MaterialTheme.colorScheme.onSurface
                                 )
                             }
                         }
@@ -133,8 +129,8 @@ fun BoosterResultDialog(
                 Button(
                     onClick = onDismiss,
                     colors = ButtonDefaults.buttonColors(
-                        containerColor = PrimaryBlue,
-                        contentColor = Color(0xFF0A1020)
+                        containerColor = MaterialTheme.colorScheme.primary,
+                        contentColor = MaterialTheme.colorScheme.onPrimary
                     ),
                     shape = RoundedCornerShape(14.dp),
                     modifier = Modifier
