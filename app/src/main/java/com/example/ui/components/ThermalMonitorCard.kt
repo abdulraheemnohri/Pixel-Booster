@@ -56,13 +56,8 @@ import com.example.core.model.ThermalSeverityLevel
 import com.example.core.model.ThermalTelemetryData
 import com.example.ui.theme.CriticalRed
 import com.example.ui.theme.CyberCyan
-import com.example.ui.theme.HighElevationDark
 import com.example.ui.theme.ModernDesignTokens
-import com.example.ui.theme.OutlineDark
 import com.example.ui.theme.PositiveMint
-import com.example.ui.theme.PrimaryBlue
-import com.example.ui.theme.TextPrimaryDark
-import com.example.ui.theme.TextSecondaryDark
 import com.example.ui.theme.WarningAmber
 
 @Composable
@@ -75,7 +70,7 @@ fun ThermalMonitorCard(
         ThermalSeverityLevel.CRITICAL -> CriticalRed
         ThermalSeverityLevel.WARNING -> if (thermal.isOverheating) WarningAmber else WarningAmber.copy(alpha = 0.9f)
         ThermalSeverityLevel.NOMINAL -> PositiveMint
-        ThermalSeverityLevel.UNSUPPORTED -> TextSecondaryDark
+        ThermalSeverityLevel.UNSUPPORTED -> MaterialTheme.colorScheme.onSurfaceVariant
     }
 
     val infiniteTransition = rememberInfiniteTransition(label = "thermal_pulse")
@@ -153,7 +148,7 @@ fun ThermalMonitorCard(
                         Text(
                             text = "Real-time SoC & Thermal Zone Telemetry",
                             style = MaterialTheme.typography.bodySmall,
-                            color = TextSecondaryDark,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
                             fontSize = 11.sp
                         )
                     }
@@ -215,7 +210,7 @@ fun ThermalMonitorCard(
                         Text(
                             text = "(${thermal.formattedTempFahrenheit})",
                             style = MaterialTheme.typography.bodyMedium,
-                            color = TextSecondaryDark,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
                             modifier = Modifier.padding(bottom = 8.dp)
                         )
                     }
@@ -232,7 +227,7 @@ fun ThermalMonitorCard(
                     modifier = Modifier
                         .size(width = 110.dp, height = 50.dp)
                         .clip(RoundedCornerShape(12.dp))
-                        .background(HighElevationDark)
+                        .background(MaterialTheme.colorScheme.surfaceContainerHigh)
                         .border(1.dp, animatedColor.copy(alpha = 0.25f), RoundedCornerShape(12.dp))
                         .padding(6.dp)
                 ) {
@@ -261,7 +256,7 @@ fun ThermalMonitorCard(
                     .height(8.dp)
                     .clip(RoundedCornerShape(4.dp)),
                 color = animatedColor,
-                trackColor = HighElevationDark,
+                trackColor = MaterialTheme.colorScheme.surfaceContainerHigh,
                 strokeCap = StrokeCap.Round
             )
 
@@ -272,7 +267,7 @@ fun ThermalMonitorCard(
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 Text("20°C Cool", style = MaterialTheme.typography.labelSmall, color = PositiveMint, fontSize = 10.sp)
-                Text("38°C Normal", style = MaterialTheme.typography.labelSmall, color = TextSecondaryDark, fontSize = 10.sp)
+                Text("38°C Normal", style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 10.sp)
                 Text("42°C Warning", style = MaterialTheme.typography.labelSmall, color = WarningAmber, fontSize = 10.sp)
                 Text("55°C Critical", style = MaterialTheme.typography.labelSmall, color = CriticalRed, fontSize = 10.sp)
             }
@@ -283,7 +278,7 @@ fun ThermalMonitorCard(
             Surface(
                 modifier = Modifier.fillMaxWidth(),
                 shape = RoundedCornerShape(14.dp),
-                color = HighElevationDark,
+                color = MaterialTheme.colorScheme.surfaceContainerHigh,
                 border = androidx.compose.foundation.BorderStroke(1.dp, Color(0x2038BDF8))
             ) {
                 Column(modifier = Modifier.padding(12.dp)) {
@@ -412,7 +407,7 @@ private fun ThermalStatItem(
             Text(
                 text = title,
                 style = MaterialTheme.typography.labelSmall,
-                color = TextSecondaryDark,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
                 fontSize = 9.sp,
                 fontWeight = FontWeight.Bold
             )
@@ -428,7 +423,7 @@ private fun ThermalStatItem(
             Text(
                 text = subtitle,
                 style = MaterialTheme.typography.bodySmall,
-                color = TextSecondaryDark,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
                 fontSize = 10.sp,
                 maxLines = 1
             )
