@@ -21,8 +21,10 @@ Pixel Booster is designed to provide a clear device overview and guide users to 
 
 - **Device dashboard:** A central place for supported device and system information.
 - **Smart Boost guidance:** Helps users review their apps and navigate to relevant Android settings.
-- **Storage overview:** Shows available storage information and points users to system cleanup options.
-- **Battery and thermal information:** Displays information only when exposed by the device and Android version.
+- **Storage overview:** Reads storage capacity from Android; if Android does not provide a value, the app reports it as unavailable rather than inventing a capacity.
+- **Safe cache cleanup:** Only targets this app’s own cache and code-cache directories. It does not scan or delete personal files in `filesDir`, Downloads, photos, or other apps’ data.
+- **Battery and thermal information:** Displays sensor readings only when exposed by the device and Android version; unavailable readings must not be replaced with plausible-looking numbers.
+- **Honest measurements:** RAM and network results are before/after observations, not promised gains. CPU temperature monitoring does not actively cool the processor; network checks do not change Android’s private DNS cache or other apps’ sockets.
 - **Network tools:** Provides network checks with clear labels about what is measured.
 - **Usage insights:** Some insights require the user to grant Usage Access in Android settings.
 - **Permission review:** Helps users review permissions visible to the app.
