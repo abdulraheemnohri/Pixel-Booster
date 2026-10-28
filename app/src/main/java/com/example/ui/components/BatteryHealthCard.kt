@@ -261,7 +261,7 @@ fun BatteryHealthCard(
             Spacer(modifier = Modifier.height(16.dp))
 
             // Capacity Progress Bar (Current mAh vs Designed mAh)
-            val capacityProgress = (battery.currentCapacityMah.toFloat() / battery.designedCapacityMah.toFloat()).coerceIn(0f, 1f)
+            val capacityProgress = if (battery.currentCapacityMah > 0 && battery.designedCapacityMah > 0) (battery.currentCapacityMah.toFloat() / battery.designedCapacityMah.toFloat()).coerceIn(0f, 1f) else 0f
             val animatedCapacityProgress by animateFloatAsState(
                 targetValue = capacityProgress,
                 animationSpec = tween(600),
@@ -324,14 +324,14 @@ fun BatteryHealthCard(
                     ) {
                         BatteryBreakdownItem(
                             title = "CHARGE CYCLES",
-                            value = "${battery.chargeCycles}",
+                            value = if (battery.chargeCycles > 0) "${battery.chargeCycles}" else "Unavailable",
                             subtitle = battery.cycleHealthAssessment,
                             modifier = Modifier.weight(1f)
                         )
                         BatteryBreakdownItem(
                             title = "CAPACITY RATIO",
                             value = battery.formattedHealthPercentage,
-                            subtitle = "${battery.designedCapacityMah} mAh Design",
+                            subtitle = if (battery.designedCapacityMah > 0) "${battery.designedCapacityMah} mAh Design" else "Design capacity unavailable",
                             modifier = Modifier.weight(1f)
                         )
                     }
@@ -351,7 +351,7 @@ fun BatteryHealthCard(
                         BatteryBreakdownItem(
                             title = "CELL TEMPERATURE",
                             value = String.format(java.util.Locale.US, "%.1f°C", battery.temperatureCelsius),
-                            subtitle = "${(battery.temperatureCelsius * 9f / 5f + 32f).toInt()}°F Thermal",
+                            subtitle = if (battery.temperatureCelsius > 0f) "${(battery.temperatureCelsius * 9f / 5f + 32f).toInt()}°F Thermal" else "Sensor not exposed",
                             modifier = Modifier.weight(1f)
                         )
                     }
