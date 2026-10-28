@@ -73,6 +73,10 @@ gradle :app:testDebugUnitTest --no-daemon
 
 The repository currently contains Gradle wrapper configuration but not the wrapper launch scripts or wrapper JAR. CI installs Gradle 9.3.1. Until wrapper scripts are added, use a compatible system Gradle installation.
 
+## Physical-device validation
+
+Use the [Pixel 6 manual validation checklist](docs/PIXEL6_MANUAL_VALIDATION.md) before describing a release as device-verified. Automated CI and Robolectric tests do not replace testing on physical Pixel hardware.
+
 ## Automated checks
 
 The repository keeps these GitHub Actions workflows:
