@@ -30,7 +30,7 @@ class SystemOptimizerTest {
         assertTrue(result.formattedCacheFreed.isNotBlank())
         assertTrue(result.formattedTotalFreed.isNotBlank())
         assertTrue(result.responsivenessGrade.isNotBlank())
-        assertTrue(result.durationMs > 0L)
+        assertTrue(result.durationMs >= 0L) // Robolectric may execute within the same clock tick.
     }
 
     @Test
