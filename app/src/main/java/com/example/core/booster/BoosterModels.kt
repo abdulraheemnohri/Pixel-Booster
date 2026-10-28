@@ -97,6 +97,7 @@ data class JunkScanResult(
         get() = MemoryInfoData.formatBytes(residualLogsBytes)
 }
 
+/** A latency of -1 means that individual connection attempt failed; zero is not used for missing data. */
 data class NetworkPingResult(
     val host: String,
     val initialLatencyMs: Long,
@@ -104,7 +105,7 @@ data class NetworkPingResult(
     val isOnline: Boolean
 ) {
     val latencyImprovementMs: Long
-        get() = (initialLatencyMs - optimizedLatencyMs).coerceAtLeast(0L)
+        get() = if (initialLatencyMs > 0L && optimizedLatencyMs > 0L) (initialLatencyMs - optimizedLatencyMs).coerceAtLeast(0L) else -1L
 }
 
 enum class MemoryPressureLevel(val label: String, val description: String) {
