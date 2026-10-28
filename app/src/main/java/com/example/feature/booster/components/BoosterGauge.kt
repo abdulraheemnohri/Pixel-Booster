@@ -94,11 +94,13 @@ fun BoosterGauge(
     }
 
     val statusLabel = when {
-        score >= 90 -> "PEAK OPTIMAL"
-        score >= 75 -> "GOOD HEADROOM"
-        score >= 60 -> "OPTIMIZATION READY"
-        else -> "TURBO BOOST RECOMMENDED"
+        score >= 90 -> "DEVICE STATUS: GOOD"
+        score >= 75 -> "DEVICE STATUS: STABLE"
+        score >= 60 -> "REVIEW SUGGESTED"
+        else -> "CHECK DEVICE STATUS"
     }
+    val tickTrackColor = MaterialTheme.colorScheme.onSurfaceVariant
+    val gaugeTrackColor = MaterialTheme.colorScheme.surfaceContainerHigh
 
     Card(
         modifier = modifier
@@ -177,7 +179,7 @@ fun BoosterGauge(
                             (center.y + tickRadius * sin(rad)).toFloat()
                         )
                         drawLine(
-                            color = if (i % 3 == 0) CyberCyan.copy(alpha = 0.4f) else MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.15f),
+                            color = if (i % 3 == 0) CyberCyan.copy(alpha = 0.4f) else tickTrackColor.copy(alpha = 0.15f),
                             start = p1,
                             end = p2,
                             strokeWidth = 1.5.dp.toPx()
@@ -186,7 +188,7 @@ fun BoosterGauge(
 
                     // Background track arc (240 degrees)
                     drawArc(
-                        color = MaterialTheme.colorScheme.surfaceContainerHigh,
+                        color = gaugeTrackColor,
                         startAngle = 150f,
                         sweepAngle = 240f,
                         useCenter = false,
@@ -226,7 +228,7 @@ fun BoosterGauge(
                         color = MaterialTheme.colorScheme.onSurface
                     )
                     Text(
-                        text = "PERFORMANCE INDEX",
+                        text = "DEVICE STATUS INDEX",
                         style = MaterialTheme.typography.labelSmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                         fontSize = 10.sp,
@@ -247,7 +249,7 @@ fun BoosterGauge(
                 enabled = !isBoosting,
                 colors = ButtonDefaults.buttonColors(
                     containerColor = PositiveMint,
-                    contentColor = Color(0xFF022C1C)
+                    contentColor = MaterialTheme.colorScheme.onPrimary
                 ),
                 shape = RoundedCornerShape(16.dp),
                 modifier = Modifier
@@ -261,12 +263,12 @@ fun BoosterGauge(
                 ) {
                     Icon(
                         imageVector = Icons.Filled.RocketLaunch,
-                        contentDescription = "Boost",
+                        contentDescription = "Run device checks",
                         modifier = Modifier.size(22.dp)
                     )
                     Spacer(modifier = Modifier.width(10.dp))
                     Text(
-                        text = if (isBoosting) "TURBO BOOSTING HARDWARE..." else "1-TAP QUICK BOOST ALL",
+                        text = if (isBoosting) "CHECKING DEVICE..." else "RUN DEVICE CHECK",
                         style = MaterialTheme.typography.titleMedium,
                         fontWeight = FontWeight.ExtraBold,
                         letterSpacing = 0.5.sp
