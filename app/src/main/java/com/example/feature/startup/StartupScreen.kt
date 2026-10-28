@@ -119,7 +119,7 @@ fun StartupScreen(
                             color = MaterialTheme.colorScheme.onSurface
                         )
                         Text(
-                            text = "Control auto-start apps to speed up boot time",
+                            text = "Review startup-related apps and Android-supported controls",
                             style = MaterialTheme.typography.bodySmall,
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
@@ -382,8 +382,8 @@ fun StartupScreen(
                                 modifier = Modifier.fillMaxWidth(),
                                 horizontalArrangement = Arrangement.SpaceBetween
                             ) {
-                                Text("Startup RAM Headroom:", style = MaterialTheme.typography.bodySmall, color = TextSecondaryDark)
-                                Text("+${result.formattedRamReclaimed}", fontWeight = FontWeight.Bold, color = CyberCyan)
+                                Text("Measured RAM reclaimed:", style = MaterialTheme.typography.bodySmall, color = TextSecondaryDark)
+                                Text(result.formattedRamReclaimed, fontWeight = FontWeight.Bold, color = CyberCyan)
                             }
                         }
                     }
@@ -683,7 +683,7 @@ fun StartupAppItemCard(
                     border = androidx.compose.foundation.BorderStroke(1.dp, Color(0x1538BDF8))
                 ) {
                     Text(
-                        text = "~${app.formattedRamFootprint} RAM",
+                        text = "RAM: ${app.formattedRamFootprint}",
                         style = MaterialTheme.typography.labelSmall,
                         color = TextPrimaryDark,
                         modifier = Modifier.padding(horizontal = 8.dp, vertical = 2.dp)
