@@ -342,10 +342,11 @@ fun HealthScoreCard(
                 modifier = Modifier.size(76.dp),
                 contentAlignment = Alignment.Center
             ) {
+                val trackColor = MaterialTheme.colorScheme.surfaceContainer
                 Canvas(modifier = Modifier.size(76.dp)) {
                     val stroke = 6.dp.toPx()
                     drawArc(
-                        color = MaterialTheme.colorScheme.surfaceContainer,
+                        color = trackColor,
                         startAngle = 135f,
                         sweepAngle = 270f,
                         useCenter = false,
