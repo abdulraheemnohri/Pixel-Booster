@@ -1,143 +1,102 @@
-# Pixel Booster Advanced — Complete Android Utility Suite
+# Pixel Booster
 
-[![Android Build & Release CI](https://github.com/abdulraheemnohri/Pixel-Booster/actions/workflows/android-build.yml/badge.svg)](https://github.com/abdulraheemnohri/Pixel-Booster/actions/workflows/android-build.yml)
-[![Signed APK Release](https://github.com/abdulraheemnohri/Pixel-Booster/actions/workflows/release-apk.yml/badge.svg)](https://github.com/abdulraheemnohri/Pixel-Booster/actions/workflows/release-apk.yml)
-[![Code & Robolectric Testing](https://github.com/abdulraheemnohri/Pixel-Booster/actions/workflows/code-test.yml/badge.svg)](https://github.com/abdulraheemnohri/Pixel-Booster/actions/workflows/code-test.yml)
+A native Android utility app focused on helping users understand their device status and find Android's supported settings for storage, battery, permissions, and app management.
 
-**Product:** Pixel Booster Advanced  
-**Package ID:** `com.abdulraheem.pixelbooster`  
-**Version:** 2.0.0  
-**Target Platform:** Native Android (Google Pixel and Android 8.0+)  
-**Min SDK:** 26 | **Target SDK:** 36  
-**Language:** Kotlin | **UI Framework:** Jetpack Compose & Material Design 3  
-**Architecture:** MVVM, Kotlin Coroutines  
-**Storage:** Room SQLite Database & Jetpack DataStore Preferences
+**App name:** Pixel Booster  
+**Package:** `com.abdulraheem.pixelbooster`  
+**Current version:** `2.0.0`  
+**Language:** Kotlin  
+**UI:** Jetpack Compose / Material Design 3  
+**Minimum Android version:** Android 8.0 (API 26)  
+**Target SDK:** API 36
 
----
+[![Android Debug Build](https://github.com/abdulraheemnohri/Pixel-Booster/actions/workflows/android-build.yml/badge.svg)](https://github.com/abdulraheemnohri/Pixel-Booster/actions/workflows/android-build.yml)
+[![Unit Tests](https://github.com/abdulraheemnohri/Pixel-Booster/actions/workflows/code-test.yml/badge.svg)](https://github.com/abdulraheemnohri/Pixel-Booster/actions/workflows/code-test.yml)
 
-## Overview & Core Philosophy
+## What it is
 
-Pixel Booster is an Android device diagnostics and optimization guide designed for Pixel and other compatible Android devices. It should use public Android APIs, explain limitations clearly, and avoid claims that an app can magically increase physical RAM or force-stop other apps. Some cleanup actions must be completed by the user in Android system settings.
+Pixel Booster is designed to provide a clear device overview and guide users to actions that Android allows ordinary, non-root apps to perform. It does not promise to increase physical RAM, secretly kill other apps, or bypass Android security restrictions.
 
-- **Transparent telemetry:** Use supported Android platform APIs and clearly label estimates.
-- **No fictitious metrics:** Never invent freed RAM, battery health, or benchmark results.
-- **Privacy:** Keep diagnostic data on-device unless a feature clearly explains otherwise.
-- **Pixel-focused UX:** Dark Material 3 design with dynamic color where supported.
+## Features
 
-## Feature modules
+- **Device dashboard:** A central place for supported device and system information.
+- **Smart Boost guidance:** Helps users review their apps and navigate to relevant Android settings.
+- **Storage overview:** Shows available storage information and points users to system cleanup options.
+- **Battery and thermal information:** Displays information only when exposed by the device and Android version.
+- **Network tools:** Provides network checks with clear labels about what is measured.
+- **Usage insights:** Some insights require the user to grant Usage Access in Android settings.
+- **Permission review:** Helps users review permissions visible to the app.
+- **Local history:** Keeps supported diagnostic history on-device.
+- **Hardware checks:** Offers checks for supported sensors and hardware capabilities.
+- **Settings and reports:** App preferences and supported diagnostic report options.
 
-1. **Dashboard:** Device and storage overview.
-2. **Smart Boost:** Guided steps for users to review background apps and Android settings.
-3. **Health diagnostics:** Battery and thermal information where the device exposes it.
-4. **Storage analyzer:** Storage overview and routes to supported cleanup controls.
-5. **Network tests:** Clearly label test methodology and network usage.
-6. **Usage insights:** Requires user-granted Usage Access where applicable.
-7. **Privacy auditor:** Review permission information available to the app.
-8. **History:** Local diagnostic and action logs.
-9. **Hardware tests:** Interactive tests for supported sensors and hardware.
-10. **Settings:** Theme, sampling options, notifications, and report export.
+Feature availability depends on Android version, device support, and permissions granted by the user. Android may restrict or hide some system metrics and actions.
 
-Feature availability depends on Android version, device manufacturer restrictions, and granted permissions.
+## Privacy and safety principles
 
----
+- No root access is required.
+- Do not treat estimates as exact hardware measurements.
+- Do not claim that clearing cache or closing apps permanently increases RAM or battery health.
+- Ask for permissions only when a feature needs them and explain why.
+- Keep diagnostic history on-device unless a feature clearly states otherwise.
+- User-initiated system actions should open Android's own settings where direct control is restricted.
 
-## Download a release APK
+## Build and test
 
-The signed APK is published as a downloadable asset on the GitHub Releases page:
+### Requirements
 
-**[Open Pixel Booster Releases](https://github.com/abdulraheemnohri/Pixel-Booster/releases)**
+- JDK 17
+- Android SDK Platform 36 and Android Build Tools 36.0.0
+- Gradle 9.3.1 (the CI workflows use this version)
 
-The release workflow attaches:
-- `PixelBooster-vX.Y.Z.apk` — signed installable APK.
-- `PixelBooster-vX.Y.Z.apk.sha256` — SHA-256 checksum file.
+### Build a debug version
 
-APKs are **not** committed into the repository's `/apk/` folder. Download the APK from a release's **Assets** section. GitHub Actions build artifacts are temporary workflow artifacts and are different from permanent GitHub Release assets.
-
-## Maintainers: configure secure signing
-
-The workflow `.github/workflows/release-apk.yml` builds and verifies a signed release APK, then attaches it to a GitHub Release. Configure these repository Actions secrets before running it:
-
-- `KEYSTORE_BASE64`: Base64-encoded bytes of the private upload keystore.
-- `KEYSTORE_PASSWORD`: The keystore password.
-- `KEY_PASSWORD`: The password for the `upload` alias.
-
-The alias is currently fixed as `upload` in `app/build.gradle.kts`. Do not commit the keystore, passwords, or Base64 value to Git. Keep an encrypted backup of the keystore and passwords.
-
-### Create a keystore in Linux / Debian
-
-Install Java's keytool if needed:
+Run these commands from the repository root on a machine with the Android SDK installed:
 
 ```bash
-sudo apt update
-sudo apt install -y openjdk-17-jdk
+gradle :app:assembleDebug --no-daemon
 ```
 
-Generate the keystore (you will be prompted for passwords):
+The debug APK is normally written to:
+
+```text
+app/build/outputs/apk/debug/app-debug.apk
+```
+
+### Run unit tests
 
 ```bash
-mkdir -p "$HOME/.android/keystores"
-chmod 700 "$HOME/.android/keystores"
-keytool -genkeypair -v \
-  -keystore "$HOME/.android/keystores/pixel-booster-upload.jks" \
-  -alias upload -keyalg RSA -keysize 2048 -validity 10000
-chmod 600 "$HOME/.android/keystores/pixel-booster-upload.jks"
+gradle :app:testDebugUnitTest --no-daemon
 ```
 
-Validate it:
+This repository currently uses a system-installed Gradle in its CI jobs. If you build locally, use a compatible Gradle installation. A Gradle wrapper is not currently included in the repository.
 
-```bash
-keytool -list -v \
-  -keystore "$HOME/.android/keystores/pixel-booster-upload.jks" \
-  -alias upload
-```
+## Automated checks
 
-Copy the Base64 output from this command into the `KEYSTORE_BASE64` secret. The output is sensitive; never print it in public logs or commit it:
+The repository keeps these GitHub Actions workflows:
 
-```bash
-base64 -w 0 "$HOME/.android/keystores/pixel-booster-upload.jks"
-```
+| Workflow | Purpose |
+|---|---|
+| **Android Debug Build CI** | Builds the debug app on pushes, pull requests, and manual runs; stores the debug APK as a temporary workflow artifact. |
+| **Code & Robolectric Testing** | Runs the app's unit-test task on pushes, pull requests, and manual runs. |
 
-If `base64 -w 0` is unsupported, use:
+Workflow artifacts are temporary CI outputs, not source files. Check the Actions tab for each run's logs and result.
 
-```bash
-base64 "$HOME/.android/keystores/pixel-booster-upload.jks" | tr -d '\n'
-```
+## Project identity
 
-Add secrets at [Settings → Secrets and variables → Actions](https://github.com/abdulraheemnohri/Pixel-Booster/settings/secrets/actions).
+- **Application ID:** `com.abdulraheem.pixelbooster`
+- **App label:** Pixel Booster
+- **Version name:** `2.0.0`
 
-### Publish a release
+Keep the application ID stable once the app is installed by users; changing it makes Android treat the app as a different application. Update the version name and version code together when preparing a new app version.
 
-Option A — from the GitHub website:
-1. Open **Actions → Release Signed APK**.
-2. Select **Run workflow**.
-3. Enter a release tag that matches the app's configured version, for example `v2.0.0`.
-4. Run the workflow and wait for the signed APK verification step to pass.
-5. Open **Releases** and download the APK under **Assets**.
+## Contributing
 
-Option B — push a version tag from a clone:
+1. Create a branch for your change.
+2. Keep changes focused and explain user-visible behavior.
+3. Run the unit tests and debug build when possible.
+4. Open a pull request with a short summary and test results.
 
-```bash
-git tag v2.0.0
-git push origin v2.0.0
-```
+## Disclaimer
 
-Use a new version tag for each new app version. Update `versionName` and `versionCode` in `app/build.gradle.kts` before releasing a newer app version. Never reuse an existing version tag for a different binary.
-
-## Build and test locally
-
-From the repository root, if the project has a Gradle wrapper:
-
-```bash
-./gradlew :app:testDebugUnitTest
-./gradlew :app:assembleDebug
-```
-
-If no `gradlew` wrapper is present, use a compatible Gradle installation or generate and commit the Gradle wrapper for reproducible builds. The debug APK is for testing; use the signed release workflow for public distribution.
-
-## GitHub workflows
-
-- `.github/workflows/android-build.yml`: Debug build and optional release build artifacts.
-- `.github/workflows/release-apk.yml`: Signed release APK, signature verification, checksum, and GitHub Release upload.
-- `.github/workflows/code-test.yml`: Unit tests.
-- Other workflow files may provide additional repository validation or automation.
-
+Pixel Booster is a device-information and guided-settings utility. It cannot override Android's protected system controls, guarantee longer battery life, or increase the device's physical RAM. Always review system actions before confirming them.
