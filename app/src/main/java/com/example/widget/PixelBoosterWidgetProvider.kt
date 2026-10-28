@@ -30,38 +30,8 @@ class PixelBoosterWidgetProvider : AppWidgetProvider() {
         }
     }
 
-    override fun onReceive(context: Context, intent: Intent) {
-        super.onReceive(context, intent)
-
-        if (intent.action == ACTION_WIDGET_BOOST) {
-            val pendingResult = goAsync()
-            CoroutineScope(Dispatchers.IO).launch {
-                try {
-                    val result = SystemOptimizer.optimizeSystem(context)
-                    withContext(Dispatchers.Main) {
-                        Toast.makeText(
-                            context,
-                            "⚡ Pixel Booster: +${result.formattedTotalFreed} Reclaimed!",
-                            Toast.LENGTH_SHORT
-                        ).show()
-
-                        val appWidgetManager = AppWidgetManager.getInstance(context)
-                        val thisAppWidget = ComponentName(context.packageName, PixelBoosterWidgetProvider::class.java.name)
-                        val appWidgetIds = appWidgetManager.getAppWidgetIds(thisAppWidget)
-                        for (id in appWidgetIds) {
-                            updateAppWidget(context, appWidgetManager, id, overrideStatus = "OPTIMIZED (+${result.formattedTotalFreed})")
-                        }
-                    }
-                } finally {
-                    pendingResult.finish()
-                }
-            }
-        }
-    }
 
     companion object {
-        const val ACTION_WIDGET_BOOST = "com.example.PIXEL_BOOSTER_WIDGET_BOOST"
-
         fun updateAppWidget(
             context: Context,
             appWidgetManager: AppWidgetManager,
@@ -77,7 +47,7 @@ class PixelBoosterWidgetProvider : AppWidgetProvider() {
                 val thermal = diagnostics.getThermalStatus()
 
                 val usedPercent = mem.usedPercentage.toInt().coerceIn(0, 100)
-                val tempCelsius = battery.temperatureCelsius ?: 31.5f
+                val tempCelsius = battery.temperatureCelsius
 
                 views.setTextViewText(
                     R.id.widget_ram_text,
@@ -87,7 +57,7 @@ class PixelBoosterWidgetProvider : AppWidgetProvider() {
                 views.setTextViewText(R.id.widget_battery_text, "🔋 ${battery.levelPercentage}%")
                 views.setTextViewText(
                     R.id.widget_temp_text,
-                    "❄️ ${String.format(Locale.US, "%.1f", tempCelsius)}°C"
+                    if (tempCelsius != null) "🌡 ${String.format(Locale.US, "%.1f", tempCelsius)}°C" else "🌡 Temp N/A"
                 )
 
                 val status = overrideStatus ?: when {
@@ -110,16 +80,10 @@ class PixelBoosterWidgetProvider : AppWidgetProvider() {
                 views.setOnClickPendingIntent(R.id.widget_root, openAppPendingIntent)
 
                 // 1-Tap Optimize Broadcast Trigger
-                val boostIntent = Intent(context, PixelBoosterWidgetProvider::class.java).apply {
-                    action = ACTION_WIDGET_BOOST
-                }
-                val boostPendingIntent = PendingIntent.getBroadcast(
-                    context,
-                    101,
-                    boostIntent,
-                    PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
-                )
-                views.setOnClickPendingIntent(R.id.widget_btn_optimize, boostPendingIntent)
+                // Open the guided Smart Boost flow; Android does not allow apps to guarantee
+                // system-wide RAM cleanup from a home-screen button.
+                views.setOnClickPendingIntent(R.id.widget_btn_optimize, openAppPendingIntent)
+                views.setTextViewText(R.id.widget_btn_optimize, "OPEN SMART BOOST")
 
                 appWidgetManager.updateAppWidget(appWidgetId, views)
             } catch (e: Exception) {
