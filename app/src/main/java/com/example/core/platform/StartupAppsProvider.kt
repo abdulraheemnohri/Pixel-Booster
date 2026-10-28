@@ -105,7 +105,7 @@ class StartupAppsProvider(
             // APK size is not a measurement of startup impact or runtime RAM.
             val impact = evaluateBootImpact(pkg, isSystem)
             val delayMs = calculateDelayMs(impact)
-            val ramFootprint = (30L * 1024L * 1024L + (apkSizeBytes / 5L)).coerceIn(24L * 1024L * 1024L, 250L * 1024L * 1024L)
+            val ramFootprint = 0L // Android does not expose reliable per-app RAM usage here.
             val isEnabled = !restrictedSet.contains(pkg)
 
             discoveredPackages[pkg] = StartupAppInfo(
