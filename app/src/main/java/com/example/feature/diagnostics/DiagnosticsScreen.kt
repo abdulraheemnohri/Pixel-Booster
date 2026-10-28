@@ -224,7 +224,7 @@ fun DiagnosticsScreen(
                                 } else {
                                     Icon(imageVector = Icons.Filled.PlayArrow, contentDescription = null, modifier = Modifier.size(18.dp))
                                     Spacer(modifier = Modifier.width(8.dp))
-                                    Text("Run Full Hardware Scan", fontFamily = SpaceGrotesk, fontWeight = FontWeight.Bold)
+                                    Text("Run Diagnostic Workflow", fontFamily = SpaceGrotesk, fontWeight = FontWeight.Bold)
                                 }
                             }
                         }
@@ -360,7 +360,7 @@ fun DiagnosticsScreen(
                                 ) {
                                     Icon(imageVector = Icons.Filled.Vibration, contentDescription = null, modifier = Modifier.size(18.dp))
                                     Spacer(modifier = Modifier.width(6.dp))
-                                    Text(if (uiState.vibrationTested) "Haptics OK" else "Test Haptics", fontFamily = SpaceGrotesk, fontSize = 12.sp, fontWeight = FontWeight.Bold)
+                                    Text(if (uiState.vibrationTested) "Command Sent" else "Test Haptics", fontFamily = SpaceGrotesk, fontSize = 12.sp, fontWeight = FontWeight.Bold)
                                 }
 
                                 Button(
@@ -378,7 +378,7 @@ fun DiagnosticsScreen(
                                 ) {
                                     Icon(imageVector = Icons.Filled.Speaker, contentDescription = null, modifier = Modifier.size(18.dp))
                                     Spacer(modifier = Modifier.width(6.dp))
-                                    Text(if (uiState.audioTested) "Audio OK" else "Test Speaker", fontFamily = SpaceGrotesk, fontSize = 12.sp, fontWeight = FontWeight.Bold)
+                                    Text("Speaker Test", fontFamily = SpaceGrotesk, fontSize = 12.sp, fontWeight = FontWeight.Bold)
                                 }
                             }
                         }
