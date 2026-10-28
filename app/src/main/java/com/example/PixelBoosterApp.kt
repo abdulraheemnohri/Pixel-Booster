@@ -3,6 +3,8 @@ package com.example
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.widthIn
+import androidx.compose.ui.Alignment
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.navigationBars
@@ -74,11 +76,11 @@ fun PixelBoosterApp(
                 NavigationRail(
                     modifier = Modifier
                         .fillMaxHeight()
-                        .windowInsetsPadding(WindowInsets.navigationBars),
+                        .windowInsetsPadding(WindowInsets.safeDrawing),
                     containerColor = MaterialTheme.colorScheme.surface
                 ) {
                     Screen.items.forEach { screen ->
-                        val isSelected = currentRoute == screen.route || (screen == Screen.More && currentRoute in setOf(Screen.Health.route, Screen.Startup.route, Screen.SpeedTest.route, Screen.History.route, Screen.Privacy.route, Screen.Settings.route))
+                        val isSelected = currentRoute == screen.route || (screen == Screen.More && Screen.isSecondaryRoute(currentRoute))
                         NavigationRailItem(
                             selected = isSelected,
                             onClick = {
@@ -111,8 +113,14 @@ fun PixelBoosterApp(
                     }
                 }
 
-                Box(modifier = Modifier.weight(1f)) {
-                    AppNavHost(navController = navController)
+                Box(
+                    modifier = Modifier.weight(1f).fillMaxHeight(),
+                    contentAlignment = Alignment.TopCenter
+                ) {
+                    AppNavHost(
+                        navController = navController,
+                        modifier = Modifier.fillMaxSize().widthIn(max = 1100.dp)
+                    )
                 }
             }
         } else {
