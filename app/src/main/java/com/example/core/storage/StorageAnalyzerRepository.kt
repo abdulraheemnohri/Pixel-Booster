@@ -81,8 +81,18 @@ class StorageAnalyzerRepository(private val context: Context) {
             if (!isAllowed || target == context.filesDir.canonicalFile) return@forEach
             if (!target.exists()) return@forEach
             val before = if (target.isDirectory) calculateDirSize(target) else target.length().coerceAtLeast(0L)
-            val deleted = runCatching { target.deleteRecursively() }.getOrDefault(false)
-            if (deleted && !target.exists()) cleaned += before
+            val isCacheRoot = allowedRoots.any { it == target }
+            if (isCacheRoot) {
+                // Preserve the app-owned cache directory itself; remove only its children.
+                (target.listFiles() ?: emptyArray()).forEach { child ->
+                    runCatching { child.deleteRecursively() }
+                }
+                val after = calculateDirSize(target)
+                cleaned += (before - after).coerceAtLeast(0L)
+            } else {
+                val deleted = runCatching { target.deleteRecursively() }.getOrDefault(false)
+                if (deleted && !target.exists()) cleaned += before
+            }
         }
         cleaned
     }
