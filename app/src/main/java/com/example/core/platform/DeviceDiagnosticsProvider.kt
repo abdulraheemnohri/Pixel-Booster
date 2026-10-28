@@ -116,7 +116,7 @@ class DeviceDiagnosticsProvider(private val context: Context) {
         val avail = memInfo.availMem.takeIf { it > 0L }
             ?: readProcMemInfoBytes("MemAvailable")
             ?: readProcMemInfoBytes("MemFree")
-            ?: 0L
+            ?: -1L
         return MemoryInfoData(
             totalRamBytes = total,
             availableRamBytes = avail,
