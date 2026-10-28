@@ -70,7 +70,7 @@ class DiagnosticsViewModel(application: Application) : AndroidViewModel(applicat
             val newCount = state.touchPointsTested + 1
             state.copy(
                 touchPointsTested = newCount,
-                diagnosticLog = if (newCount == 1) listOf("Multi-touch digitizer responsiveness verified") + state.diagnosticLog else state.diagnosticLog
+                diagnosticLog = if (newCount == 1) listOf("Touch-test area tapped; this records interaction only and does not verify all digitizer points.") + state.diagnosticLog else state.diagnosticLog
             )
         }
     }
