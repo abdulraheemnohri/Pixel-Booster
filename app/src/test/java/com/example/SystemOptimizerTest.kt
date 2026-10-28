@@ -5,6 +5,7 @@ import androidx.test.core.app.ApplicationProvider
 import com.example.core.optimizer.SystemOptimizer
 import com.example.widget.PixelBoosterWidgetProvider
 import kotlinx.coroutines.runBlocking
+import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertTrue
 import org.junit.Test
@@ -17,7 +18,7 @@ import org.robolectric.annotation.Config
 class SystemOptimizerTest {
 
     @Test
-    fun `test smart boost returns measured nonnegative metrics` = runBlocking {
+    fun `test smart boost returns measured nonnegative metrics`() = runBlocking {
         val context = ApplicationProvider.getApplicationContext<Context>()
         val result = SystemOptimizer.optimizeSystem(context)
 
