@@ -59,15 +59,16 @@ data class StorageInfoData(
     val totalBytes: Long,
     val freeBytes: Long
 ) {
-    val usedBytes: Long get() = (totalBytes - freeBytes).coerceAtLeast(0L)
+    val isAvailable: Boolean get() = totalBytes > 0L && freeBytes >= 0L
+    val usedBytes: Long get() = if (isAvailable) (totalBytes - freeBytes).coerceAtLeast(0L) else 0L
     val usedPercentage: Float
-        get() = if (totalBytes > 0) ((usedBytes.toFloat() / totalBytes.toFloat()) * 100f).coerceIn(0f, 100f) else 0f
+        get() = if (isAvailable) ((usedBytes.toFloat() / totalBytes.toFloat()) * 100f).coerceIn(0f, 100f) else 0f
     val freePercentage: Float
-        get() = (100f - usedPercentage).coerceIn(0f, 100f)
+        get() = if (isAvailable) (100f - usedPercentage).coerceIn(0f, 100f) else 0f
 
-    val formattedTotal: String get() = MemoryInfoData.formatBytes(totalBytes)
-    val formattedFree: String get() = MemoryInfoData.formatBytes(freeBytes)
-    val formattedUsed: String get() = MemoryInfoData.formatBytes(usedBytes)
+    val formattedTotal: String get() = if (totalBytes > 0L) MemoryInfoData.formatBytes(totalBytes) else "Unavailable"
+    val formattedFree: String get() = if (isAvailable) MemoryInfoData.formatBytes(freeBytes) else "Unavailable"
+    val formattedUsed: String get() = if (isAvailable) MemoryInfoData.formatBytes(usedBytes) else "Unavailable"
 }
 
 enum class BatteryChargingState {
