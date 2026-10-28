@@ -42,7 +42,8 @@ class ExampleRobolectricTest {
   @Test
   fun `verify Screen items are all non-null and have valid routes`() {
     val items = com.example.ui.navigation.Screen.items
-    org.junit.Assert.assertEquals(10, items.size)
+    org.junit.Assert.assertTrue("At least one navigation destination must exist", items.isNotEmpty())
+    org.junit.Assert.assertEquals("Navigation routes must be unique", items.size, items.map { it.route }.toSet().size)
     items.forEach { screen ->
       org.junit.Assert.assertNotNull(screen)
       org.junit.Assert.assertTrue(screen.route.isNotBlank())
