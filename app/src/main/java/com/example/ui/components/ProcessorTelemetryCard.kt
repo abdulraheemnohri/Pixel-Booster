@@ -44,7 +44,6 @@ import com.example.core.model.ProcessorTelemetryData
 import com.example.ui.theme.CriticalRed
 import com.example.ui.theme.CyberCyan
 import com.example.ui.theme.ModernDesignTokens
-import com.example.ui.theme.OutlineDark
 import com.example.ui.theme.PositiveMint
 import com.example.ui.theme.WarningAmber
 
