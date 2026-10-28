@@ -71,7 +71,7 @@ app/build/outputs/apk/debug/app-debug.apk
 gradle :app:testDebugUnitTest --no-daemon
 ```
 
-The wrapper pins the project Gradle version. Install JDK 17 and Android SDK Platform 36 before building.
+The repository currently contains Gradle wrapper configuration but not the wrapper launch scripts or wrapper JAR. CI installs Gradle 9.3.1. Until wrapper scripts are added, use a compatible system Gradle installation.
 
 ## Automated checks
 
