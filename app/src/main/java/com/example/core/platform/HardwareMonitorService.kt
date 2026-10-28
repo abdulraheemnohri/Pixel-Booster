@@ -479,10 +479,8 @@ class HardwareMonitorService(
         val coreCount = Runtime.getRuntime().availableProcessors().coerceAtLeast(4)
 
         // Core load distribution
-        val coreLoads = List(coreCount) { index ->
-            val base = cpuUsage * (0.8f + (index % 3) * 0.15f)
-            base.coerceIn(0f, 100f)
-        }
+        // Per-core utilization is not measured by this aggregate /proc/stat sampler.
+        val coreLoads = List(coreCount) { -1f }
 
         // Estimated GPU usage (frame composition & graphics memory bandwidth)
         val gpuUsage = -1f // GPU utilization is not exposed by a supported public API.
@@ -545,7 +543,7 @@ class HardwareMonitorService(
         }
     }
 
-    private fun sampleFallbackCpuUsage(): Float = 0f // Unavailable sentinel; no synthetic estimate.
+    private fun sampleFallbackCpuUsage(): Float = -1f // Unavailable sentinel; no synthetic estimate.
 
     // 4. INTERNET / NETWORK TELEMETRY
     fun sampleNetworkTelemetry(): NetworkTelemetryData {
@@ -587,7 +585,7 @@ class HardwareMonitorService(
             localIpAddress = localIp,
             ipv6Address = ipv6Addr,
             gatewayIp = resolveGatewayIp(localIp),
-            dnsServersList = listOf("8.8.8.8", "1.1.1.1"),
+            dnsServersList = emptyList(), // DNS servers are not read from active LinkProperties here.
             wifiSsid = wifiSsid,
             wifiRssiDbm = rssiDbm,
             wifiSignalPercent = signalPercent,
