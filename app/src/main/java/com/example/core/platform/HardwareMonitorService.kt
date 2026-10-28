@@ -33,7 +33,6 @@ import java.io.RandomAccessFile
 import java.net.InetSocketAddress
 import java.net.Socket
 import kotlin.math.roundToInt
-import kotlin.random.Random
 
 import android.net.wifi.WifiManager
 import android.telephony.TelephonyManager
@@ -73,7 +72,7 @@ class HardwareMonitorService(
 
     // Thermals tracking state
     private val temperatureHistory = mutableListOf<Float>()
-    private var peakRecordedTemp: Float = 31.5f
+    private var peakRecordedTemp: Float = 0f
 
     private val _telemetryFlow = MutableStateFlow<CompleteHardwareTelemetry>(sampleInitialTelemetry())
     val telemetryFlow: StateFlow<CompleteHardwareTelemetry> = _telemetryFlow.asStateFlow()
@@ -118,8 +117,8 @@ class HardwareMonitorService(
             sessionTotalRxBytes = 0L,
             sessionTotalTxBytes = 0L,
             connectionType = determineConnectionType(),
-            latencyMs = 28L,
-            isConnected = true
+            latencyMs = 0L,
+            isConnected = connectivityManager?.activeNetwork != null
         )
         val memory = boosterService.getLiveRamMetrics()
         val storage = diagnosticsProvider.getStorageInfo()
@@ -165,11 +164,8 @@ class HardwareMonitorService(
         }
 
         val rawTemp = batteryIntent?.getIntExtra(BatteryManager.EXTRA_TEMPERATURE, -1) ?: -1
-        val batteryTemp = if (rawTemp > 0) {
-            rawTemp / 10.0f
-        } else {
-            32.4f
-        }
+        // Zero means unavailable; never substitute a made-up temperature.
+        val batteryTemp = if (rawTemp > 0) rawTemp / 10.0f else 0f
 
         val (socTemp, activeZones) = readSocThermalZones(batteryTemp)
         val currentTemp = maxOf(batteryTemp, socTemp)
@@ -242,7 +238,7 @@ class HardwareMonitorService(
             }
         }
 
-        return Pair(maxZoneTemp, zoneCount.coerceAtLeast(1))
+        return Pair(maxZoneTemp, zoneCount)
     }
 
     fun evaluateThermals(
@@ -308,9 +304,11 @@ class HardwareMonitorService(
             null
         }
 
-        val rawLevel = batteryIntent?.getIntExtra(BatteryManager.EXTRA_LEVEL, -1) ?: 50
-        val scale = batteryIntent?.getIntExtra(BatteryManager.EXTRA_SCALE, 100)?.coerceAtLeast(1) ?: 100
-        val percentage = ((rawLevel.toFloat() / scale.toFloat()) * 100f).roundToInt().coerceIn(0, 100)
+        val rawLevel = batteryIntent?.getIntExtra(BatteryManager.EXTRA_LEVEL, -1) ?: -1
+        val scale = batteryIntent?.getIntExtra(BatteryManager.EXTRA_SCALE, -1) ?: -1
+        val percentage = if (rawLevel >= 0 && scale > 0) {
+            ((rawLevel.toFloat() / scale.toFloat()) * 100f).roundToInt().coerceIn(0, 100)
+        } else 0
 
         val status = batteryIntent?.getIntExtra(BatteryManager.EXTRA_STATUS, -1) ?: BatteryManager.BATTERY_STATUS_UNKNOWN
         val chargingState = when (status) {
@@ -329,10 +327,10 @@ class HardwareMonitorService(
             else -> BatteryPluggedSource.NONE
         }
 
-        val voltageMv = batteryIntent?.getIntExtra(BatteryManager.EXTRA_VOLTAGE, 4100)?.takeIf { it > 0 } ?: 4120
-        val rawTemp = batteryIntent?.getIntExtra(BatteryManager.EXTRA_TEMPERATURE, 310)?.takeIf { it > 0 } ?: 315
+        val voltageMv = batteryIntent?.getIntExtra(BatteryManager.EXTRA_VOLTAGE, -1)?.takeIf { it > 0 } ?: 0
+        val rawTemp = batteryIntent?.getIntExtra(BatteryManager.EXTRA_TEMPERATURE, -1)?.takeIf { it > 0 } ?: 0
         val tempCelsius = rawTemp / 10.0f
-        val technology = batteryIntent?.getStringExtra(BatteryManager.EXTRA_TECHNOLOGY) ?: "Li-ion Polymer"
+        val technology = batteryIntent?.getStringExtra(BatteryManager.EXTRA_TECHNOLOGY) ?: "Unknown"
 
         // Designed capacity calculation based on device profile
         val model = Build.MODEL ?: ""
@@ -360,11 +358,11 @@ class HardwareMonitorService(
 
         // Read sysfs full charge vs design for accurate battery health wear calculation
         val sysfsHealthRatio = readSysfsBatteryHealthRatio()
-        val healthRatio = sysfsHealthRatio ?: 0.975f
-        val healthPercentage = (healthRatio * 100f).coerceIn(75f, 100f)
+        val healthRatio = sysfsHealthRatio
+        val healthPercentage = healthRatio?.let { (it * 100f).coerceIn(0f, 100f) } ?: 0f
         val capacityPercentage = ((currentMah.toFloat() / designedCapacity.toFloat()) * 100f).coerceIn(0f, 100f)
 
-        val healthGrade = when {
+        val healthGrade = if (healthRatio == null) "Unavailable (sensor not exposed)" else when {
             healthPercentage >= 95f -> "Optimal (A+)"
             healthPercentage >= 90f -> "Good (A)"
             healthPercentage >= 82f -> "Fair (B)"
