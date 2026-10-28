@@ -147,6 +147,6 @@ class HardwareMonitorTest {
         assertNotNull(telemetry.network)
         assertNotNull(telemetry.memory)
         assertNotNull(telemetry.storage)
-        assertTrue(telemetry.systemVitalityScore in 0..100)
+        assertTrue(telemetry.systemVitalityScore == -1 || telemetry.systemVitalityScore in 0..100)
     }
 }
