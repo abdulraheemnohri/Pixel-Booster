@@ -513,27 +513,27 @@ class HardwareMonitorService(
         // Core load distribution
         val coreLoads = List(coreCount) { index ->
             val base = cpuUsage * (0.8f + (index % 3) * 0.15f)
-            (base + Random.nextFloat() * 6f - 3f).coerceIn(4f, 100f)
+            base.coerceIn(0f, 100f)
         }
 
         // Estimated GPU usage (frame composition & graphics memory bandwidth)
-        val gpuUsage = ((cpuUsage * 0.85f) + (Random.nextFloat() * 8f - 4f)).coerceIn(8f, 95f)
-        val gpuFps = if (gpuUsage > 85f) 58 else 120
+        val gpuUsage = -1f // GPU utilization is not exposed by a supported public API.
+        val gpuFps = 0 // FPS telemetry is unavailable; do not infer it from CPU load.
 
         // Google Tensor TPU / Neural Processing Engine Telemetry
-        val tpuUsage = ((cpuUsage * 0.45f) + (Random.nextFloat() * 12f)).coerceIn(5f, 90f)
-        val tpuState = if (tpuUsage > 40f) "Active (Neural Compute)" else "Standby (Low Power)"
+        val tpuUsage = -1f // TPU/NPU utilization is not exposed by a supported public API.
+        val tpuState = "Telemetry unavailable"
 
         return ProcessorTelemetryData(
             overallCpuUsage = cpuUsage,
             coreCount = coreCount,
             coreLoads = coreLoads,
             gpuUsage = gpuUsage,
-            gpuEngineName = "Arm Mali-G715 Immortalis / Tensor GPU",
+            gpuEngineName = "GPU utilization unavailable",
             gpuFpsEstimate = gpuFps,
             tpuUsage = tpuUsage,
-            tpuEngineName = "Google Tensor TPU v4 / NPU",
-            tpuTopsRating = "45 TOPS Peak ML Acceleration",
+            tpuEngineName = "TPU/NPU utilization unavailable",
+            tpuTopsRating = "TOPS rating not verified",
             tpuState = tpuState
         )
     }
@@ -565,7 +565,7 @@ class HardwareMonitorService(
 
                 if (deltaTotal > 0) {
                     val usage = ((deltaTotal - deltaIdle).toFloat() / deltaTotal.toFloat()) * 100f
-                    usage.coerceIn(5f, 98f)
+                    usage.coerceIn(0f, 100f)
                 } else {
                     sampleFallbackCpuUsage()
                 }
@@ -577,12 +577,7 @@ class HardwareMonitorService(
         }
     }
 
-    private fun sampleFallbackCpuUsage(): Float {
-        // Safe heuristic fallback based on active thread load and memory
-        val activeThreads = Thread.activeCount()
-        val estimated = (activeThreads * 1.8f) + 14f + (Random.nextFloat() * 6f)
-        return estimated.coerceIn(12f, 78f)
-    }
+    private fun sampleFallbackCpuUsage(): Float = 0f // Unavailable sentinel; no synthetic estimate.
 
     // 4. INTERNET / NETWORK TELEMETRY
     fun sampleNetworkTelemetry(): NetworkTelemetryData {
@@ -615,10 +610,10 @@ class HardwareMonitorService(
         return NetworkTelemetryData(
             downloadSpeedBytesPerSec = rxSpeed,
             uploadSpeedBytesPerSec = txSpeed,
-            sessionTotalRxBytes = sessionTotalRx.coerceAtLeast(24L * 1024L * 1024L),
-            sessionTotalTxBytes = sessionTotalTx.coerceAtLeast(8L * 1024L * 1024L),
+            sessionTotalRxBytes = sessionTotalRx.coerceAtLeast(0L),
+            sessionTotalTxBytes = sessionTotalTx.coerceAtLeast(0L),
             connectionType = connectionType,
-            latencyMs = if (isConnected) 22L + (Random.nextInt(10)) else 999L,
+            latencyMs = -1L,
             isConnected = isConnected,
             activeInterfaceName = activeInterface,
             localIpAddress = localIp,
@@ -632,9 +627,9 @@ class HardwareMonitorService(
             linkSpeedMbps = linkSpeed,
             cellularCarrier = carrier,
             cellularNetworkType = netType,
-            packetLossPercent = if (isConnected) 0.0f else 100.0f,
-            jitterMs = if (isConnected) 1 + Random.nextInt(3) else 0,
-            healthGrade = if (isConnected && (rssiDbm > -75 || linkSpeed > 100)) "A+ (Optimal)" else "B (Fair)"
+            packetLossPercent = -1.0f,
+            jitterMs = -1,
+            healthGrade = "Not measured"
         )
     }
 
