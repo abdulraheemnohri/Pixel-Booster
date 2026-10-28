@@ -37,7 +37,8 @@ jobs:
           fi
           echo "ANDROID_HOME=$SDK_ROOT" >> "$GITHUB_ENV"
           echo "$(dirname "$SDKMANAGER")" >> "$GITHUB_PATH"
-          yes | "$SDKMANAGER" --licenses >/dev/null || [[ "$?" -eq 141 ]]
+          printf 'y\n%.0s' {1..100} > "$RUNNER_TEMP/android-sdk-licenses.txt"
+          "$SDKMANAGER" --licenses < "$RUNNER_TEMP/android-sdk-licenses.txt" >/dev/null
           "$SDKMANAGER" "platforms;android-36" "build-tools;36.0.0"
 
       - name: Set up Gradle
