@@ -43,13 +43,9 @@ import androidx.compose.ui.unit.sp
 import com.example.core.model.ProcessorTelemetryData
 import com.example.ui.theme.CriticalRed
 import com.example.ui.theme.CyberCyan
-import com.example.ui.theme.HighElevationDark
 import com.example.ui.theme.ModernDesignTokens
 import com.example.ui.theme.OutlineDark
 import com.example.ui.theme.PositiveMint
-import com.example.ui.theme.PrimaryBlue
-import com.example.ui.theme.TextPrimaryDark
-import com.example.ui.theme.TextSecondaryDark
 import com.example.ui.theme.WarningAmber
 
 @Composable
@@ -126,7 +122,7 @@ fun ProcessorTelemetryCard(
                         Text(
                             text = "Heterogeneous Compute Matrix",
                             style = MaterialTheme.typography.bodySmall,
-                            color = TextSecondaryDark,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
                             fontSize = 11.sp
                         )
                     }
@@ -134,13 +130,13 @@ fun ProcessorTelemetryCard(
 
                 Surface(
                     shape = RoundedCornerShape(ModernDesignTokens.RadiusFull),
-                    color = HighElevationDark,
+                    color = MaterialTheme.colorScheme.surfaceContainer,
                     border = androidx.compose.foundation.BorderStroke(1.dp, Color(0x3038BDF8))
                 ) {
                     Text(
                         text = "${processor.coreCount} Cores",
                         style = MaterialTheme.typography.labelSmall,
-                        color = TextPrimaryDark,
+                        color = MaterialTheme.colorScheme.onSurface,
                         fontWeight = FontWeight.Bold,
                         modifier = Modifier.padding(horizontal = 10.dp, vertical = 4.dp)
                     )
@@ -170,7 +166,7 @@ fun ProcessorTelemetryCard(
                 Text(
                     text = "CPU utilization unavailable from this device sampler.",
                     style = MaterialTheme.typography.bodySmall,
-                    color = TextSecondaryDark,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
                     modifier = Modifier.padding(top = 8.dp)
                 )
             }
@@ -197,7 +193,7 @@ fun ProcessorTelemetryCard(
                                     .fillMaxWidth()
                                     .height(24.dp)
                                     .clip(RoundedCornerShape(4.dp))
-                                    .background(HighElevationDark),
+                                    .background(MaterialTheme.colorScheme.surfaceContainer),
                                 contentAlignment = Alignment.BottomCenter
                             ) {
                                 Box(
@@ -217,7 +213,7 @@ fun ProcessorTelemetryCard(
                                 text = "C$index",
                                 style = MaterialTheme.typography.labelSmall,
                                 fontSize = 9.sp,
-                                color = TextSecondaryDark
+                                color = MaterialTheme.colorScheme.onSurfaceVariant
                             )
                         }
                     }
@@ -226,7 +222,7 @@ fun ProcessorTelemetryCard(
                 Text(
                     text = "Per-core utilization unavailable; only aggregate CPU sampling is attempted.",
                     style = MaterialTheme.typography.bodySmall,
-                    color = TextSecondaryDark
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
             }
 
@@ -312,14 +308,14 @@ fun ProcessorMetricRow(
                     .height(6.dp)
                     .clip(RoundedCornerShape(3.dp)),
                 color = accentColor,
-                trackColor = HighElevationDark,
+                trackColor = MaterialTheme.colorScheme.surfaceContainer,
                 strokeCap = StrokeCap.Round
             )
         } else {
             Text(
                 text = "Measurement unavailable",
                 style = MaterialTheme.typography.labelSmall,
-                color = TextSecondaryDark
+                color = MaterialTheme.colorScheme.onSurfaceVariant
             )
         }
 
@@ -328,7 +324,7 @@ fun ProcessorMetricRow(
         Text(
             text = subtext,
             style = MaterialTheme.typography.bodySmall,
-            color = TextSecondaryDark,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
             fontSize = 10.sp
         )
     }
