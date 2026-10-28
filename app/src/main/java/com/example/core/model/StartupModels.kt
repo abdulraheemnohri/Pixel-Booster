@@ -33,7 +33,7 @@ data class BootOptimizationResult(
     val timestamp: Long = System.currentTimeMillis()
 ) {
     val formattedTimeSaved: String
-        get() = String.format(Locale.US, "%.1f seconds", totalDelayReducedMs / 1000f)
+        get() = String.format(Locale.US, "Estimated %.1f seconds", totalDelayReducedMs / 1000f)
 
     val formattedRamReclaimed: String
         get() = if (ramHeadroomReclaimedBytes > 0L) MemoryInfoData.formatBytes(ramHeadroomReclaimedBytes) else "Not measured"
