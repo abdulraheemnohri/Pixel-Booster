@@ -69,6 +69,8 @@ data class SettingsData(
     val autoRamTrimEnabled: Boolean = true,
     val autoThermalCoolingEnabled: Boolean = true,
     val batterySaverAutomationEnabled: Boolean = false,
-    val backgroundNetworkThrottleEnabled: Boolean = false
+    val backgroundNetworkThrottleEnabled: Boolean = false,
+    val chargingCutOffLimit: Int = 85,
+    val batterySafetyGuardEnabled: Boolean = true
 )
 

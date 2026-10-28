@@ -21,7 +21,7 @@ class StorageAnalyzerRepository(private val context: Context) {
     fun getVolumeInfo(volumeType: StorageVolumeType): StorageVolumeInfo {
         val targetDir = when (volumeType) {
             StorageVolumeType.INTERNAL -> Environment.getDataDirectory()
-            StorageVolumeType.EXTERNAL -> Environment.getExternalStorageDirectory()
+            StorageVolumeType.EXTERNAL -> Environment.getDataDirectory() // Exclusive to internal storage
             StorageVolumeType.APP_SANDBOX -> context.filesDir ?: context.cacheDir
         }
 
@@ -30,11 +30,6 @@ class StorageAnalyzerRepository(private val context: Context) {
             val totalBytes = stat.totalBytes
             val availableBytes = stat.availableBytes
             val usedBytes = (totalBytes - availableBytes).coerceAtLeast(0L)
-            val isRemovable = volumeType == StorageVolumeType.EXTERNAL && try {
-                Environment.isExternalStorageRemovable()
-            } catch (_: Throwable) {
-                false
-            }
 
             StorageVolumeInfo(
                 volumeType = volumeType,
@@ -42,8 +37,8 @@ class StorageAnalyzerRepository(private val context: Context) {
                 totalBytes = totalBytes,
                 availableBytes = availableBytes,
                 usedBytes = usedBytes,
-                isRemovable = isRemovable,
-                fileSystem = if (volumeType == StorageVolumeType.INTERNAL) "ext4/f2fs" else "fuse/sdcardfs"
+                isRemovable = false,
+                fileSystem = "ext4/f2fs (Internal Only)"
             )
         } catch (_: Throwable) {
             StorageVolumeInfo(
@@ -61,7 +56,7 @@ class StorageAnalyzerRepository(private val context: Context) {
         val allVolumes = getStorageVolumes()
         val activeVolume = allVolumes.find { it.volumeType == activeVolumeType } ?: allVolumes.first()
 
-        // 1. Genuine App Cache scan
+        // 1. Exclusive to Internal Storage App Cache Scan
         var cacheBytes = 0L
         val internalCache = context.cacheDir
         if (internalCache != null && internalCache.exists()) {
@@ -72,29 +67,11 @@ class StorageAnalyzerRepository(private val context: Context) {
                     JunkCategoryItem(
                         id = "cache_internal",
                         category = JunkCategoryType.APP_CACHE,
-                        name = "App Memory & Web Cache",
+                        name = "Internal App Memory & Web Cache",
                         sizeBytes = size,
                         filePath = internalCache.absolutePath
                     )
                 )
-            }
-        }
-
-        context.externalCacheDir?.let { extCache ->
-            if (extCache.exists()) {
-                val size = calculateDirSize(extCache)
-                if (size > 0) {
-                    cacheBytes += size
-                    items.add(
-                        JunkCategoryItem(
-                            id = "cache_external",
-                            category = JunkCategoryType.APP_CACHE,
-                            name = "External Media Cache",
-                            sizeBytes = size,
-                            filePath = extCache.absolutePath
-                        )
-                    )
-                }
             }
         }
 
@@ -115,76 +92,37 @@ class StorageAnalyzerRepository(private val context: Context) {
             }
         }
 
-        // 2. Genuine Large Files scan (>25MB)
+        // 2. Exclusive to Internal Storage Files Scan (Large Unused Files > 5MB & Temp files)
         var largeFilesBytes = 0L
-        val searchDirs = listOfNotNull(
-            Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS),
-            context.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS),
-            context.getExternalFilesDir(null)
-        )
+        var tempBytes = 0L
+        val internalFilesDir = context.filesDir
 
-        for (dir in searchDirs) {
-            if (dir.exists()) {
-                dir.listFiles()?.forEach { f ->
-                    if (f.isFile && f.length() > 25L * 1024L * 1024L) {
-                        largeFilesBytes += f.length()
+        if (internalFilesDir != null && internalFilesDir.exists()) {
+            internalFilesDir.walkTopDown().maxDepth(4).forEach { f ->
+                if (f.isFile) {
+                    val length = f.length()
+                    if (length > 5L * 1024L * 1024L) {
+                        largeFilesBytes += length
                         items.add(
                             JunkCategoryItem(
-                                id = "large_${f.name}_${f.lastModified()}",
+                                id = "large_internal_${f.name}_${f.lastModified()}",
                                 category = JunkCategoryType.LARGE_FILES,
                                 name = f.name,
-                                sizeBytes = f.length(),
+                                sizeBytes = length,
                                 filePath = f.absolutePath
                             )
                         )
-                    }
-                }
-            }
-        }
-
-        // 3. Genuine Temporary Files scan (.tmp, .log, .bak)
-        var tempBytes = 0L
-        val tempCandidates = mutableListOf<File>()
-        searchDirs.forEach { dir ->
-            if (dir.exists()) {
-                dir.walkTopDown().maxDepth(2).forEach { f ->
-                    if (f.isFile && (f.extension.equals("tmp", ignoreCase = true) ||
-                                f.extension.equals("log", ignoreCase = true) ||
-                                f.extension.equals("bak", ignoreCase = true))) {
-                        tempCandidates.add(f)
-                    }
-                }
-            }
-        }
-        for (tempFile in tempCandidates) {
-            val length = tempFile.length()
-            if (length > 0) {
-                tempBytes += length
-                items.add(
-                    JunkCategoryItem(
-                        id = "temp_${tempFile.name}_${tempFile.lastModified()}",
-                        category = JunkCategoryType.TEMP_FILES,
-                        name = tempFile.name,
-                        sizeBytes = length,
-                        filePath = tempFile.absolutePath
-                    )
-                )
-            }
-        }
-
-        // 4. Genuine Redundant APK files scan (.apk)
-        var apkBytes = 0L
-        searchDirs.forEach { dir ->
-            if (dir.exists()) {
-                dir.listFiles()?.forEach { f ->
-                    if (f.isFile && f.extension.equals("apk", ignoreCase = true)) {
-                        apkBytes += f.length()
+                    } else if (f.extension.equals("tmp", ignoreCase = true) ||
+                               f.extension.equals("log", ignoreCase = true) ||
+                               f.extension.equals("bak", ignoreCase = true) ||
+                               f.name.endsWith(".temp", ignoreCase = true)) {
+                        tempBytes += length
                         items.add(
                             JunkCategoryItem(
-                                id = "apk_${f.name}_${f.lastModified()}",
-                                category = JunkCategoryType.REDUNDANT_APKS,
+                                id = "temp_internal_${f.name}_${f.lastModified()}",
+                                category = JunkCategoryType.TEMP_FILES,
                                 name = f.name,
-                                sizeBytes = f.length(),
+                                sizeBytes = length,
                                 filePath = f.absolutePath
                             )
                         )
@@ -193,14 +131,14 @@ class StorageAnalyzerRepository(private val context: Context) {
             }
         }
 
-        val totalJunk = cacheBytes + largeFilesBytes + tempBytes + apkBytes
+        val totalJunk = cacheBytes + largeFilesBytes + tempBytes
 
         StorageAnalyzerReport(
             totalJunkBytes = totalJunk,
             cacheBytes = cacheBytes,
             largeFilesBytes = largeFilesBytes,
             tempFilesBytes = tempBytes,
-            redundantApksBytes = apkBytes,
+            redundantApksBytes = 0L,
             items = items,
             activeVolume = activeVolume,
             availableVolumes = allVolumes
@@ -231,11 +169,10 @@ class StorageAnalyzerRepository(private val context: Context) {
             }
         }
 
-        // Also clean internal cache dir
+        // Also clean internal cache dir securely
         try {
             context.cacheDir?.listFiles()?.forEach { it.deleteRecursively() }
             context.codeCacheDir?.listFiles()?.forEach { it.deleteRecursively() }
-            context.externalCacheDir?.listFiles()?.forEach { it.deleteRecursively() }
         } catch (_: Throwable) {}
 
         cleaned

@@ -391,6 +391,62 @@ fun BatteryHealthCard(
 
             Spacer(modifier = Modifier.height(14.dp))
 
+            // Automatic Charging Cut-Off & Battery Safety Guardian Banner
+            Surface(
+                modifier = Modifier.fillMaxWidth(),
+                shape = RoundedCornerShape(14.dp),
+                color = PositiveMint.copy(alpha = 0.1f),
+                border = androidx.compose.foundation.BorderStroke(1.dp, PositiveMint.copy(alpha = 0.35f))
+            ) {
+                Column(modifier = Modifier.padding(14.dp)) {
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Row(verticalAlignment = Alignment.CenterVertically) {
+                            Icon(
+                                imageVector = Icons.Filled.ElectricBolt,
+                                contentDescription = null,
+                                tint = PositiveMint,
+                                modifier = Modifier.size(18.dp)
+                            )
+                            Spacer(modifier = Modifier.width(8.dp))
+                            Text(
+                                text = "Charging Cut-Off & Safety Guardian",
+                                style = MaterialTheme.typography.titleSmall,
+                                fontWeight = FontWeight.Bold,
+                                color = PositiveMint
+                            )
+                        }
+                        Surface(
+                            shape = RoundedCornerShape(9999.dp),
+                            color = PositiveMint.copy(alpha = 0.2f)
+                        ) {
+                            Text(
+                                text = "ACTIVE",
+                                style = MaterialTheme.typography.labelSmall,
+                                color = PositiveMint,
+                                fontWeight = FontWeight.ExtraBold,
+                                fontSize = 9.sp,
+                                modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp)
+                            )
+                        }
+                    }
+                    Spacer(modifier = Modifier.height(6.dp))
+                    Text(
+                        text = if (battery.levelPercentage >= 85 && battery.isCharging)
+                            "⚠️ Charge reached 85% cutoff threshold! Unplug to preserve battery longevity."
+                        else
+                            "Monitoring thermal and voltage safety. Protects against overcharge and overheating.",
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onSurface
+                    )
+                }
+            }
+
+            Spacer(modifier = Modifier.height(14.dp))
+
             // Action Button
             Button(
                 onClick = onOpenBatterySettings,

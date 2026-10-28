@@ -49,6 +49,8 @@ class UserPreferencesRepository(context: Context) {
         val AUTO_THERMAL_COOLING_ENABLED = booleanPreferencesKey("auto_thermal_cooling_enabled")
         val BATTERY_SAVER_AUTOMATION_ENABLED = booleanPreferencesKey("battery_saver_automation_enabled")
         val BACKGROUND_NETWORK_THROTTLE_ENABLED = booleanPreferencesKey("background_network_throttle_enabled")
+        val CHARGING_CUT_OFF_LIMIT = intPreferencesKey("charging_cut_off_limit")
+        val BATTERY_SAFETY_GUARD_ENABLED = booleanPreferencesKey("battery_safety_guard_enabled")
         val RESTRICTED_STARTUP_PACKAGES = stringSetPreferencesKey("restricted_startup_packages")
     }
 
@@ -83,7 +85,9 @@ class UserPreferencesRepository(context: Context) {
             autoRamTrimEnabled = prefs[PreferencesKeys.AUTO_RAM_TRIM_ENABLED] ?: true,
             autoThermalCoolingEnabled = prefs[PreferencesKeys.AUTO_THERMAL_COOLING_ENABLED] ?: true,
             batterySaverAutomationEnabled = prefs[PreferencesKeys.BATTERY_SAVER_AUTOMATION_ENABLED] ?: false,
-            backgroundNetworkThrottleEnabled = prefs[PreferencesKeys.BACKGROUND_NETWORK_THROTTLE_ENABLED] ?: false
+            backgroundNetworkThrottleEnabled = prefs[PreferencesKeys.BACKGROUND_NETWORK_THROTTLE_ENABLED] ?: false,
+            chargingCutOffLimit = prefs[PreferencesKeys.CHARGING_CUT_OFF_LIMIT] ?: 85,
+            batterySafetyGuardEnabled = prefs[PreferencesKeys.BATTERY_SAFETY_GUARD_ENABLED] ?: true
         )
     }
 
@@ -185,6 +189,18 @@ class UserPreferencesRepository(context: Context) {
     suspend fun setBackgroundNetworkThrottleEnabled(enabled: Boolean) {
         appContext.dataStore.edit { prefs ->
             prefs[PreferencesKeys.BACKGROUND_NETWORK_THROTTLE_ENABLED] = enabled
+        }
+    }
+
+    suspend fun setChargingCutOffLimit(limit: Int) {
+        appContext.dataStore.edit { prefs ->
+            prefs[PreferencesKeys.CHARGING_CUT_OFF_LIMIT] = limit.coerceIn(70, 100)
+        }
+    }
+
+    suspend fun setBatterySafetyGuardEnabled(enabled: Boolean) {
+        appContext.dataStore.edit { prefs ->
+            prefs[PreferencesKeys.BATTERY_SAFETY_GUARD_ENABLED] = enabled
         }
     }
 
