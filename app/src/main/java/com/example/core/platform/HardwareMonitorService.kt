@@ -334,7 +334,7 @@ class HardwareMonitorService(
 
         // Designed capacity calculation based on device profile
         val model = Build.MODEL ?: ""
-        val designedCapacity = resolveDesignedCapacityMah(model)
+        val designedCapacity = resolveDesignedCapacityMah()
 
         // Read real hardware charge counter if accessible
         var currentMah = -1
@@ -352,15 +352,14 @@ class HardwareMonitorService(
 
         // If hardware charge counter unavailable, derive from level percentage and design
         if (currentMah <= 0 || currentMah > designedCapacity * 1.2) {
-            val healthEstimate = 0.975f
-            currentMah = ((percentage / 100f) * (designedCapacity * healthEstimate)).roundToInt()
+            currentMah = 0
         }
 
         // Read sysfs full charge vs design for accurate battery health wear calculation
         val sysfsHealthRatio = readSysfsBatteryHealthRatio()
         val healthRatio = sysfsHealthRatio
         val healthPercentage = healthRatio?.let { (it * 100f).coerceIn(0f, 100f) } ?: 0f
-        val capacityPercentage = ((currentMah.toFloat() / designedCapacity.toFloat()) * 100f).coerceIn(0f, 100f)
+        val capacityPercentage = if (currentMah > 0 && designedCapacity > 0) ((currentMah.toFloat() / designedCapacity.toFloat()) * 100f).coerceIn(0f, 100f) else 0f
 
         val healthGrade = if (healthRatio == null) "Unavailable (sensor not exposed)" else when {
             healthPercentage >= 95f -> "Optimal (A+)"
@@ -373,13 +372,8 @@ class HardwareMonitorService(
         val (chargeCycles, cyclesSource) = resolveRealChargeCycles(batteryIntent, percentage, chargingState)
 
         // Estimated charging wattage
-        val wattage = if (chargingState == BatteryChargingState.CHARGING) {
-            when (pluggedSource) {
-                BatteryPluggedSource.AC -> 27.5f // 30W USB-PD
-                BatteryPluggedSource.WIRELESS -> 15.0f // Qi2 / Pixel Stand
-                BatteryPluggedSource.USB -> 7.5f
-                else -> 10.0f
-            }
+        val wattage = if (voltageMv > 0 && currentFlowMa != 0) {
+            voltageMv.toFloat() * kotlin.math.abs(currentFlowMa).toFloat() / 1_000_000f
         } else null
 
         return BatteryHealthData(
@@ -464,45 +458,19 @@ class HardwareMonitorService(
         }
 
         // 3. Persistent battery wear cycle tracker
-        val prefs = context.getSharedPreferences("pixel_booster_battery_tracker", Context.MODE_PRIVATE)
-        val lastLevel = prefs.getInt("last_battery_level", currentLevel)
-        var accumulatedPercent = prefs.getInt("accumulated_charge_percent", 0)
-        var storedCycles = prefs.getInt("recorded_cycle_count", 138)
-
-        if (chargingState == BatteryChargingState.CHARGING && currentLevel > lastLevel) {
-            val delta = currentLevel - lastLevel
-            accumulatedPercent += delta
-            if (accumulatedPercent >= 100) {
-                storedCycles += (accumulatedPercent / 100)
-                accumulatedPercent %= 100
-            }
-            prefs.edit()
-                .putInt("accumulated_charge_percent", accumulatedPercent)
-                .putInt("recorded_cycle_count", storedCycles)
-                .putInt("last_battery_level", currentLevel)
-                .apply()
-        } else {
-            prefs.edit().putInt("last_battery_level", currentLevel).apply()
-        }
-
-        return Pair(storedCycles, "Persistent Coulomb Wear Tracker")
+        return Pair(0, "Unavailable (hardware counter not exposed)")
     }
 
-    private fun resolveDesignedCapacityMah(model: String): Int {
-        val lower = model.lowercase()
-        return when {
-            lower.contains("pixel 9 pro xl") -> 5060
-            lower.contains("pixel 9 pro") -> 4700
-            lower.contains("pixel 9") -> 4700
-            lower.contains("pixel 8 pro") -> 5050
-            lower.contains("pixel 8") -> 4575
-            lower.contains("pixel 7 pro") -> 5000
-            lower.contains("pixel 7") -> 4355
-            lower.contains("pixel 6 pro") -> 5003
-            lower.contains("pixel 6") -> 4614
-            lower.contains("fold") -> 4821
-            else -> 5000
+    private fun resolveDesignedCapacityMah(): Int {
+        val paths = listOf("/sys/class/power_supply/battery/charge_full_design", "/sys/class/power_supply/bms/charge_full_design")
+        for (path in paths) {
+            val value = runCatching { java.io.File(path).takeIf { it.canRead() }?.readText()?.trim()?.toLongOrNull() }.getOrNull()
+            if (value != null && value > 0L) {
+                val mah = if (value > 100_000L) value / 1_000L else value
+                if (mah in 1L..20_000L) return mah.toInt()
+            }
         }
+        return 0
     }
 
     // 3. CPU, GPU, TPU TELEMETRY
