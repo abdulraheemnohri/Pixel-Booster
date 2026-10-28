@@ -160,11 +160,20 @@ fun ProcessorTelemetryCard(
             )
             
             // Real-time CPU Trend Graph
-            LiveTrendGraph(
-                currentValue = processor.overallCpuUsage,
-                lineColor = cpuColor,
-                modifier = Modifier.padding(top = 8.dp)
-            )
+            if (processor.overallCpuUsage >= 0f) {
+                LiveTrendGraph(
+                    currentValue = processor.overallCpuUsage,
+                    lineColor = cpuColor,
+                    modifier = Modifier.padding(top = 8.dp)
+                )
+            } else {
+                Text(
+                    text = "CPU utilization unavailable from this device sampler.",
+                    style = MaterialTheme.typography.bodySmall,
+                    color = TextSecondaryDark,
+                    modifier = Modifier.padding(top = 8.dp)
+                )
+            }
 
             // Multi-Core Bar Distribution
             Spacer(modifier = Modifier.height(8.dp))
@@ -220,7 +229,7 @@ fun ProcessorTelemetryCard(
                 label = "GPU Graphics Engine",
                 value = processor.formattedGpuUsage,
                 percentage = processor.gpuUsage,
-                subtext = "${processor.gpuEngineName} • ~${processor.gpuFpsEstimate} FPS Headroom",
+                subtext = "${processor.gpuEngineName} • FPS telemetry unavailable",
                 accentColor = gpuColor,
                 icon = Icons.Filled.Games
             )
@@ -287,16 +296,24 @@ fun ProcessorMetricRow(
 
         Spacer(modifier = Modifier.height(6.dp))
 
-        LinearProgressIndicator(
-            progress = { animatedProgress },
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(6.dp)
-                .clip(RoundedCornerShape(3.dp)),
-            color = accentColor,
-            trackColor = HighElevationDark,
-            strokeCap = StrokeCap.Round
-        )
+        if (percentage >= 0f) {
+            LinearProgressIndicator(
+                progress = { animatedProgress },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(6.dp)
+                    .clip(RoundedCornerShape(3.dp)),
+                color = accentColor,
+                trackColor = HighElevationDark,
+                strokeCap = StrokeCap.Round
+            )
+        } else {
+            Text(
+                text = "Measurement unavailable",
+                style = MaterialTheme.typography.labelSmall,
+                color = TextSecondaryDark
+            )
+        }
 
         Spacer(modifier = Modifier.height(4.dp))
 
