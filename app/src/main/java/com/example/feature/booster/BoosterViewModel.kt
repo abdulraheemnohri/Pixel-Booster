@@ -308,20 +308,20 @@ class BoosterViewModel(application: Application) : AndroidViewModel(application)
             val freedMb = freedBytes / (1024L * 1024L)
             val summary = BoostResultSummary(
                 toolType = BoosterToolType.JUNK_CLEANER,
-                title = "Junk Cleared",
-                headlineMetric = "$freedMb MB Cleaned",
+                title = "App Cache Cleanup Complete",
+                headlineMetric = "$freedMb MB app cache removed",
                 details = listOf(
-                    "Application Cache" to scan.formattedSystemCache,
-                    "Thumbnail Cache" to scan.formattedThumbnails,
-                    "Temporary Files" to scan.formattedTempFiles,
-                    "Residual Logs" to scan.formattedLogs
+                    "App cache directory" to scan.formattedSystemCache,
+                    "External app cache" to scan.formattedThumbnails,
+                    "Code cache" to scan.formattedTempFiles,
+                    "Residual logs" to "Not scanned or removed"
                 )
             )
 
             repository.recordLog(
                 boosterType = BoosterToolType.JUNK_CLEANER.name,
-                title = "Deep Junk Cleaner",
-                details = "Swept $freedMb MB of residual caches, obsolete temp files and thumbnails",
+                title = "App-Owned Cache Cleanup",
+                details = "Removed $freedMb MB from this app’s cache directories only; personal files, shared media, and other apps were not touched.",
                 metricFreed = "$freedMb MB"
             )
 
@@ -453,8 +453,8 @@ class BoosterViewModel(application: Application) : AndroidViewModel(application)
             repository.recordLog(
                 boosterType = BoosterToolType.GAME_TURBO.name,
                 title = if (next) "Game Turbo Enabled" else "Game Turbo Disabled",
-                details = if (next) "Allocated priority RAM and primed GPU frame pipeline" else "Standard runtime profile restored",
-                metricFreed = if (next) "TURBO ON" else "OFF"
+                details = if (next) "Game guidance mode enabled in the app; Android does not grant extra RAM or GPU priority." else "Game guidance mode disabled in the app.",
+                metricFreed = if (next) "GUIDANCE ON" else "OFF"
             )
         }
     }
@@ -487,7 +487,7 @@ class BoosterViewModel(application: Application) : AndroidViewModel(application)
             _uiState.update {
                 it.copy(
                     cacheClearProgress = 0.55f,
-                    cacheClearStageText = "Purging temporary disk caches, bitmaps & residual logs..."
+                    cacheClearStageText = "Clearing this app’s cache folders only..."
                 )
             }
             delay(350)
@@ -495,7 +495,7 @@ class BoosterViewModel(application: Application) : AndroidViewModel(application)
             _uiState.update {
                 it.copy(
                     cacheClearProgress = 0.82f,
-                    cacheClearStageText = "Reclaiming bytecode cache & defragmenting memory..."
+                    cacheClearStageText = "Measuring bytes actually removed..."
                 )
             }
 
@@ -505,7 +505,7 @@ class BoosterViewModel(application: Application) : AndroidViewModel(application)
             _uiState.update {
                 it.copy(
                     cacheClearProgress = 1.0f,
-                    cacheClearStageText = "Cache cleared! System responsiveness improved."
+                    cacheClearStageText = "App cache cleanup finished; performance improvement is not guaranteed."
                 )
             }
             delay(250)
@@ -515,9 +515,9 @@ class BoosterViewModel(application: Application) : AndroidViewModel(application)
             // Persist to Room
             repository.recordLog(
                 boosterType = "CLEAR_CACHE",
-                title = "Non-Essential Cache Purge",
-                details = "Swept $freedMb MB (Internal: ${report.formattedInternal}, Bytecode: ${report.formattedCodeCache}) in ${report.durationMs}ms",
-                metricFreed = "+$freedMb MB Freed"
+                title = "App-Owned Cache Cleanup",
+                details = "Removed $freedMb MB from this app’s own cache folders (Internal: ${report.formattedInternal}, Code cache: ${report.formattedCodeCache}) in ${report.durationMs}ms. System-wide performance improvement is not guaranteed.",
+                metricFreed = "$freedMb MB app cache removed"
             )
 
             EventLogger.log(
