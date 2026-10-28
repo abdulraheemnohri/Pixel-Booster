@@ -420,7 +420,7 @@ class BoosterViewModel(application: Application) : AndroidViewModel(application)
                     "Target" to res.host,
                     "First measurement" to res.initialLatencyMs.takeIf { it > 0L }?.let { "$it ms" } ?: "Unavailable",
                     "Second measurement" to res.optimizedLatencyMs.takeIf { it > 0L }?.let { "$it ms" } ?: "Unavailable",
-                    "Difference" to res.latencyImprovementMs.takeIf { it >= 0L }?.let { "$it ms (observed, not optimized)" } ?: "Unavailable unless both attempts succeed"
+                    "Latency difference" to res.latencyImprovementMs.takeIf { it != Long.MIN_VALUE }?.let { "$it ms (positive = second attempt faster; negative = slower)" } ?: "Unavailable unless both attempts succeed"
                 )
             )
 
@@ -428,7 +428,7 @@ class BoosterViewModel(application: Application) : AndroidViewModel(application)
                 boosterType = BoosterToolType.NETWORK_TURBO.name,
                 title = "Network Turbo Accelerator",
                 details = "Connection test to ${res.host}: first ${res.initialLatencyMs.takeIf { it > 0L }?.let { "$it ms" } ?: "unavailable"}, second ${res.optimizedLatencyMs.takeIf { it > 0L }?.let { "$it ms" } ?: "unavailable"}. No network settings were changed.",
-                metricFreed = res.latencyImprovementMs.takeIf { it >= 0L }?.let { "$it ms observed difference" } ?: "Unavailable"
+                metricFreed = res.latencyImprovementMs.takeIf { it != Long.MIN_VALUE }?.let { "$it ms observed latency difference" } ?: "Unavailable"
             )
 
             _uiState.update {
