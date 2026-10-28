@@ -1,6 +1,8 @@
 package com.example.ui.navigation
 
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Apps
+import androidx.compose.material.icons.outlined.Apps
 import androidx.compose.material.icons.filled.BarChart
 import androidx.compose.material.icons.filled.Bolt
 import androidx.compose.material.icons.filled.Dashboard
@@ -121,9 +123,18 @@ sealed class Screen(
         testTag = "nav_item_settings"
     )
 
+    data object More : Screen(
+        route = "more",
+        title = "More",
+        selectedIcon = Icons.Filled.Apps,
+        unselectedIcon = Icons.Outlined.Apps,
+        testTag = "nav_item_more"
+    )
+
     companion object {
+        // Keep the primary navigation focused; secondary tools remain available from More.
         val items: List<Screen>
-            get() = listOf(Home, Booster, Startup, Health, Storage, SpeedTest, Usage, Privacy, History, Diagnostics, Settings)
+            get() = listOf(Home, Booster, Storage, Usage, Diagnostics, More)
     }
 
 }
