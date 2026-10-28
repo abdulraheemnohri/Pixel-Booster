@@ -602,9 +602,9 @@ class HardwareMonitorService(
     }
 
     private fun resolveLocalNetworkAddresses(): Triple<String, String, String> {
-        var ipv4 = "127.0.0.1"
-        var ipv6 = "::1"
-        var interfaceName = "wlan0"
+        var ipv4 = "Unavailable"
+        var ipv6 = "Unavailable"
+        var interfaceName = "Unavailable"
 
         try {
             val interfaces = NetworkInterface.getNetworkInterfaces() ?: return Triple(ipv4, ipv6, interfaceName)
@@ -627,8 +627,8 @@ class HardwareMonitorService(
             }
         } catch (_: Throwable) {}
 
-        if (ipv4 == "127.0.0.1") ipv4 = "192.168.1.108"
-        if (ipv6 == "::1") ipv6 = "fe80::882f:99a1:4c"
+        
+        
         return Triple(ipv4, ipv6, interfaceName)
     }
 
@@ -637,9 +637,9 @@ class HardwareMonitorService(
             val parts = localIp.split(".")
             if (parts.size == 4) {
                 "${parts[0]}.${parts[1]}.${parts[2]}.1"
-            } else "192.168.1.1"
+            } else "Unavailable"
         } catch (_: Throwable) {
-            "192.168.1.1"
+            "Unavailable"
         }
     }
 
@@ -648,17 +648,17 @@ class HardwareMonitorService(
             val info = wifiManager?.connectionInfo
             if (info != null && info.networkId != -1) {
                 val rawSsid = info.ssid?.replace("\"", "")
-                val ssid = if (!rawSsid.isNullOrBlank() && rawSsid != "<unknown ssid>") rawSsid else "Wi-Fi High-Speed Network"
+                val ssid = if (!rawSsid.isNullOrBlank() && rawSsid != "<unknown ssid>") rawSsid else "Unavailable"
                 val rssi = info.rssi.coerceIn(-100, -30)
-                val signalPercent = ((rssi + 100) * 1.42f).toInt().coerceIn(10, 100)
+                val signalPercent = (((rssi + 100) / 70f) * 100f).toInt().coerceIn(0, 100)
                 val freq = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) info.frequency else 5240
 
-                val speed = info.linkSpeed.coerceAtLeast(54)
+                val speed = info.linkSpeed.coerceAtLeast(0)
                 return WifiTelemetryInfo(ssid, rssi, signalPercent, freq, speed)
             }
         } catch (_: Throwable) {}
 
-        return WifiTelemetryInfo("Wi-Fi Pixel Fast Node", -56, 88, 5240, 866)
+        return WifiTelemetryInfo("Unavailable", 0, 0, 0, 0)
     }
 
 
@@ -673,11 +673,11 @@ class HardwareMonitorService(
     private fun sampleCellularInfo(): Pair<String, String> {
         try {
             val operator = telephonyManager?.networkOperatorName
-            val carrier = if (!operator.isNullOrBlank()) operator else "Mobile Network Provider"
-            val netType = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) "5G Ultra Wideband" else "LTE-Advanced"
+            val carrier = if (!operator.isNullOrBlank()) operator else "Unavailable"
+            val netType = "Unavailable"
             return Pair(carrier, netType)
         } catch (_: Throwable) {
-            return Pair("Google Fi / Carrier", "5G NR SA")
+            return Pair("Unavailable", "Unavailable")
         }
     }
 
@@ -686,10 +686,10 @@ class HardwareMonitorService(
         val caps = connectivityManager.getNetworkCapabilities(activeNet) ?: return "Disconnected"
 
         return when {
-            caps.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) -> "Wi-Fi 6E (5 GHz)"
-            caps.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) -> "5G Sub-6 Ultra"
-            caps.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET) -> "Ethernet Gigabit"
-            else -> "Connected Network"
+            caps.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) -> "Wi-Fi"
+            caps.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) -> "Mobile data"
+            caps.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET) -> "Ethernet"
+            else -> "Other network"
         }
     }
 
