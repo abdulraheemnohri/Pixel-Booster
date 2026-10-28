@@ -109,18 +109,14 @@ class DeviceDiagnosticsProvider(private val context: Context) {
 
     fun getMemoryInfo(): MemoryInfoData {
         val memInfo = ActivityManager.MemoryInfo()
-        activityManager?.getMemoryInfo(memInfo)
-        val total = if (memInfo.totalMem > 0L) {
-            memInfo.totalMem
-        } else {
-            // Standard baseline (8 GB Pixel hardware RAM) when running in test runners
-            8L * 1024L * 1024L * 1024L
-        }
-        val avail = if (memInfo.availMem > 0L) {
-            memInfo.availMem
-        } else {
-            (total * 0.35).toLong()
-        }
+        runCatching { activityManager?.getMemoryInfo(memInfo) }
+        // Use Android's API first, then read the kernel-provided procfs values if needed.
+        // Never substitute a guessed device RAM capacity or guessed free-memory percentage.
+        val total = memInfo.totalMem.takeIf { it > 0L } ?: readProcMemInfoBytes("MemTotal") ?: 0L
+        val avail = memInfo.availMem.takeIf { it > 0L }
+            ?: readProcMemInfoBytes("MemAvailable")
+            ?: readProcMemInfoBytes("MemFree")
+            ?: 0L
         return MemoryInfoData(
             totalRamBytes = total,
             availableRamBytes = avail,
@@ -128,6 +124,17 @@ class DeviceDiagnosticsProvider(private val context: Context) {
             isLowMemory = memInfo.lowMemory
         )
     }
+
+    private fun readProcMemInfoBytes(key: String): Long? = runCatching {
+        File("/proc/meminfo").useLines { lines ->
+            lines.firstOrNull { it.startsWith("$key:") }
+                ?.substringAfter(":")
+                ?.trim()
+                ?.substringBefore(" ")
+                ?.toLongOrNull()
+                ?.times(1024L)
+        }
+    }.getOrNull()
 
     fun getStorageInfo(): StorageInfoData {
         return try {
