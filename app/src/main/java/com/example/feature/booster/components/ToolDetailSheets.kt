@@ -233,18 +233,34 @@ private fun JunkCleanerContent(
         }
         Spacer(modifier = Modifier.height(8.dp))
         Text(
-            text = "Scans internal storage for temporary app caches, thumbnail databases, obsolete APK residue, and runtime logs.",
+            text = "Android does not let ordinary apps inspect or delete other apps’ private caches, photos, thumbnails, or system logs. This action is limited to cache data owned by Pixel Booster.",
             style = MaterialTheme.typography.bodyMedium,
             color = MaterialTheme.colorScheme.onSurfaceVariant
         )
 
         Spacer(modifier = Modifier.height(20.dp))
 
-        Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
-            JunkItemTile(title = "App Cache & Temp Files", size = "340 MB", description = "Safe to delete, regenerates as needed")
-            JunkItemTile(title = "Thumbnail Cache", size = "180 MB", description = "Temporary gallery image previews")
-            JunkItemTile(title = "System Code Cache", size = "120 MB", description = "Compiled bytecode cache")
-            JunkItemTile(title = "Residual Diagnostic Logs", size = "45 MB", description = "Old telemetry and trace logs")
+        Card(
+            modifier = Modifier.fillMaxWidth(),
+            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainer)
+        ) {
+            Column(modifier = Modifier.padding(16.dp)) {
+                Text(
+                    text = "Device storage available",
+                    style = MaterialTheme.typography.labelMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+                Text(
+                    text = storageInfo?.formattedAvailable ?: "Unavailable",
+                    style = MaterialTheme.typography.titleLarge,
+                    fontWeight = FontWeight.Bold
+                )
+                Text(
+                    text = "This is device storage information, not a claim about reclaimable cache.",
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+            }
         }
 
         Spacer(modifier = Modifier.height(24.dp))
@@ -255,7 +271,7 @@ private fun JunkCleanerContent(
             shape = RoundedCornerShape(14.dp),
             modifier = Modifier.fillMaxWidth().height(48.dp).testTag("btn_clean_junk_confirm")
         ) {
-            Text(text = "Purge Safe Caches (685 MB)", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
+            Text(text = "Clear Pixel Booster app cache", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
         }
     }
 }
@@ -299,7 +315,7 @@ private fun CpuCoolerContent(
         }
         Spacer(modifier = Modifier.height(8.dp))
         Text(
-            text = "Eases heavy background CPU load, mitigates thermal clock throttling, and helps maintain peak frame rates.",
+            text = "Shows thermal information when Android exposes it and offers supported guidance. An ordinary app cannot force-cool the processor or guarantee higher frame rates.",
             style = MaterialTheme.typography.bodyMedium,
             color = MaterialTheme.colorScheme.onSurfaceVariant
         )
@@ -317,7 +333,7 @@ private fun CpuCoolerContent(
                 ) {
                     Text(text = "Sensor Telemetry", style = MaterialTheme.typography.labelSmall, color = TextSecondaryDark)
                     Text(
-                        text = "Status: ${thermalStatus?.statusName ?: "Nominal"}",
+                        text = "Status: ${thermalStatus?.statusName ?: "Unavailable"}",
                         style = MaterialTheme.typography.labelSmall,
                         fontWeight = FontWeight.Bold,
                         color = WarningAmber
@@ -325,14 +341,14 @@ private fun CpuCoolerContent(
                 }
                 Spacer(modifier = Modifier.height(8.dp))
                 Text(
-                    text = "Battery Temp: ${batteryInfo?.formattedTemperature ?: "31.5°C"}",
+                    text = "Battery Temp: ${batteryInfo?.formattedTemperature ?: "Unavailable"}",
                     style = MaterialTheme.typography.titleLarge,
                     fontWeight = FontWeight.Bold,
                     color = TextPrimaryDark
                 )
                 Spacer(modifier = Modifier.height(4.dp))
                 Text(
-                    text = thermalStatus?.recommendation ?: "Operating within normal parameters.",
+                    text = thermalStatus?.recommendation ?: "Thermal status is not available from Android on this device or at this time.",
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
