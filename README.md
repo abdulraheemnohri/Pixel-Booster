@@ -20,17 +20,17 @@ Pixel Booster is designed to provide a clear device overview and guide users to 
 ## Features
 
 - **Device dashboard:** A central place for supported device and system information.
-- **Smart Boost guidance:** Helps users review their apps and navigate to relevant Android settings.
+- **Smart Boost guidance:** Measures before/after system memory observations, clears only this app’s cache directories, reads available battery-temperature data, and runs two best-effort network connection measurements. Each operation reports unavailable data instead of inventing a value.
 - **Storage overview:** Reads storage capacity from Android; if Android does not provide a value, the app reports it as unavailable rather than inventing a capacity.
 - **Safe cache cleanup:** Only targets this app’s own cache and code-cache directories. It does not scan or delete personal files in `filesDir`, Downloads, photos, or other apps’ data.
 - **Battery and thermal information:** Displays sensor readings only when exposed by the device and Android version; unavailable readings must not be replaced with plausible-looking numbers.
 - **Honest measurements:** RAM and network results are before/after observations, not promised gains. CPU temperature monitoring does not actively cool the processor; network checks do not change Android’s private DNS cache or other apps’ sockets.
-- **Network tools:** Provides network checks with clear labels about what is measured.
+- **Network tools:** Shows each successful connection measurement separately. If one attempt fails, that measurement and any comparison requiring both attempts are shown as unavailable. A network test does not optimize the connection.
 - **Usage insights:** Some insights require the user to grant Usage Access in Android settings.
 - **Permission review:** Helps users review permissions visible to the app.
 - **Local history:** Keeps supported diagnostic history on-device.
 - **Hardware checks:** Offers checks for supported sensors and hardware capabilities.
-- **Settings and reports:** App preferences and supported diagnostic report options.
+- **Settings and reports:** App preferences and supported diagnostic report options. Preference toggles do not imply that an automatic background service is running unless the screen explicitly says it is implemented.
 
 Feature availability depends on Android version, device support, and permissions granted by the user. Android may restrict or hide some system metrics and actions.
 
@@ -71,7 +71,7 @@ app/build/outputs/apk/debug/app-debug.apk
 gradle :app:testDebugUnitTest --no-daemon
 ```
 
-This repository currently uses a system-installed Gradle in its CI jobs. If you build locally, use a compatible Gradle installation. A Gradle wrapper is not currently included in the repository.
+The wrapper pins the project Gradle version. Install JDK 17 and Android SDK Platform 36 before building.
 
 ## Automated checks
 
