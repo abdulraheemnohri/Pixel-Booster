@@ -101,7 +101,7 @@ data class ProcessorTelemetryData(
     val tpuState: String
 ) {
     val formattedCpuUsage: String
-        get() = String.format(Locale.US, "%.0f%%", overallCpuUsage)
+        get() = if (overallCpuUsage < 0f) "Unavailable" else String.format(Locale.US, "%.0f%%", overallCpuUsage)
 
     val formattedGpuUsage: String
         get() = if (gpuUsage < 0f) "Unavailable" else String.format(Locale.US, "%.0f%%", gpuUsage)
