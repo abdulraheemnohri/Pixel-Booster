@@ -92,7 +92,7 @@ fun BoosterScreen(
                             color = MaterialTheme.colorScheme.onSurface
                         )
                         Text(
-                            text = "Pixel Hardware Acceleration & Clean Engine",
+                            text = "Device Health & Safe Maintenance",
                             style = MaterialTheme.typography.bodySmall,
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
