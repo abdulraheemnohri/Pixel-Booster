@@ -1,22 +1,19 @@
-name: Android Build & Release CI
+name: Android Debug Build CI
 
 on:
   push:
-    branches: [ "main", "master" ]
+    branches: ["main", "master"]
   pull_request:
-    branches: [ "main", "master" ]
+    branches: ["main", "master"]
   workflow_dispatch:
-    inputs:
-      build_release:
-        description: 'Build Release APK/AAB'
-        type: boolean
-        required: false
-        default: false
+
+permissions:
+  contents: read
 
 jobs:
   build-apk:
+    name: Build debug APK
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -24,29 +21,40 @@ jobs:
       - name: Set up JDK 17
         uses: actions/setup-java@v4
         with:
-          java-version: '17'
-          distribution: 'temurin'
+          java-version: "17"
+          distribution: "temurin"
           cache: gradle
 
-      - name: Grant execute permission for gradlew if present
-        run: if [ -f "./gradlew" ]; then chmod +x ./gradlew; fi
+      - name: Set up Android SDK
+        uses: android-actions/setup-android@v3
 
-      - name: Assemble Debug APK
+      - name: Install Android SDK platform and build tools
+        run: |
+          yes | sdkmanager --licenses >/dev/null
+          sdkmanager "platforms;android-36" "build-tools;36.0.0"
+
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: "9.3.1"
+
+      - name: Create CI debug signing key
+        run: |
+          keytool -genkeypair -noprompt \
+            -keystore "$GITHUB_WORKSPACE/debug.keystore" \
+            -storepass android \
+            -alias androiddebugkey \
+            -keypass android \
+            -keyalg RSA -keysize 2048 -validity 10000 \
+            -dname "CN=Android Debug,O=Android,C=US"
+
+      - name: Assemble debug APK
         run: gradle :app:assembleDebug --no-daemon
 
-      - name: Assemble Release APK (if requested)
-        if: github.event.inputs.build_release == 'true'
-        run: gradle :app:assembleRelease --no-daemon
-
-      - name: Upload Debug APK Artifact
+      - name: Upload debug APK artifact
         uses: actions/upload-artifact@v4
         with:
           name: PixelBooster-Debug-APK
           path: app/build/outputs/apk/debug/app-debug.apk
-
-      - name: Upload Release APK Artifact
-        if: github.event.inputs.build_release == 'true'
-        uses: actions/upload-artifact@v4
-        with:
-          name: PixelBooster-Release-APK
-          path: app/build/outputs/apk/release/app-release.apk
+          if-no-files-found: error
+          retention-days: 14
