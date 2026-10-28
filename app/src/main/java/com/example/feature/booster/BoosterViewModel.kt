@@ -99,8 +99,10 @@ class BoosterViewModel(application: Application) : AndroidViewModel(application)
 
         // Compute dynamic optimization health score (0 to 100)
         var score = 100
-        if (mem.usedPercentage > 80f) score -= 15
-        else if (mem.usedPercentage > 65f) score -= 8
+        if (mem.totalRamBytes > 0L) {
+            if (mem.usedPercentage > 80f) score -= 15
+            else if (mem.usedPercentage > 65f) score -= 8
+        }
 
         if (storage.freePercentage < 15f) score -= 15
         else if (storage.freePercentage < 25f) score -= 8
@@ -155,7 +157,9 @@ class BoosterViewModel(application: Application) : AndroidViewModel(application)
                     boostProgress = 0.35f
                 )
             }
-            val (_, freedRamBytes) = boosterService.boostRam()
+            val (ramBeforeBytes, freedRamBytes) = boosterService.boostRam()
+            val freedRamMb = if (ramBeforeBytes > 0L) freedRamBytes / (1024L * 1024L) else null
+            val ramSummary = freedRamMb?.let { "$it MB observed RAM-used decrease" } ?: "RAM measurement unavailable"
             delay(450)
 
             // Stage 2: Junk Purge
@@ -202,15 +206,14 @@ class BoosterViewModel(application: Application) : AndroidViewModel(application)
             }
             delay(300)
 
-            val freedRamMb = freedRamBytes / (1024L * 1024L)
             val freedJunkMb = freedJunkBytes / (1024L * 1024L)
 
             val summary = BoostResultSummary(
                 toolType = null,
                 title = "Device Check Complete",
-                headlineMetric = "$freedRamMb MB observed RAM-used decrease",
+                headlineMetric = ramSummary,
                 details = listOf(
-                    "Observed RAM-used change" to "$freedRamMb MB decrease (system-wide memory may fluctuate; not reclaimed RAM)",
+                    "Observed RAM-used change" to (freedRamMb?.let { "$it MB decrease (system-wide memory may fluctuate; not reclaimed RAM)" } ?: "Unavailable; no valid memory measurement"),
                     "This app’s cache cleared" to "$freedJunkMb MB measured",
                     "Battery sensor" to (tempDrop?.let { String.format(Locale.US, "%.1f°C observed change (positive means cooler)", it) } ?: "Unavailable; no valid sensor reading"),
                     "Connection test" to if (networkResult.isOnline) "${networkResult.initialLatencyMs.takeIf { it > 0L }?.let { "$it ms" } ?: "First attempt unavailable"}; ${networkResult.optimizedLatencyMs.takeIf { it > 0L }?.let { "$it ms" } ?: "Second attempt unavailable"} (measured; not optimized)" else "Unavailable; connection test failed"
@@ -222,13 +225,13 @@ class BoosterViewModel(application: Application) : AndroidViewModel(application)
                 boosterType = "QUICK_BOOST",
                 title = "Quick Device Check",
                 details = "Observed RAM-used decrease: $freedRamMb MB (not guaranteed reclaimed). Removed $freedJunkMb MB from this app cache. Battery sensor: ${tempDrop?.let { String.format(Locale.US, "%.1f°C observed change", it) } ?: "unavailable"}; no active CPU cooling was performed.",
-                metricFreed = "$freedRamMb MB observed RAM delta"
+                metricFreed = ramSummary
             )
 
             EventLogger.log(
                 severity = LogSeverity.INFO,
                 category = LogCategory.SYSTEM,
-                message = "Quick maintenance completed: observed RAM-used decrease $freedRamMb MB; removed $freedJunkMb MB from app-owned cache. No system-wide RAM/CPU optimization is claimed."
+                message = "Quick maintenance completed: $ramSummary; removed $freedJunkMb MB from app-owned cache. No system-wide RAM/CPU optimization is claimed."
             )
 
             refreshHardwareTelemetry()
@@ -262,9 +265,9 @@ class BoosterViewModel(application: Application) : AndroidViewModel(application)
             val summary = BoostResultSummary(
                 toolType = BoosterToolType.RAM_BOOSTER,
                 title = "Memory Measurement Complete",
-                headlineMetric = "$freedMb MB observed RAM-used decrease",
+                headlineMetric = ramSummary,
                 details = listOf(
-                    "Observed RAM-used change" to "$freedMb MB decrease; system-wide reclaim is not guaranteed",
+                    "Observed RAM-used change" to (freedMb?.let { "$it MB decrease; system-wide reclaim is not guaranteed" } ?: "Unavailable; no valid memory measurement"),
                     "Background apps" to "Not terminated (Android controls other apps)",
                     "Garbage collector" to "Requested GC for this app only"
                 )
@@ -273,8 +276,8 @@ class BoosterViewModel(application: Application) : AndroidViewModel(application)
             repository.recordLog(
                 boosterType = BoosterToolType.RAM_BOOSTER.name,
                 title = "Memory Measurement",
-                details = "Observed system used-RAM decrease: $freedMb MB after requesting garbage collection in this app. This is not a guaranteed system-wide reclaim.",
-                metricFreed = "$freedMb MB observed RAM delta"
+                details = "$ramSummary after requesting garbage collection in this app. This is not a guaranteed system-wide reclaim.",
+                metricFreed = ramSummary
             )
 
             refreshHardwareTelemetry()
