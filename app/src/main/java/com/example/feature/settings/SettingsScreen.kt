@@ -522,13 +522,13 @@ fun SettingsScreen(
                             ) {
                                 Column(modifier = Modifier.weight(1f)) {
                                     Text(
-                                        text = "Smart Cache Optimization",
+                                        text = "Auto Cache Clean Preference (Not Scheduled)",
                                         style = MaterialTheme.typography.titleSmall,
                                         fontWeight = FontWeight.SemiBold,
                                         color = MaterialTheme.colorScheme.onSurface
                                     )
                                     Text(
-                                        text = "Periodically purges obsolete temp files during idle periods",
+                                        text = "Saved preference only. Automatic background cleaning is not implemented; run Smart Boost manually to clear this app’s cache.",
                                         style = MaterialTheme.typography.bodySmall,
                                         color = MaterialTheme.colorScheme.onSurfaceVariant
                                     )
@@ -588,13 +588,13 @@ fun SettingsScreen(
                             ) {
                                 Column(modifier = Modifier.weight(1f)) {
                                     Text(
-                                        text = "Auto RAM Heap Reclaim",
+                                        text = "Auto RAM Trim Preference (Not Active)",
                                         style = MaterialTheme.typography.titleSmall,
                                         fontWeight = FontWeight.SemiBold,
                                         color = MaterialTheme.colorScheme.onSurface
                                     )
                                     Text(
-                                        text = "Periodically trims inactive memory buffers and runs garbage collection",
+                                        text = "Saved preference only. No scheduled task is registered, and this app cannot trim other apps’ private memory.",
                                         style = MaterialTheme.typography.bodySmall,
                                         color = MaterialTheme.colorScheme.onSurfaceVariant
                                     )
@@ -621,13 +621,13 @@ fun SettingsScreen(
                             ) {
                                 Column(modifier = Modifier.weight(1f)) {
                                     Text(
-                                        text = "Auto Thermal Mitigation",
+                                        text = "Thermal Mitigation Preference (Not Active)",
                                         style = MaterialTheme.typography.titleSmall,
                                         fontWeight = FontWeight.SemiBold,
                                         color = MaterialTheme.colorScheme.onSurface
                                     )
                                     Text(
-                                        text = "Automatically throttles heavy background tasks when SoC temp > 42°C",
+                                        text = "Saved preference only. This app cannot control Pixel CPU throttling or automatically stop other apps.",
                                         style = MaterialTheme.typography.bodySmall,
                                         color = MaterialTheme.colorScheme.onSurfaceVariant
                                     )
@@ -654,13 +654,13 @@ fun SettingsScreen(
                             ) {
                                 Column(modifier = Modifier.weight(1f)) {
                                     Text(
-                                        text = "Smart Battery Saver Trigger",
+                                        text = "Battery Saver Preference (Not Automatic)",
                                         style = MaterialTheme.typography.titleSmall,
                                         fontWeight = FontWeight.SemiBold,
                                         color = MaterialTheme.colorScheme.onSurface
                                     )
                                     Text(
-                                        text = "Engages system battery saver mode automatically at 20% charge",
+                                        text = "Saved preference only. Automatic activation is not implemented; use the Android Battery Saver settings shortcut.",
                                         style = MaterialTheme.typography.bodySmall,
                                         color = MaterialTheme.colorScheme.onSurfaceVariant
                                     )
@@ -687,13 +687,13 @@ fun SettingsScreen(
                             ) {
                                 Column(modifier = Modifier.weight(1f)) {
                                     Text(
-                                        text = "Background Network Limiter",
+                                        text = "Network Limiter Preference (Not Active)",
                                         style = MaterialTheme.typography.titleSmall,
                                         fontWeight = FontWeight.SemiBold,
                                         color = MaterialTheme.colorScheme.onSurface
                                     )
                                     Text(
-                                        text = "Limits background socket polling and sync during standby",
+                                        text = "Saved preference only. Android does not let this app globally throttle other apps’ network traffic.",
                                         style = MaterialTheme.typography.bodySmall,
                                         color = MaterialTheme.colorScheme.onSurfaceVariant
                                     )
