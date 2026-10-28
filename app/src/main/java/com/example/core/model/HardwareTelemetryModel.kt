@@ -12,10 +12,10 @@ data class ThermalTelemetryData(
     val warningMessage: String?,
     val coolingAdvice: String,
     val temperatureHistory: List<Float> = emptyList(),
-    val socTempCelsius: Float = currentTempCelsius,
-    val batteryTempCelsius: Float = currentTempCelsius,
-    val activeThermalZones: Int = 1,
-    val powerManagerStatusName: String = "Nominal"
+    val socTempCelsius: Float = 0f,
+    val batteryTempCelsius: Float = 0f,
+    val activeThermalZones: Int = 0,
+    val powerManagerStatusName: String = "Unavailable"
 ) {
     val formattedCurrentTemp: String
         get() = if (currentTempCelsius > 0f) String.format(Locale.US, "%.1f°C", currentTempCelsius) else "Unavailable"
