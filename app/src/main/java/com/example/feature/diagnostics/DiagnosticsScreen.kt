@@ -59,14 +59,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.ui.theme.CyberCyan
-import com.example.ui.theme.HighElevationDark
 import com.example.ui.theme.ModernDesignTokens
-import com.example.ui.theme.OutlineDark
 import com.example.ui.theme.PositiveMint
-import com.example.ui.theme.PrimaryBlue
 import com.example.ui.theme.SpaceGrotesk
-import com.example.ui.theme.TextPrimaryDark
-import com.example.ui.theme.TextSecondaryDark
 import com.example.ui.theme.WarningAmber
 import com.example.ui.theme.modernCard
 
@@ -270,7 +265,7 @@ fun DiagnosticsScreen(
                                 }
                                 Surface(
                                     shape = RoundedCornerShape(9999.dp),
-                                    color = HighElevationDark,
+                                    color = MaterialTheme.colorScheme.surfaceContainerHigh,
                                     border = androidx.compose.foundation.BorderStroke(1.dp, CyberCyan.copy(alpha = 0.4f))
                                 ) {
                                     Text(
@@ -292,7 +287,7 @@ fun DiagnosticsScreen(
                                     .fillMaxWidth()
                                     .height(130.dp)
                                     .clip(RoundedCornerShape(16.dp))
-                                    .background(HighElevationDark)
+                                    .background(MaterialTheme.colorScheme.surfaceContainerHigh)
                                     .border(1.dp, CyberCyan.copy(alpha = 0.3f), RoundedCornerShape(16.dp))
                                     .clickable { viewModel.recordTouchPoint() }
                                     .testTag("touch_test_canvas"),
@@ -305,12 +300,12 @@ fun DiagnosticsScreen(
                                         text = "Touch Here to Test Responsiveness",
                                         style = MaterialTheme.typography.bodyMedium,
                                         fontWeight = FontWeight.Bold,
-                                        color = TextPrimaryDark
+                                        color = MaterialTheme.colorScheme.onSurface
                                     )
                                     Text(
                                         text = "Verified points: ${uiState.touchPointsTested}",
                                         style = MaterialTheme.typography.bodySmall,
-                                        color = TextSecondaryDark
+                                        color = MaterialTheme.colorScheme.onSurfaceVariant
                                     )
                                 }
                             }
@@ -348,7 +343,7 @@ fun DiagnosticsScreen(
                                 Button(
                                     onClick = { viewModel.triggerHapticTest() },
                                     colors = ButtonDefaults.buttonColors(
-                                        containerColor = HighElevationDark,
+                                        containerColor = MaterialTheme.colorScheme.surfaceContainerHigh,
                                         contentColor = CyberCyan
                                     ),
                                     shape = RoundedCornerShape(14.dp),
@@ -366,7 +361,7 @@ fun DiagnosticsScreen(
                                 Button(
                                     onClick = { viewModel.testAudioSpeaker() },
                                     colors = ButtonDefaults.buttonColors(
-                                        containerColor = HighElevationDark,
+                                        containerColor = MaterialTheme.colorScheme.surfaceContainerHigh,
                                         contentColor = PositiveMint
                                     ),
                                     shape = RoundedCornerShape(14.dp),
@@ -399,8 +394,8 @@ fun DiagnosticsScreen(
                 items(uiState.diagnosticLog) { logEntry ->
                     Surface(
                         shape = RoundedCornerShape(14.dp),
-                        color = HighElevationDark.copy(alpha = 0.6f),
-                        border = androidx.compose.foundation.BorderStroke(1.dp, OutlineDark),
+                        color = MaterialTheme.colorScheme.surfaceContainerHigh.copy(alpha = 0.6f),
+                        border = androidx.compose.foundation.BorderStroke(1.dp, MaterialTheme.colorScheme.outline),
                         modifier = Modifier.fillMaxWidth()
                     ) {
                         Row(
@@ -412,7 +407,7 @@ fun DiagnosticsScreen(
                             Text(
                                 text = logEntry,
                                 style = MaterialTheme.typography.bodySmall,
-                                color = TextPrimaryDark,
+                                color = MaterialTheme.colorScheme.onSurface,
                                 fontFamily = SpaceGrotesk
                             )
                         }
