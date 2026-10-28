@@ -20,7 +20,7 @@ data class StartupAppInfo(
     val bootTriggerReason: String
 ) {
     val formattedRamFootprint: String
-        get() = MemoryInfoData.formatBytes(estimatedRamBytes)
+        get() = if (estimatedRamBytes > 0L) MemoryInfoData.formatBytes(estimatedRamBytes) else "Not exposed by Android"
 
     val formattedBootDelay: String
         get() = String.format(Locale.US, "+%d ms", estimatedBootDelayMs)
@@ -36,7 +36,7 @@ data class BootOptimizationResult(
         get() = String.format(Locale.US, "%.1f seconds", totalDelayReducedMs / 1000f)
 
     val formattedRamReclaimed: String
-        get() = MemoryInfoData.formatBytes(ramHeadroomReclaimedBytes)
+        get() = if (ramHeadroomReclaimedBytes > 0L) MemoryInfoData.formatBytes(ramHeadroomReclaimedBytes) else "Not measured"
 }
 
 data class StartupSummary(
@@ -50,5 +50,5 @@ data class StartupSummary(
         get() = String.format(Locale.US, "%.1f sec", totalBootDelayMs / 1000f)
 
     val formattedTotalRam: String
-        get() = MemoryInfoData.formatBytes(totalRamFootprintBytes)
+        get() = if (totalRamFootprintBytes > 0L) MemoryInfoData.formatBytes(totalRamFootprintBytes) else "Not exposed by Android"
 }
