@@ -28,7 +28,7 @@ class BoosterServiceTest {
         val service = BoosterService(context)
         val (before, freed) = service.boostRam()
         assertTrue(before >= 0L)
-        assertTrue(freed > 0L)
+        assertTrue(freed >= 0L) // Zero is a valid measured result; no synthetic minimum is added.
     }
 
     @Test
@@ -37,11 +37,11 @@ class BoosterServiceTest {
         val service = BoosterService(context)
         val scan = service.scanJunk()
         assertNotNull(scan)
-        assertTrue(scan.totalBytes > 0L)
+        assertTrue(scan.totalBytes >= 0L) // Empty app cache is valid.
         assertTrue(scan.formattedTotal.isNotBlank())
 
         val cleaned = service.cleanJunk(scan)
-        assertEquals(scan.totalBytes, cleaned)
+        assertTrue(cleaned >= 0L) // Report bytes actually removed, not the pre-clean scan estimate.
     }
 
     @Test
@@ -49,7 +49,7 @@ class BoosterServiceTest {
         val context = ApplicationProvider.getApplicationContext<Context>()
         val service = BoosterService(context)
         val drop = service.coolCpu()
-        assertTrue(drop > 0.5f)
+        assertTrue(drop.isFinite()) // Sensor change can be positive, zero, or negative.
         assertTrue(drop < 10.0f)
     }
 
@@ -97,14 +97,14 @@ class BoosterServiceTest {
         val service = BoosterService(context)
 
         val estimatedCache = service.estimateNonEssentialCacheBytes()
-        assertTrue(estimatedCache > 0L)
+        assertTrue(estimatedCache >= 0L) // Empty cache is valid.
 
         val report = service.clearNonEssentialCache()
         assertNotNull(report)
-        assertTrue(report.totalFreedBytes > 0L)
+        assertTrue(report.totalFreedBytes >= 0L)
         assertTrue(report.formattedTotal.isNotBlank())
         assertTrue(report.internalCacheBytes >= 0L)
-        assertTrue(report.durationMs > 0L)
+        assertTrue(report.durationMs >= 0L)
     }
 
     @Test
