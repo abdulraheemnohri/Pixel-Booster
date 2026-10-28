@@ -140,8 +140,8 @@ data class CacheClearReport(
     val externalCacheBytes: Long,
     val codeCacheBytes: Long,
     val temporaryBuffersBytes: Long,
-    val responsivenessScoreBoost: Int = 12,
-    val durationMs: Long = 420L,
+    val responsivenessScoreBoost: Int = 0,
+    val durationMs: Long = 0L,
     val timestamp: Long = System.currentTimeMillis()
 ) {
     val formattedTotal: String get() = MemoryInfoData.formatBytes(totalFreedBytes)
