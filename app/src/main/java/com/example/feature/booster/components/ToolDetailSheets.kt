@@ -53,7 +53,6 @@ import com.example.core.model.BatteryInfoData
 import com.example.core.model.MemoryInfoData
 import com.example.core.model.StorageInfoData
 import com.example.core.model.ThermalStatusData
-import com.example.ui.theme.OutlineDark
 import com.example.ui.theme.PositiveMint
 import com.example.ui.theme.WarningAmber
 
@@ -165,7 +164,7 @@ private fun RamBoosterContent(
 
         if (memoryInfo != null) {
             Card(
-                modifier = Modifier.fillMaxWidth().border(1.dp, OutlineDark, RoundedCornerShape(16.dp)),
+                modifier = Modifier.fillMaxWidth().border(1.dp, MaterialTheme.colorScheme.outline, RoundedCornerShape(16.dp)),
                 colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainer)
             ) {
                 Column(modifier = Modifier.padding(16.dp)) {
@@ -304,7 +303,7 @@ private fun CpuCoolerContent(
             Icon(Icons.Filled.Thermostat, contentDescription = null, tint = WarningAmber, modifier = Modifier.size(28.dp))
             Spacer(modifier = Modifier.width(10.dp))
             Text(
-                text = "CPU Cooler & Thermal Engine",
+                text = "Thermal Monitor",
                 style = MaterialTheme.typography.titleLarge,
                 fontWeight = FontWeight.Bold
             )
@@ -319,7 +318,7 @@ private fun CpuCoolerContent(
         Spacer(modifier = Modifier.height(20.dp))
 
         Card(
-            modifier = Modifier.fillMaxWidth().border(1.dp, OutlineDark, RoundedCornerShape(16.dp)),
+            modifier = Modifier.fillMaxWidth().border(1.dp, MaterialTheme.colorScheme.outline, RoundedCornerShape(16.dp)),
             colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainer)
         ) {
             Column(modifier = Modifier.padding(16.dp)) {
@@ -359,7 +358,7 @@ private fun CpuCoolerContent(
             shape = RoundedCornerShape(14.dp),
             modifier = Modifier.fillMaxWidth().height(48.dp).testTag("btn_cool_cpu_confirm")
         ) {
-            Text(text = "Start CPU Cooldown", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
+            Text(text = "Measure Temperature Change", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
         }
     }
 }
@@ -400,7 +399,7 @@ private fun BatterySaverContent(
                     .clickable { onSelectProfile(profile) }
                     .border(
                         1.dp,
-                        if (isSelected) MaterialTheme.colorScheme.primary else OutlineDark,
+                        if (isSelected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.outline,
                         RoundedCornerShape(14.dp)
                     )
             ) {
@@ -480,7 +479,7 @@ private fun GameTurboContent(
             Icon(Icons.Filled.SportsEsports, contentDescription = null, tint = PositiveMint, modifier = Modifier.size(28.dp))
             Spacer(modifier = Modifier.width(10.dp))
             Text(
-                text = "Game Turbo Mode",
+                text = "Gaming Preferences",
                 style = MaterialTheme.typography.titleLarge,
                 fontWeight = FontWeight.Bold
             )
@@ -495,7 +494,7 @@ private fun GameTurboContent(
         Spacer(modifier = Modifier.height(20.dp))
 
         Card(
-            modifier = Modifier.fillMaxWidth().border(1.dp, OutlineDark, RoundedCornerShape(16.dp)),
+            modifier = Modifier.fillMaxWidth().border(1.dp, MaterialTheme.colorScheme.outline, RoundedCornerShape(16.dp)),
             colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainer)
         ) {
             Row(
