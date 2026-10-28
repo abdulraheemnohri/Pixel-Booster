@@ -224,7 +224,7 @@ class BoosterViewModel(application: Application) : AndroidViewModel(application)
             repository.recordLog(
                 boosterType = "QUICK_BOOST",
                 title = "Quick Device Check",
-                details = "Observed RAM-used decrease: $freedRamMb MB (not guaranteed reclaimed). Removed $freedJunkMb MB from this app cache. Battery sensor: ${tempDrop?.let { String.format(Locale.US, "%.1f°C observed change", it) } ?: "unavailable"}; no active CPU cooling was performed.",
+                details = "$ramSummary (not guaranteed reclaimed). Removed $freedJunkMb MB from this app cache. Battery sensor: ${tempDrop?.let { String.format(Locale.US, "%.1f°C observed change", it) } ?: "unavailable"}; no active CPU cooling was performed.",
                 metricFreed = ramSummary
             )
 
@@ -258,10 +258,11 @@ class BoosterViewModel(application: Application) : AndroidViewModel(application)
                     boostProgress = 0.5f
                 )
             }
-            val (_, freedBytes) = boosterService.boostRam()
+            val (ramBeforeBytes, freedBytes) = boosterService.boostRam()
             delay(600)
 
-            val freedMb = freedBytes / (1024L * 1024L)
+            val freedMb = if (ramBeforeBytes > 0L) freedBytes / (1024L * 1024L) else null
+            val ramSummary = freedMb?.let { "$it MB observed RAM-used decrease" } ?: "RAM measurement unavailable"
             val summary = BoostResultSummary(
                 toolType = BoosterToolType.RAM_BOOSTER,
                 title = "Memory Measurement Complete",
