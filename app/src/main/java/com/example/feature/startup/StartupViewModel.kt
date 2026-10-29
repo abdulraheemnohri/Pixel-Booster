@@ -89,7 +89,7 @@ class StartupViewModel(application: Application) : AndroidViewModel(application)
             EventLogger.log(
                 severity = LogSeverity.INFO,
                 category = LogCategory.SYSTEM,
-                message = "Startup trigger for $packageName set to: ${if (enable) "Enabled" else "Restricted"}"
+                message = "Local startup review preference for $packageName set to: ${if (enable) "Enabled" else "Marked for review"}"
             )
         }
     }
@@ -104,8 +104,8 @@ class StartupViewModel(application: Application) : AndroidViewModel(application)
             optimizationRepository.recordLog(
                 boosterType = "STARTUP_OPTIMIZE",
                 title = "Boot Time Optimization",
-                details = "Restricted ${result.appsOptimizedCount} non-essential background processes, shaved ${result.formattedTimeSaved} off boot latency",
-                metricFreed = "-${result.formattedTimeSaved}"
+                details = "Saved local review preferences for ${result.appsOptimizedCount} non-essential apps; boot-time and RAM changes are not measured.",
+                metricFreed = "Boot-time change: not measured"
             )
 
             val updatedApps = startupProvider.getStartupApps()
@@ -124,7 +124,7 @@ class StartupViewModel(application: Application) : AndroidViewModel(application)
             EventLogger.log(
                 severity = LogSeverity.INFO,
                 category = LogCategory.SYSTEM,
-                message = "Optimized ${result.appsOptimizedCount} startup apps, saved ${result.formattedTimeSaved}"
+                message = "Saved local review preferences for ${result.appsOptimizedCount} apps; system startup behavior was not changed."
             )
         }
     }
