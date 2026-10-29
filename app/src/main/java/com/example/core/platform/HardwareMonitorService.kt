@@ -12,6 +12,8 @@ import android.os.Build
 import android.os.PowerManager
 import android.os.SystemClock
 import com.example.core.booster.BoosterService
+import com.example.core.booster.LiveRamMetrics
+import com.example.core.booster.MemoryPressureLevel
 import com.example.core.model.BatteryChargingState
 import com.example.core.model.BatteryHealthData
 import com.example.core.model.BatteryPluggedSource
@@ -121,6 +123,17 @@ class HardwareMonitorService(
             isConnected = connectivityManager?.activeNetwork != null
         )
         val memory = boosterService.getLiveRamMetrics() ?: LiveRamMetrics(
+            totalBytes = 0L,
+            availableBytes = -1L,
+            usedBytes = -1L,
+            usedPercentage = 0f,
+            thresholdBytes = 0L,
+            isLowMemory = false,
+            jvmAllocatedBytes = 0L,
+            jvmMaxBytes = 0L,
+            jvmFreeBytes = 0L,
+            memoryPressure = MemoryPressureLevel.NOMINAL
+        ) ?: LiveRamMetrics(
             totalBytes = 0L,
             availableBytes = -1L,
             usedBytes = -1L,
