@@ -126,9 +126,10 @@ data class LiveRamMetrics(
     val jvmFreeBytes: Long,
     val memoryPressure: MemoryPressureLevel
 ) {
-    val formattedTotal: String get() = MemoryInfoData.formatBytes(totalBytes)
-    val formattedAvailable: String get() = MemoryInfoData.formatBytes(availableBytes)
-    val formattedUsed: String get() = MemoryInfoData.formatBytes(usedBytes)
+    val isAvailable: Boolean get() = totalBytes > 0L && availableBytes >= 0L
+    val formattedTotal: String get() = if (isAvailable) MemoryInfoData.formatBytes(totalBytes) else "Unavailable"
+    val formattedAvailable: String get() = if (isAvailable) MemoryInfoData.formatBytes(availableBytes) else "Unavailable"
+    val formattedUsed: String get() = if (isAvailable) MemoryInfoData.formatBytes(usedBytes) else "Unavailable"
     val formattedJvmAllocated: String get() = MemoryInfoData.formatBytes(jvmAllocatedBytes)
     val formattedJvmMax: String get() = MemoryInfoData.formatBytes(jvmMaxBytes)
     val formattedJvmFree: String get() = MemoryInfoData.formatBytes(jvmFreeBytes)
