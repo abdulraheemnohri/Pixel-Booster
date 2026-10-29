@@ -125,6 +125,6 @@ class StartupManagerTest {
         assertEquals("Startup", Screen.Startup.title)
         assertFalse(Screen.items.contains(Screen.Startup))
         assertTrue(Screen.items.contains(Screen.More))
-        assertEquals(6, Screen.items.size)
+        assertEquals(5, Screen.items.size)
     }
 }
