@@ -33,7 +33,7 @@
             android:background="@drawable/widget_chip_bg"
             android:paddingHorizontal="8dp"
             android:paddingVertical="4dp"
-            android:text="🔋 85%"
+            android:text="🔋 —"
             android:textColor="#34D399"
             android:textSize="11sp"
             android:textStyle="bold" />
@@ -50,7 +50,7 @@
             android:background="@drawable/widget_chip_bg"
             android:paddingHorizontal="8dp"
             android:paddingVertical="4dp"
-            android:text="❄️ 31.5°C"
+            android:text="🌡️ —"
             android:textColor="#818CF8"
             android:textSize="11sp"
             android:textStyle="bold" />
@@ -84,7 +84,7 @@
                 android:id="@+id/widget_ram_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="68% Used • 3.8 GB Free"
+                android:text="Memory telemetry unavailable"
                 android:textColor="#F1F5F9"
                 android:textSize="11sp"
                 android:textStyle="bold" />
@@ -97,7 +97,7 @@
             android:layout_height="8dp"
             android:layout_marginTop="6dp"
             android:max="100"
-            android:progress="68"
+            android:progress="0"
             android:progressDrawable="@drawable/widget_progress_bar" />
     </LinearLayout>
 
@@ -116,7 +116,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="STATUS: OPTIMAL"
+            android:text="STATUS: WAITING FOR DATA"
             android:textColor="#34D399"
             android:textSize="11sp"
             android:textStyle="bold" />

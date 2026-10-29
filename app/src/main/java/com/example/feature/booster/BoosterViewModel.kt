@@ -99,11 +99,15 @@ class BoosterViewModel(application: Application) : AndroidViewModel(application)
 
         // Compute dynamic optimization health score (0 to 100)
         var score = 100
-        if (mem.usedPercentage > 80f) score -= 15
-        else if (mem.usedPercentage > 65f) score -= 8
+        if (mem.isAvailable) {
+            if (mem.usedPercentage > 80f) score -= 15
+            else if (mem.usedPercentage > 65f) score -= 8
+        }
 
-        if (storage.freePercentage < 15f) score -= 15
-        else if (storage.freePercentage < 25f) score -= 8
+        if (storage.isAvailable) {
+            if (storage.freePercentage < 15f) score -= 15
+            else if (storage.freePercentage < 25f) score -= 8
+        }
 
         if (thermal.statusCode >= 2) score -= 15
         if (battery.levelPercentage <= 20) score -= 10
@@ -155,7 +159,9 @@ class BoosterViewModel(application: Application) : AndroidViewModel(application)
                     boostProgress = 0.35f
                 )
             }
-            val (_, freedRamBytes) = boosterService.boostRam()
+            val (ramBeforeBytes, freedRamBytes) = boosterService.boostRam()
+            val freedRamMb = if (ramBeforeBytes > 0L) freedRamBytes / (1024L * 1024L) else null
+            val ramSummary = freedRamMb?.let { "$it MB observed RAM-used decrease" } ?: "RAM measurement unavailable"
             delay(450)
 
             // Stage 2: Junk Purge
@@ -196,22 +202,21 @@ class BoosterViewModel(application: Application) : AndroidViewModel(application)
             _uiState.update {
                 it.copy(
                     currentStage = BoosterStage.COMPLETED,
-                    currentStageText = "Optimization Complete!",
+                    currentStageText = "Device checks complete",
                     boostProgress = 1.0f
                 )
             }
             delay(300)
 
-            val freedRamMb = freedRamBytes / (1024L * 1024L)
             val freedJunkMb = freedJunkBytes / (1024L * 1024L)
 
             val summary = BoostResultSummary(
                 toolType = null,
-                title = "Turbo Boost Complete",
-                headlineMetric = "$freedRamMb MB observed RAM decrease",
+                title = "Device Check Complete",
+                headlineMetric = ramSummary,
                 details = listOf(
-                    "Observed RAM change" to "$freedRamMb MB decrease (not guaranteed reclaimed RAM)",
-                    "Junk Purged" to "$freedJunkMb MB cache cleared",
+                    "Observed RAM-used change" to (freedRamMb?.let { "$it MB decrease (system-wide memory may fluctuate; not reclaimed RAM)" } ?: "Unavailable; no valid memory measurement"),
+                    "This app’s cache cleared" to "$freedJunkMb MB measured",
                     "Battery sensor" to (tempDrop?.let { String.format(Locale.US, "%.1f°C observed change (positive means cooler)", it) } ?: "Unavailable; no valid sensor reading"),
                     "Connection test" to if (networkResult.isOnline) "${networkResult.initialLatencyMs.takeIf { it > 0L }?.let { "$it ms" } ?: "First attempt unavailable"}; ${networkResult.optimizedLatencyMs.takeIf { it > 0L }?.let { "$it ms" } ?: "Second attempt unavailable"} (measured; not optimized)" else "Unavailable; connection test failed"
                 )
@@ -220,15 +225,15 @@ class BoosterViewModel(application: Application) : AndroidViewModel(application)
             // Persist to Room
             repository.recordLog(
                 boosterType = "QUICK_BOOST",
-                title = "One-Tap Quick Boost",
-                details = "Observed RAM-used decrease: $freedRamMb MB (not guaranteed reclaimed). Removed $freedJunkMb MB from this app cache. Battery sensor: ${tempDrop?.let { String.format(Locale.US, "%.1f°C observed change", it) } ?: "unavailable"}; no active CPU cooling was performed.",
-                metricFreed = "$freedRamMb MB observed RAM delta"
+                title = "Quick Device Check",
+                details = "$ramSummary (not guaranteed reclaimed). Removed $freedJunkMb MB from this app cache. Battery sensor: ${tempDrop?.let { String.format(Locale.US, "%.1f°C observed change", it) } ?: "unavailable"}; no active CPU cooling was performed.",
+                metricFreed = ramSummary
             )
 
             EventLogger.log(
                 severity = LogSeverity.INFO,
                 category = LogCategory.SYSTEM,
-                message = "Quick maintenance completed: observed RAM-used decrease $freedRamMb MB; removed $freedJunkMb MB from app-owned cache. No system-wide RAM/CPU optimization is claimed."
+                message = "Quick maintenance completed: $ramSummary; removed $freedJunkMb MB from app-owned cache. No system-wide RAM/CPU optimization is claimed."
             )
 
             refreshHardwareTelemetry()
@@ -255,16 +260,17 @@ class BoosterViewModel(application: Application) : AndroidViewModel(application)
                     boostProgress = 0.5f
                 )
             }
-            val (_, freedBytes) = boosterService.boostRam()
+            val (ramBeforeBytes, freedBytes) = boosterService.boostRam()
             delay(600)
 
-            val freedMb = freedBytes / (1024L * 1024L)
+            val freedMb = if (ramBeforeBytes > 0L) freedBytes / (1024L * 1024L) else null
+            val ramSummary = freedMb?.let { "$it MB observed RAM-used decrease" } ?: "RAM measurement unavailable"
             val summary = BoostResultSummary(
                 toolType = BoosterToolType.RAM_BOOSTER,
                 title = "Memory Measurement Complete",
-                headlineMetric = "$freedMb MB observed RAM decrease",
+                headlineMetric = ramSummary,
                 details = listOf(
-                    "Observed RAM change" to "$freedMb MB decrease; system-wide reclaim is not guaranteed",
+                    "Observed RAM-used change" to (freedMb?.let { "$it MB decrease; system-wide reclaim is not guaranteed" } ?: "Unavailable; no valid memory measurement"),
                     "Background apps" to "Not terminated (Android controls other apps)",
                     "Garbage collector" to "Requested GC for this app only"
                 )
@@ -273,8 +279,8 @@ class BoosterViewModel(application: Application) : AndroidViewModel(application)
             repository.recordLog(
                 boosterType = BoosterToolType.RAM_BOOSTER.name,
                 title = "Memory Measurement",
-                details = "Observed system used-RAM decrease: $freedMb MB after requesting garbage collection in this app. This is not a guaranteed system-wide reclaim.",
-                metricFreed = "$freedMb MB observed RAM delta"
+                details = "$ramSummary after requesting garbage collection in this app. This is not a guaranteed system-wide reclaim.",
+                metricFreed = ramSummary
             )
 
             refreshHardwareTelemetry()
@@ -365,7 +371,7 @@ class BoosterViewModel(application: Application) : AndroidViewModel(application)
 
             repository.recordLog(
                 boosterType = BoosterToolType.CPU_COOLER.name,
-                title = "CPU Thermal Cooler",
+                title = "Thermal Observation",
                 details = "Observed battery-sensor temperature: ${drop?.let { String.format(Locale.US, "%.1f°C change", it) } ?: "unavailable"}. No CPU frequency or thermal controls were changed.",
                 metricFreed = drop?.let { String.format(Locale.US, "%.1f°C observed sensor change", it) } ?: "Unavailable"
             )
@@ -418,15 +424,15 @@ class BoosterViewModel(application: Application) : AndroidViewModel(application)
                 headlineMetric = res.optimizedLatencyMs.takeIf { it > 0L }?.let { "$it ms measured latency" } ?: "No latency result available",
                 details = listOf(
                     "Target" to res.host,
-                    "First measurement" to res.initialLatencyMs.takeIf { it > 0L }?.let { "$it ms" } ?: "Unavailable",
-                    "Second measurement" to res.optimizedLatencyMs.takeIf { it > 0L }?.let { "$it ms" } ?: "Unavailable",
-                    "Latency difference" to res.latencyImprovementMs.takeIf { it != Long.MIN_VALUE }?.let { "$it ms (positive = second attempt faster; negative = slower)" } ?: "Unavailable unless both attempts succeed"
+                    "First measurement" to (res.initialLatencyMs.takeIf { it > 0L }?.let { "$it ms" } ?: "Unavailable"),
+                    "Second measurement" to (res.optimizedLatencyMs.takeIf { it > 0L }?.let { "$it ms" } ?: "Unavailable"),
+                    "Latency difference" to (res.latencyImprovementMs.takeIf { it != Long.MIN_VALUE }?.let { "$it ms (positive = second attempt faster; negative = slower)" } ?: "Unavailable unless both attempts succeed")
                 )
             )
 
             repository.recordLog(
                 boosterType = BoosterToolType.NETWORK_TURBO.name,
-                title = "Network Turbo Accelerator",
+                title = "Network Diagnostics",
                 details = "Connection test to ${res.host}: first ${res.initialLatencyMs.takeIf { it > 0L }?.let { "$it ms" } ?: "unavailable"}, second ${res.optimizedLatencyMs.takeIf { it > 0L }?.let { "$it ms" } ?: "unavailable"}. No network settings were changed.",
                 metricFreed = res.latencyImprovementMs.takeIf { it != Long.MIN_VALUE }?.let { "$it ms observed latency difference" } ?: "Unavailable"
             )
@@ -452,7 +458,7 @@ class BoosterViewModel(application: Application) : AndroidViewModel(application)
             _uiState.update { it.copy(gameTurboActive = next) }
             repository.recordLog(
                 boosterType = BoosterToolType.GAME_TURBO.name,
-                title = if (next) "Game Turbo Enabled" else "Game Turbo Disabled",
+                title = if (next) "Gaming preference enabled" else "Gaming preference disabled",
                 details = if (next) "Game guidance mode enabled in the app; Android does not grant extra RAM or GPU priority." else "Game guidance mode disabled in the app.",
                 metricFreed = if (next) "GUIDANCE ON" else "OFF"
             )

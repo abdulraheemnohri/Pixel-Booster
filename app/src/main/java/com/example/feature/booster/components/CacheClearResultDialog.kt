@@ -34,12 +34,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import com.example.core.booster.CacheClearReport
-import com.example.ui.theme.HighElevationDark
-import com.example.ui.theme.OutlineDark
 import com.example.ui.theme.PositiveMint
-import com.example.ui.theme.PrimaryBlue
-import com.example.ui.theme.TextPrimaryDark
-import com.example.ui.theme.TextSecondaryDark
 
 @Composable
 fun CacheClearResultDialog(
@@ -98,8 +93,8 @@ fun CacheClearResultDialog(
                 // Big Headline Freed Metric
                 Surface(
                     shape = RoundedCornerShape(16.dp),
-                    color = HighElevationDark,
-                    border = androidx.compose.foundation.BorderStroke(1.dp, OutlineDark),
+                    color = MaterialTheme.colorScheme.surfaceContainerHigh,
+                    border = androidx.compose.foundation.BorderStroke(1.dp, MaterialTheme.colorScheme.outline),
                     modifier = Modifier.fillMaxWidth()
                 ) {
                     Column(
@@ -115,7 +110,7 @@ fun CacheClearResultDialog(
                         Text(
                             text = "NON-ESSENTIAL CACHE FREED",
                             style = MaterialTheme.typography.labelSmall,
-                            color = TextSecondaryDark,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
                             fontSize = 10.sp
                         )
 
@@ -128,7 +123,7 @@ fun CacheClearResultDialog(
                             Icon(
                                 imageVector = Icons.Filled.Speed,
                                 contentDescription = null,
-                                tint = PrimaryBlue,
+                                tint = MaterialTheme.colorScheme.primary,
                                 modifier = Modifier.size(16.dp)
                             )
                             Spacer(modifier = Modifier.width(6.dp))
@@ -136,7 +131,7 @@ fun CacheClearResultDialog(
                                 text = "+${report.responsivenessScoreBoost}% System Responsiveness",
                                 style = MaterialTheme.typography.labelMedium,
                                 fontWeight = FontWeight.Bold,
-                                color = PrimaryBlue
+                                color = MaterialTheme.colorScheme.primary
                             )
                         }
                     }
@@ -196,7 +191,7 @@ private fun ReportDetailRow(label: String, value: String) {
             text = value,
             style = MaterialTheme.typography.bodySmall,
             fontWeight = FontWeight.Bold,
-            color = TextPrimaryDark
+            color = MaterialTheme.colorScheme.onSurface
         )
     }
 }

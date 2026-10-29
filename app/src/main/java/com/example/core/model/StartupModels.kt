@@ -3,9 +3,9 @@ package com.example.core.model
 import java.util.Locale
 
 enum class BootImpactLevel(val label: String, val delayDesc: String) {
-    HIGH("High Impact", "+450ms to 850ms boot delay"),
-    MEDIUM("Moderate Impact", "+180ms to 350ms boot delay"),
-    LOW("Minimal Impact", "<100ms boot delay")
+    HIGH("High review priority", "Heuristic only; boot impact not measured"),
+    MEDIUM("Moderate review priority", "Heuristic only; boot impact not measured"),
+    LOW("Low review priority", "Heuristic only; boot impact not measured")
 }
 
 data class StartupAppInfo(
@@ -23,7 +23,7 @@ data class StartupAppInfo(
         get() = if (estimatedRamBytes > 0L) MemoryInfoData.formatBytes(estimatedRamBytes) else "Not exposed by Android"
 
     val formattedBootDelay: String
-        get() = String.format(Locale.US, "+%d ms", estimatedBootDelayMs)
+        get() = if (estimatedBootDelayMs > 0) String.format(Locale.US, "%d ms (estimate)", estimatedBootDelayMs) else "Not measured"
 }
 
 data class BootOptimizationResult(
@@ -33,7 +33,7 @@ data class BootOptimizationResult(
     val timestamp: Long = System.currentTimeMillis()
 ) {
     val formattedTimeSaved: String
-        get() = String.format(Locale.US, "Estimated %.1f seconds", totalDelayReducedMs / 1000f)
+        get() = if (totalDelayReducedMs > 0) String.format(Locale.US, "Estimated %.1f seconds", totalDelayReducedMs / 1000f) else "Not measured"
 
     val formattedRamReclaimed: String
         get() = if (ramHeadroomReclaimedBytes > 0L) MemoryInfoData.formatBytes(ramHeadroomReclaimedBytes) else "Not measured"
@@ -47,7 +47,7 @@ data class StartupSummary(
     val totalRamFootprintBytes: Long
 ) {
     val formattedTotalBootDelay: String
-        get() = String.format(Locale.US, "%.1f sec", totalBootDelayMs / 1000f)
+        get() = if (totalBootDelayMs > 0) String.format(Locale.US, "%.1f sec (estimate)", totalBootDelayMs / 1000f) else "Not measured"
 
     val formattedTotalRam: String
         get() = if (totalRamFootprintBytes > 0L) MemoryInfoData.formatBytes(totalRamFootprintBytes) else "Not exposed by Android"

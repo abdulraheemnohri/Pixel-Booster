@@ -86,14 +86,9 @@ import com.example.core.model.ThemeMode
 import com.example.ui.theme.CriticalRed
 import com.example.ui.theme.CyberCyan
 import com.example.ui.theme.ElectricIndigo
-import com.example.ui.theme.HighElevationDark
 import com.example.ui.theme.ModernDesignTokens
-import com.example.ui.theme.OutlineDark
 import com.example.ui.theme.PositiveMint
-import com.example.ui.theme.PrimaryBlue
 import com.example.ui.theme.SpaceGrotesk
-import com.example.ui.theme.TextPrimaryDark
-import com.example.ui.theme.TextSecondaryDark
 import com.example.ui.theme.WarningAmber
 import com.example.ui.theme.modernCard
 import com.example.ui.theme.pulsingGlow
@@ -230,7 +225,7 @@ fun SettingsScreen(
                                 }
                                 Surface(
                                     shape = RoundedCornerShape(9999.dp),
-                                    color = HighElevationDark,
+                                    color = MaterialTheme.colorScheme.surfaceContainerHigh,
                                     border = androidx.compose.foundation.BorderStroke(1.dp, Color(0x2538BDF8))
                                 ) {
                                     Text(
@@ -265,8 +260,8 @@ fun SettingsScreen(
                                         colors = FilterChipDefaults.filterChipColors(
                                             selectedContainerColor = CyberCyan,
                                             selectedLabelColor = Color(0xFF070B14),
-                                            containerColor = HighElevationDark,
-                                            labelColor = TextPrimaryDark
+                                            containerColor = MaterialTheme.colorScheme.surfaceContainerHigh,
+                                            labelColor = MaterialTheme.colorScheme.onSurface
                                         ),
                                         border = FilterChipDefaults.filterChipBorder(
                                             enabled = true,
@@ -324,7 +319,7 @@ fun SettingsScreen(
                                 colors = SliderDefaults.colors(
                                     thumbColor = CyberCyan,
                                     activeTrackColor = CyberCyan,
-                                    inactiveTrackColor = HighElevationDark
+                                    inactiveTrackColor = MaterialTheme.colorScheme.surfaceContainerHigh
                                 ),
                                 modifier = Modifier.testTag("slider_battery_threshold")
                             )
@@ -374,7 +369,7 @@ fun SettingsScreen(
                                 colors = SliderDefaults.colors(
                                     thumbColor = CyberCyan,
                                     activeTrackColor = CyberCyan,
-                                    inactiveTrackColor = HighElevationDark
+                                    inactiveTrackColor = MaterialTheme.colorScheme.surfaceContainerHigh
                                 ),
                                 modifier = Modifier.testTag("slider_ram_threshold")
                             )
@@ -406,7 +401,7 @@ fun SettingsScreen(
                                     colors = SwitchDefaults.colors(
                                         checkedThumbColor = Color(0xFF070B14),
                                         checkedTrackColor = CyberCyan,
-                                        uncheckedTrackColor = HighElevationDark
+                                        uncheckedTrackColor = MaterialTheme.colorScheme.surfaceContainerHigh
                                     ),
                                     modifier = Modifier.testTag("switch_thermal_warnings")
                                 )
@@ -452,7 +447,7 @@ fun SettingsScreen(
                             ) {
                                 Button(
                                     onClick = { actionLauncher.openWifiSettings() },
-                                    colors = ButtonDefaults.buttonColors(containerColor = HighElevationDark, contentColor = CyberCyan),
+                                    colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.surfaceContainerHigh, contentColor = CyberCyan),
                                     shape = RoundedCornerShape(12.dp),
                                     border = androidx.compose.foundation.BorderStroke(1.dp, Color(0x3038BDF8)),
                                     modifier = Modifier.weight(1f).testTag("btn_wifi_settings")
@@ -462,7 +457,7 @@ fun SettingsScreen(
 
                                 Button(
                                     onClick = { actionLauncher.openCellularNetworkSettings() },
-                                    colors = ButtonDefaults.buttonColors(containerColor = HighElevationDark, contentColor = PositiveMint),
+                                    colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.surfaceContainerHigh, contentColor = PositiveMint),
                                     shape = RoundedCornerShape(12.dp),
                                     border = androidx.compose.foundation.BorderStroke(1.dp, Color(0x3034D399)),
                                     modifier = Modifier.weight(1f).testTag("btn_cellular_settings")
@@ -477,7 +472,7 @@ fun SettingsScreen(
                             ) {
                                 Button(
                                     onClick = { actionLauncher.openPrivateDnsSettings() },
-                                    colors = ButtonDefaults.buttonColors(containerColor = HighElevationDark, contentColor = TextPrimaryDark),
+                                    colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.surfaceContainerHigh, contentColor = MaterialTheme.colorScheme.onSurface),
                                     shape = RoundedCornerShape(12.dp),
                                     border = androidx.compose.foundation.BorderStroke(1.dp, Color(0x20FFFFFF)),
                                     modifier = Modifier.weight(1f).testTag("btn_private_dns")
@@ -487,7 +482,7 @@ fun SettingsScreen(
 
                                 Button(
                                     onClick = { actionLauncher.openDataSaverSettings() },
-                                    colors = ButtonDefaults.buttonColors(containerColor = HighElevationDark, contentColor = TextPrimaryDark),
+                                    colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.surfaceContainerHigh, contentColor = MaterialTheme.colorScheme.onSurface),
                                     shape = RoundedCornerShape(12.dp),
                                     border = androidx.compose.foundation.BorderStroke(1.dp, Color(0x20FFFFFF)),
                                     modifier = Modifier.weight(1f).testTag("btn_data_saver")
@@ -539,7 +534,7 @@ fun SettingsScreen(
                                     colors = SwitchDefaults.colors(
                                         checkedThumbColor = Color(0xFF070B14),
                                         checkedTrackColor = PositiveMint,
-                                        uncheckedTrackColor = HighElevationDark
+                                        uncheckedTrackColor = MaterialTheme.colorScheme.surfaceContainerHigh
                                     ),
                                     modifier = Modifier.testTag("switch_auto_cache")
                                 )
@@ -572,7 +567,7 @@ fun SettingsScreen(
                                     colors = SwitchDefaults.colors(
                                         checkedThumbColor = Color(0xFF070B14),
                                         checkedTrackColor = CyberCyan,
-                                        uncheckedTrackColor = HighElevationDark
+                                        uncheckedTrackColor = MaterialTheme.colorScheme.surfaceContainerHigh
                                     ),
                                     modifier = Modifier.testTag("switch_haptics")
                                 )
@@ -605,7 +600,7 @@ fun SettingsScreen(
                                     colors = SwitchDefaults.colors(
                                         checkedThumbColor = Color(0xFF070B14),
                                         checkedTrackColor = CyberCyan,
-                                        uncheckedTrackColor = HighElevationDark
+                                        uncheckedTrackColor = MaterialTheme.colorScheme.surfaceContainerHigh
                                     ),
                                     modifier = Modifier.testTag("switch_auto_ram_trim")
                                 )
@@ -638,7 +633,7 @@ fun SettingsScreen(
                                     colors = SwitchDefaults.colors(
                                         checkedThumbColor = Color(0xFF070B14),
                                         checkedTrackColor = WarningAmber,
-                                        uncheckedTrackColor = HighElevationDark
+                                        uncheckedTrackColor = MaterialTheme.colorScheme.surfaceContainerHigh
                                     ),
                                     modifier = Modifier.testTag("switch_auto_thermal")
                                 )
@@ -671,7 +666,7 @@ fun SettingsScreen(
                                     colors = SwitchDefaults.colors(
                                         checkedThumbColor = Color(0xFF070B14),
                                         checkedTrackColor = PositiveMint,
-                                        uncheckedTrackColor = HighElevationDark
+                                        uncheckedTrackColor = MaterialTheme.colorScheme.surfaceContainerHigh
                                     ),
                                     modifier = Modifier.testTag("switch_battery_saver_auto")
                                 )
@@ -704,7 +699,7 @@ fun SettingsScreen(
                                     colors = SwitchDefaults.colors(
                                         checkedThumbColor = Color(0xFF070B14),
                                         checkedTrackColor = CyberCyan,
-                                        uncheckedTrackColor = HighElevationDark
+                                        uncheckedTrackColor = MaterialTheme.colorScheme.surfaceContainerHigh
                                     ),
                                     modifier = Modifier.testTag("switch_network_throttle")
                                 )
@@ -872,8 +867,8 @@ fun SettingsScreen(
                                 colors = OutlinedTextFieldDefaults.colors(
                                     focusedBorderColor = CyberCyan,
                                     unfocusedBorderColor = Color(0x3538BDF8),
-                                    focusedContainerColor = HighElevationDark,
-                                    unfocusedContainerColor = HighElevationDark
+                                    focusedContainerColor = MaterialTheme.colorScheme.surfaceContainerHigh,
+                                    unfocusedContainerColor = MaterialTheme.colorScheme.surfaceContainerHigh
                                 ),
                                 modifier = Modifier.fillMaxWidth().testTag("input_log_search")
                             )
@@ -889,7 +884,7 @@ fun SettingsScreen(
                                         "No telemetry events found",
                                         style = MaterialTheme.typography.bodySmall,
                                         fontFamily = SpaceGrotesk,
-                                        color = TextSecondaryDark
+                                        color = MaterialTheme.colorScheme.onSurfaceVariant
                                     )
                                 }
                             } else {
@@ -926,7 +921,7 @@ fun SettingsScreen(
                                 Row(verticalAlignment = Alignment.CenterVertically) {
                                     Surface(
                                         shape = CircleShape,
-                                        color = HighElevationDark,
+                                        color = MaterialTheme.colorScheme.surfaceContainerHigh,
                                         border = androidx.compose.foundation.BorderStroke(1.5.dp, CyberCyan.copy(alpha = 0.5f)),
                                         modifier = Modifier.size(36.dp)
                                     ) {
@@ -951,7 +946,7 @@ fun SettingsScreen(
 
                                 Surface(
                                     shape = RoundedCornerShape(9999.dp),
-                                    color = HighElevationDark,
+                                    color = MaterialTheme.colorScheme.surfaceContainerHigh,
                                     border = androidx.compose.foundation.BorderStroke(1.dp, Color(0x3538BDF8))
                                 ) {
                                     Text(
@@ -969,7 +964,7 @@ fun SettingsScreen(
 
                             Surface(
                                 shape = RoundedCornerShape(12.dp),
-                                color = HighElevationDark.copy(alpha = 0.6f),
+                                color = MaterialTheme.colorScheme.surfaceContainerHigh.copy(alpha = 0.6f),
                                 border = androidx.compose.foundation.BorderStroke(1.dp, Color(0x1538BDF8)),
                                 modifier = Modifier.fillMaxWidth()
                             ) {
@@ -977,7 +972,7 @@ fun SettingsScreen(
                                     Text(
                                         text = "Device: ${specs.manufacturer} ${specs.model} (${specs.pixelGenerationName})",
                                         style = MaterialTheme.typography.bodySmall,
-                                        color = TextPrimaryDark,
+                                        color = MaterialTheme.colorScheme.onSurface,
                                         fontWeight = FontWeight.Medium
                                     )
                                     Spacer(modifier = Modifier.height(4.dp))
@@ -1139,7 +1134,7 @@ fun DarkModeControllerCard(
                     ) {
                         Surface(
                             shape = CircleShape,
-                            color = HighElevationDark,
+                            color = MaterialTheme.colorScheme.surfaceContainerHigh,
                             border = androidx.compose.foundation.BorderStroke(1.5.dp, CyberCyan.copy(alpha = 0.5f)),
                             modifier = Modifier.size(38.dp)
                         ) {
@@ -1178,7 +1173,7 @@ fun DarkModeControllerCard(
 
                 Surface(
                     shape = RoundedCornerShape(9999.dp),
-                    color = HighElevationDark,
+                    color = MaterialTheme.colorScheme.surfaceContainerHigh,
                     border = androidx.compose.foundation.BorderStroke(1.dp, Color(0x3538BDF8))
                 ) {
                     Text(
@@ -1255,7 +1250,7 @@ fun DarkModeControllerCard(
                     colors = SwitchDefaults.colors(
                         checkedThumbColor = Color(0xFF070B14),
                         checkedTrackColor = CyberCyan,
-                        uncheckedTrackColor = HighElevationDark
+                        uncheckedTrackColor = MaterialTheme.colorScheme.surfaceContainerHigh
                     ),
                     modifier = Modifier.testTag("switch_dynamic_color")
                 )
@@ -1274,12 +1269,12 @@ fun ThemeModeSegmentButton(
     testTag: String
 ) {
     val containerColor by animateColorAsState(
-        targetValue = if (isSelected) CyberCyan else HighElevationDark,
+        targetValue = if (isSelected) CyberCyan else MaterialTheme.colorScheme.surfaceContainerHigh,
         animationSpec = tween(250),
         label = "segment_bg"
     )
     val contentColor by animateColorAsState(
-        targetValue = if (isSelected) Color(0xFF070B14) else TextPrimaryDark,
+        targetValue = if (isSelected) Color(0xFF070B14) else MaterialTheme.colorScheme.onSurface,
         animationSpec = tween(250),
         label = "segment_fg"
     )
@@ -1335,12 +1330,12 @@ fun LogEventItemRow(event: LogEvent) {
         LogSeverity.ERROR -> CriticalRed
         LogSeverity.WARNING -> WarningAmber
         LogSeverity.INFO -> CyberCyan
-        LogSeverity.VERBOSE -> TextSecondaryDark
+        LogSeverity.VERBOSE -> MaterialTheme.colorScheme.onSurfaceVariant
     }
 
     Surface(
         shape = RoundedCornerShape(12.dp),
-        color = HighElevationDark,
+        color = MaterialTheme.colorScheme.surfaceContainerHigh,
         border = androidx.compose.foundation.BorderStroke(1.dp, Color(0x1538BDF8)),
         modifier = Modifier.fillMaxWidth()
     ) {
@@ -1365,7 +1360,7 @@ fun LogEventItemRow(event: LogEvent) {
                     text = "${event.category.name} • ${event.formattedTimestamp}",
                     style = MaterialTheme.typography.labelSmall,
                     fontFamily = SpaceGrotesk,
-                    color = TextSecondaryDark,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
                     fontSize = 10.sp
                 )
             }

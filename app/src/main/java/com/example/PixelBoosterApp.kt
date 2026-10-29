@@ -2,12 +2,12 @@ package com.example
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.widthIn
+import androidx.compose.ui.Alignment
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.navigationBars
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationRail
@@ -46,10 +46,7 @@ import com.example.feature.usage.UsageScreen
 import com.example.feature.usage.UsageViewModel
 import com.example.ui.navigation.PixelBoosterBottomBar
 import com.example.ui.navigation.Screen
-import com.example.ui.theme.HighElevationDark
 import com.example.ui.theme.PixelBoosterTheme
-import com.example.ui.theme.PrimaryBlue
-import com.example.ui.theme.TextSecondaryDark
 
 @Composable
 fun PixelBoosterApp(
@@ -76,12 +73,11 @@ fun PixelBoosterApp(
             Row(modifier = Modifier.fillMaxSize()) {
                 NavigationRail(
                     modifier = Modifier
-                        .fillMaxHeight()
-                        .windowInsetsPadding(WindowInsets.navigationBars),
+                        .fillMaxHeight(),
                     containerColor = MaterialTheme.colorScheme.surface
                 ) {
                     Screen.items.forEach { screen ->
-                        val isSelected = currentRoute == screen.route || (screen == Screen.More && currentRoute in setOf(Screen.Health.route, Screen.Startup.route, Screen.SpeedTest.route, Screen.History.route, Screen.Privacy.route, Screen.Settings.route))
+                        val isSelected = currentRoute == screen.route || (screen == Screen.More && Screen.isSecondaryRoute(currentRoute))
                         NavigationRailItem(
                             selected = isSelected,
                             onClick = {
@@ -103,19 +99,25 @@ fun PixelBoosterApp(
                             },
                             label = { Text(screen.title) },
                             colors = NavigationRailItemDefaults.colors(
-                                selectedIconColor = PrimaryBlue,
-                                selectedTextColor = PrimaryBlue,
-                                unselectedIconColor = TextSecondaryDark,
-                                unselectedTextColor = TextSecondaryDark,
-                                indicatorColor = HighElevationDark
+                                selectedIconColor = MaterialTheme.colorScheme.primary,
+                                selectedTextColor = MaterialTheme.colorScheme.primary,
+                                unselectedIconColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                                unselectedTextColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                                indicatorColor = MaterialTheme.colorScheme.secondaryContainer
                             ),
                             modifier = Modifier.testTag(screen.testTag)
                         )
                     }
                 }
 
-                Box(modifier = Modifier.weight(1f)) {
-                    AppNavHost(navController = navController)
+                Box(
+                    modifier = Modifier.weight(1f).fillMaxHeight(),
+                    contentAlignment = Alignment.TopCenter
+                ) {
+                    AppNavHost(
+                        navController = navController,
+                        modifier = Modifier.widthIn(max = 1100.dp).fillMaxWidth().fillMaxHeight()
+                    )
                 }
             }
         } else {

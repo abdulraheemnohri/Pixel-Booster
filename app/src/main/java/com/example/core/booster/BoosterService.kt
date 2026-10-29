@@ -31,8 +31,9 @@ class BoosterService(private val context: Context) {
         )
     }
 
-    fun getLiveRamMetrics(): LiveRamMetrics {
+    fun getLiveRamMetrics(): LiveRamMetrics? {
         val mem = diagnosticsProvider.getMemoryInfo()
+        if (!mem.isAvailable) return null
         val runtime = Runtime.getRuntime()
         val allocated = (runtime.totalMemory() - runtime.freeMemory()).coerceAtLeast(0L)
         val pressure = when {

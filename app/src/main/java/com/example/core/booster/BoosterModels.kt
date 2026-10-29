@@ -8,18 +8,18 @@ enum class BoosterToolType(
     val description: String
 ) {
     RAM_BOOSTER(
-        title = "RAM Booster",
-        subtitle = "Memory Reclaim",
+        title = "RAM Monitor",
+        subtitle = "Measured Memory",
         description = "Shows measured system memory and requests garbage collection for this app only; Android manages system-wide RAM."
     ),
     JUNK_CLEANER(
-        title = "Junk Cleaner",
-        subtitle = "Cache & Temp Purge",
+        title = "App Cache Cleaner",
+        subtitle = "This App’s Cache",
         description = "Scans and clears only this app’s disposable cache folders; other apps and personal files are not touched."
     ),
     CPU_COOLER(
-        title = "CPU Cooler",
-        subtitle = "Thermal Relief",
+        title = "Thermal Monitor",
+        subtitle = "Temperature Guidance",
         description = "Reads available thermal and battery sensors and offers safe cooling advice; it cannot force-cool the CPU."
     ),
     BATTERY_SAVER(
@@ -28,13 +28,13 @@ enum class BoosterToolType(
         description = "Provides supported power-setting guidance; it cannot unlock CPU frequencies or guarantee battery gains."
     ),
     NETWORK_TURBO(
-        title = "Network Turbo",
-        subtitle = "Ping & Latency",
+        title = "Network Diagnostics",
+        subtitle = "Connection Latency",
         description = "Measures connection latency only; it does not flush system sockets or guarantee lower ping."
     ),
     GAME_TURBO(
-        title = "Game Turbo",
-        subtitle = "Maximum FPS Priority",
+        title = "Gaming Guide",
+        subtitle = "Gaming Preferences",
         description = "Provides game-use guidance; Android does not expose a general no-root FPS boost switch."
     )
 }
@@ -126,9 +126,10 @@ data class LiveRamMetrics(
     val jvmFreeBytes: Long,
     val memoryPressure: MemoryPressureLevel
 ) {
-    val formattedTotal: String get() = MemoryInfoData.formatBytes(totalBytes)
-    val formattedAvailable: String get() = MemoryInfoData.formatBytes(availableBytes)
-    val formattedUsed: String get() = MemoryInfoData.formatBytes(usedBytes)
+    val isAvailable: Boolean get() = totalBytes > 0L && availableBytes >= 0L
+    val formattedTotal: String get() = if (isAvailable) MemoryInfoData.formatBytes(totalBytes) else "Unavailable"
+    val formattedAvailable: String get() = if (isAvailable) MemoryInfoData.formatBytes(availableBytes) else "Unavailable"
+    val formattedUsed: String get() = if (isAvailable) MemoryInfoData.formatBytes(usedBytes) else "Unavailable"
     val formattedJvmAllocated: String get() = MemoryInfoData.formatBytes(jvmAllocatedBytes)
     val formattedJvmMax: String get() = MemoryInfoData.formatBytes(jvmMaxBytes)
     val formattedJvmFree: String get() = MemoryInfoData.formatBytes(jvmFreeBytes)
@@ -140,8 +141,8 @@ data class CacheClearReport(
     val externalCacheBytes: Long,
     val codeCacheBytes: Long,
     val temporaryBuffersBytes: Long,
-    val responsivenessScoreBoost: Int = 12,
-    val durationMs: Long = 420L,
+    val responsivenessScoreBoost: Int = 0,
+    val durationMs: Long = 0L,
     val timestamp: Long = System.currentTimeMillis()
 ) {
     val formattedTotal: String get() = MemoryInfoData.formatBytes(totalFreedBytes)

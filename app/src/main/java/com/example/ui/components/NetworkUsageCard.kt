@@ -42,13 +42,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.core.model.NetworkTelemetryData
 import com.example.ui.theme.CyberCyan
-import com.example.ui.theme.HighElevationDark
 import com.example.ui.theme.ModernDesignTokens
-import com.example.ui.theme.OutlineDark
 import com.example.ui.theme.PositiveMint
-import com.example.ui.theme.PrimaryBlue
-import com.example.ui.theme.TextPrimaryDark
-import com.example.ui.theme.TextSecondaryDark
 
 @Composable
 fun NetworkUsageCard(
@@ -118,7 +113,7 @@ fun NetworkUsageCard(
                         Text(
                             text = "Real-Time TrafficStats Subsystem",
                             style = MaterialTheme.typography.bodySmall,
-                            color = TextSecondaryDark,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
                             fontSize = 11.sp
                         )
                     }
@@ -149,7 +144,7 @@ fun NetworkUsageCard(
                 // Download Speed Card
                 Surface(
                     shape = RoundedCornerShape(16.dp),
-                    color = HighElevationDark,
+                    color = MaterialTheme.colorScheme.surfaceContainer,
                     border = androidx.compose.foundation.BorderStroke(1.dp, Color(0x2538BDF8)),
                     modifier = Modifier.weight(1f)
                 ) {
@@ -162,7 +157,7 @@ fun NetworkUsageCard(
                             Text(
                                 text = "DOWNLOAD",
                                 style = MaterialTheme.typography.labelSmall,
-                                color = TextSecondaryDark,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant,
                                 fontSize = 10.sp,
                                 fontWeight = FontWeight.Bold
                             )
@@ -183,7 +178,7 @@ fun NetworkUsageCard(
                         Text(
                             text = "Session: ${network.formattedSessionTotalRx}",
                             style = MaterialTheme.typography.bodySmall,
-                            color = TextSecondaryDark,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
                             fontSize = 10.sp
                         )
                     }
@@ -192,7 +187,7 @@ fun NetworkUsageCard(
                 // Upload Speed Card
                 Surface(
                     shape = RoundedCornerShape(16.dp),
-                    color = HighElevationDark,
+                    color = MaterialTheme.colorScheme.surfaceContainer,
                     border = androidx.compose.foundation.BorderStroke(1.dp, Color(0x2534D399)),
                     modifier = Modifier.weight(1f)
                 ) {
@@ -205,7 +200,7 @@ fun NetworkUsageCard(
                             Text(
                                 text = "UPLOAD",
                                 style = MaterialTheme.typography.labelSmall,
-                                color = TextSecondaryDark,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant,
                                 fontSize = 10.sp,
                                 fontWeight = FontWeight.Bold
                             )
@@ -226,7 +221,7 @@ fun NetworkUsageCard(
                         Text(
                             text = "Session: ${network.formattedSessionTotalTx}",
                             style = MaterialTheme.typography.bodySmall,
-                            color = TextSecondaryDark,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
                             fontSize = 10.sp
                         )
                     }
@@ -238,7 +233,7 @@ fun NetworkUsageCard(
             // IP Address & Interface Details Row
             Surface(
                 shape = RoundedCornerShape(12.dp),
-                color = HighElevationDark,
+                color = MaterialTheme.colorScheme.surfaceContainer,
                 border = androidx.compose.foundation.BorderStroke(1.dp, Color(0x1538BDF8)),
                 modifier = Modifier.fillMaxWidth()
             ) {
@@ -252,13 +247,13 @@ fun NetworkUsageCard(
                             text = "Local IP: ${network.localIpAddress}",
                             style = MaterialTheme.typography.bodySmall,
                             fontWeight = FontWeight.SemiBold,
-                            color = TextPrimaryDark,
+                            color = MaterialTheme.colorScheme.onSurface,
                             fontSize = 11.sp
                         )
                         Text(
                             text = "SSID: ${network.wifiSsid} • ${network.formattedRssiDbm} (${network.wifiSignalPercent}%)",
                             style = MaterialTheme.typography.bodySmall,
-                            color = TextSecondaryDark,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
                             fontSize = 10.sp
                         )
                     }
@@ -292,7 +287,7 @@ fun NetworkUsageCard(
                     Icon(
                         imageVector = Icons.Filled.NetworkCheck,
                         contentDescription = null,
-                        tint = TextSecondaryDark,
+                        tint = MaterialTheme.colorScheme.onSurfaceVariant,
                         modifier = Modifier.size(16.dp)
                     )
                     Spacer(modifier = Modifier.width(8.dp))

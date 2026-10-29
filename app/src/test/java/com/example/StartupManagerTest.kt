@@ -51,7 +51,7 @@ class StartupManagerTest {
 
         val initialSummary = provider.getStartupSummary()
         assertTrue(initialSummary.totalStartupApps > 0)
-        assertTrue(initialSummary.totalBootDelayMs > 0)
+        assertEquals(0, initialSummary.totalBootDelayMs)
         assertEquals(0L, initialSummary.totalRamFootprintBytes)
 
         // Find a non-essential app to toggle
@@ -88,9 +88,9 @@ class StartupManagerTest {
         val result = provider.optimizeAllNonEssential()
         assertNotNull(result)
         assertTrue(result.appsOptimizedCount > 0)
-        assertTrue(result.totalDelayReducedMs > 0)
+        assertEquals(0, result.totalDelayReducedMs)
         assertEquals(0L, result.ramHeadroomReclaimedBytes)
-        assertTrue(result.formattedTimeSaved.contains("seconds"))
+        assertEquals("Not measured", result.formattedTimeSaved)
         assertTrue(result.formattedRamReclaimed.isNotBlank())
 
         val postSummary = provider.getStartupSummary()
@@ -125,6 +125,6 @@ class StartupManagerTest {
         assertEquals("Startup", Screen.Startup.title)
         assertFalse(Screen.items.contains(Screen.Startup))
         assertTrue(Screen.items.contains(Screen.More))
-        assertEquals(6, Screen.items.size)
+        assertEquals(5, Screen.items.size)
     }
 }

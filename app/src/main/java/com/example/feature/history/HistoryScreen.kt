@@ -66,13 +66,8 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.core.database.DiagnosticSampleEntity
 import com.example.ui.theme.CriticalRed
 import com.example.ui.theme.CyberCyan
-import com.example.ui.theme.HighElevationDark
 import com.example.ui.theme.ModernDesignTokens
-import com.example.ui.theme.OutlineDark
 import com.example.ui.theme.PositiveMint
-import com.example.ui.theme.PrimaryBlue
-import com.example.ui.theme.TextPrimaryDark
-import com.example.ui.theme.TextSecondaryDark
 import com.example.ui.theme.WarningAmber
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -139,7 +134,7 @@ fun HistoryScreen(
 
                 ScrollableTabRow(
                     selectedTabIndex = selectedIndex,
-                    containerColor = HighElevationDark,
+                    containerColor = MaterialTheme.colorScheme.surfaceContainer,
                     edgePadding = 8.dp,
                     indicator = { tabPositions ->
                         SecondaryIndicator(
@@ -161,7 +156,7 @@ fun HistoryScreen(
                                     text = "${metric.label} (${metric.unit})",
                                     style = MaterialTheme.typography.labelMedium,
                                     fontWeight = if (selectedIndex == index) FontWeight.Bold else FontWeight.Medium,
-                                    color = if (selectedIndex == index) CyberCyan else TextSecondaryDark
+                                    color = if (selectedIndex == index) CyberCyan else MaterialTheme.colorScheme.onSurfaceVariant
                                 )
                             },
                             modifier = Modifier.testTag("tab_metric_${metric.name.lowercase()}")
@@ -184,13 +179,13 @@ fun HistoryScreen(
                                 colors = FilterChipDefaults.filterChipColors(
                                     selectedContainerColor = CyberCyan,
                                     selectedLabelColor = Color(0xFF031628),
-                                    containerColor = HighElevationDark,
-                                    labelColor = TextPrimaryDark
+                                    containerColor = MaterialTheme.colorScheme.surfaceContainer,
+                                    labelColor = MaterialTheme.colorScheme.onSurface
                                 ),
                                 border = FilterChipDefaults.filterChipBorder(
                                     enabled = true,
                                     selected = uiState.selectedWindow == window,
-                                    borderColor = OutlineDark,
+                                    borderColor = MaterialTheme.colorScheme.outline,
                                     selectedBorderColor = CyberCyan
                                 ),
                                 modifier = Modifier.testTag("window_${window.name.lowercase()}")
@@ -232,7 +227,7 @@ fun HistoryScreen(
                     StatMetricSummaryCard(
                         label = "MAXIMUM",
                         value = "${String.format(Locale.US, "%.1f", uiState.maxVal)}${uiState.selectedMetric.unit}",
-                        color = if (uiState.maxVal > 85f) WarningAmber else TextPrimaryDark,
+                        color = if (uiState.maxVal > 85f) WarningAmber else MaterialTheme.colorScheme.onSurface,
                         modifier = Modifier.weight(1f)
                     )
                 }
@@ -266,7 +261,7 @@ fun HistoryScreen(
                     Card(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .border(1.dp, OutlineDark, RoundedCornerShape(18.dp)),
+                            .border(1.dp, MaterialTheme.colorScheme.outline, RoundedCornerShape(18.dp)),
                         shape = RoundedCornerShape(18.dp),
                         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainer)
                     ) {
@@ -419,7 +414,7 @@ fun HistoryLineChartCard(
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(180.dp)
-                        .background(HighElevationDark.copy(alpha = 0.5f), RoundedCornerShape(14.dp)),
+                        .background(MaterialTheme.colorScheme.surfaceContainer.copy(alpha = 0.5f), RoundedCornerShape(14.dp)),
                     contentAlignment = Alignment.Center
                 ) {
                     Text(
@@ -461,6 +456,7 @@ fun CanvasLineChart(
     modifier: Modifier = Modifier
 ) {
     val lineColor = CyberCyan
+    val gridColor = MaterialTheme.colorScheme.outline.copy(alpha = 0.6f)
     val fillColor = Brush.verticalGradient(
         colors = listOf(
             CyberCyan.copy(alpha = 0.35f),
@@ -477,7 +473,7 @@ fun CanvasLineChart(
         for (i in 0..gridCount) {
             val y = height * (i.toFloat() / gridCount.toFloat())
             drawLine(
-                color = OutlineDark.copy(alpha = 0.6f),
+                color = gridColor,
                 start = Offset(0f, y),
                 end = Offset(width, y),
                 strokeWidth = 1.dp.toPx()
@@ -597,7 +593,7 @@ fun HistorySampleItemCard(sample: DiagnosticSampleEntity) {
                 )
                 Surface(
                     shape = RoundedCornerShape(ModernDesignTokens.RadiusFull),
-                    color = HighElevationDark,
+                    color = MaterialTheme.colorScheme.surfaceContainer,
                     border = androidx.compose.foundation.BorderStroke(1.dp, Color(0x2538BDF8))
                 ) {
                     Text(
@@ -619,17 +615,17 @@ fun HistorySampleItemCard(sample: DiagnosticSampleEntity) {
                 Text(
                     text = "RAM: ${String.format(Locale.US, "%.0f", sample.usedRamPercentage)}%",
                     style = MaterialTheme.typography.bodySmall,
-                    color = TextSecondaryDark
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
                 Text(
                     text = "Battery: ${sample.batteryPercentage}% (${sample.batteryTemperatureCelsius?.let { "${String.format(Locale.US, "%.1f", it)}°C" } ?: "N/A"})",
                     style = MaterialTheme.typography.bodySmall,
-                    color = TextSecondaryDark
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
                 Text(
                     text = "State: ${sample.chargingState}",
                     style = MaterialTheme.typography.bodySmall,
-                    color = TextSecondaryDark
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
             }
         }

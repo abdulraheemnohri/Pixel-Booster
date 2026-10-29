@@ -50,13 +50,8 @@ import com.example.core.model.FindingSeverity
 import com.example.ui.theme.CriticalRed
 import com.example.ui.theme.CyberCyan
 import com.example.ui.theme.ElevatedSurfaceDark
-import com.example.ui.theme.HighElevationDark
 import com.example.ui.theme.ModernDesignTokens
-import com.example.ui.theme.OutlineDark
 import com.example.ui.theme.PositiveMint
-import com.example.ui.theme.PrimaryBlue
-import com.example.ui.theme.TextPrimaryDark
-import com.example.ui.theme.TextSecondaryDark
 import com.example.ui.theme.WarningAmber
 
 @Composable
@@ -205,7 +200,7 @@ private fun StatusPill(
     Surface(
         modifier = modifier,
         shape = RoundedCornerShape(12.dp),
-        color = HighElevationDark.copy(alpha = 0.7f),
+        color = MaterialTheme.colorScheme.surfaceContainerHigh.copy(alpha = 0.7f),
         border = androidx.compose.foundation.BorderStroke(1.dp, color.copy(alpha = 0.25f))
     ) {
         Column(
@@ -221,7 +216,7 @@ private fun StatusPill(
             Text(
                 text = label,
                 style = MaterialTheme.typography.labelSmall,
-                color = TextSecondaryDark,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
                 fontSize = 10.sp
             )
         }
@@ -337,7 +332,7 @@ fun TelemetryMetricCard(
                     .height(8.dp)
                     .clip(RoundedCornerShape(4.dp)),
                 color = statusColor,
-                trackColor = HighElevationDark,
+                trackColor = MaterialTheme.colorScheme.surfaceContainerHigh,
                 strokeCap = StrokeCap.Round
             )
 

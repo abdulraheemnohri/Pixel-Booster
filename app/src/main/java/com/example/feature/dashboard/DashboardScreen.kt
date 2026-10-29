@@ -80,13 +80,8 @@ import com.example.ui.components.TelemetryMetricCard
 import com.example.ui.components.ThermalMonitorCard
 import com.example.ui.theme.CriticalRed
 import com.example.ui.theme.CyberCyan
-import com.example.ui.theme.HighElevationDark
 import com.example.ui.theme.ModernDesignTokens
-import com.example.ui.theme.OutlineDark
 import com.example.ui.theme.PositiveMint
-import com.example.ui.theme.PrimaryBlue
-import com.example.ui.theme.TextPrimaryDark
-import com.example.ui.theme.TextSecondaryDark
 import com.example.ui.theme.WarningAmber
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -379,7 +374,7 @@ fun ScaffoldWithTopBar(
                             // Live monitoring indicator dot
                             Surface(
                                 shape = RoundedCornerShape(ModernDesignTokens.RadiusFull),
-                                color = if (isLive) PositiveMint.copy(alpha = 0.15f) else TextSecondaryDark.copy(alpha = 0.15f),
+                                color = if (isLive) PositiveMint.copy(alpha = 0.15f) else MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.15f),
                                 border = androidx.compose.foundation.BorderStroke(
                                     1.dp,
                                     if (isLive) PositiveMint.copy(alpha = 0.4f) else Color.Transparent
@@ -393,13 +388,13 @@ fun ScaffoldWithTopBar(
                                         modifier = Modifier
                                             .size(6.dp)
                                             .clip(CircleShape)
-                                            .background(if (isLive) PositiveMint else TextSecondaryDark)
+                                            .background(if (isLive) PositiveMint else MaterialTheme.colorScheme.onSurfaceVariant)
                                     )
                                     Spacer(modifier = Modifier.width(4.dp))
                                     Text(
                                         text = if (isLive) "LIVE 1.0s" else "PAUSED",
                                         style = MaterialTheme.typography.labelSmall,
-                                        color = if (isLive) PositiveMint else TextSecondaryDark,
+                                        color = if (isLive) PositiveMint else MaterialTheme.colorScheme.onSurfaceVariant,
                                         fontSize = 10.sp,
                                         fontWeight = FontWeight.Bold
                                     )
@@ -476,7 +471,7 @@ fun SystemVitalityHudCard(
     onOpenHealth: () -> Unit
 ) {
     val scoreColor = when {
-        vitalityScore < 0 -> TextSecondaryDark
+        vitalityScore < 0 -> MaterialTheme.colorScheme.onSurfaceVariant
         vitalityScore >= 85 -> PositiveMint
         vitalityScore >= 60 -> WarningAmber
         else -> CriticalRed
@@ -536,11 +531,12 @@ fun SystemVitalityHudCard(
                             else -> "Heuristic status from available readings; not a diagnostic certification"
                         },
                         style = MaterialTheme.typography.bodySmall,
-                        color = if (isOverheating) WarningAmber else TextSecondaryDark
+                        color = if (isOverheating) WarningAmber else MaterialTheme.colorScheme.onSurfaceVariant
                     )
                 }
 
                 // Modern Circular Dial with score
+                val dialTrackColor = MaterialTheme.colorScheme.surfaceContainerHigh
                 Box(
                     modifier = Modifier.size(76.dp),
                     contentAlignment = Alignment.Center
@@ -548,7 +544,7 @@ fun SystemVitalityHudCard(
                     Canvas(modifier = Modifier.size(76.dp)) {
                         val stroke = 6.dp.toPx()
                         drawArc(
-                            color = HighElevationDark,
+                            color = dialTrackColor,
                             startAngle = 135f,
                             sweepAngle = 270f,
                             useCenter = false,
@@ -590,12 +586,12 @@ fun SystemVitalityHudCard(
             ) {
                 Surface(
                     shape = RoundedCornerShape(12.dp),
-                    color = HighElevationDark,
+                    color = MaterialTheme.colorScheme.surfaceContainerHigh,
                     border = androidx.compose.foundation.BorderStroke(1.dp, Color(0x1538BDF8)),
                     modifier = Modifier.weight(1f)
                 ) {
                     Column(modifier = Modifier.padding(10.dp)) {
-                        Text("Cell Temp", style = MaterialTheme.typography.labelSmall, color = TextSecondaryDark, fontSize = 10.sp)
+                        Text("Cell Temp", style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 10.sp)
                         Text(
                             String.format(Locale.US, "%.1f°C", tempCelsius),
                             style = MaterialTheme.typography.bodyMedium,
@@ -607,36 +603,36 @@ fun SystemVitalityHudCard(
 
                 Surface(
                     shape = RoundedCornerShape(12.dp),
-                    color = HighElevationDark,
+                    color = MaterialTheme.colorScheme.surfaceContainerHigh,
                     border = androidx.compose.foundation.BorderStroke(1.dp, Color(0x1538BDF8)),
                     modifier = Modifier.weight(1f)
                 ) {
                     Column(modifier = Modifier.padding(10.dp)) {
-                        Text("Battery Grade", style = MaterialTheme.typography.labelSmall, color = TextSecondaryDark, fontSize = 10.sp)
+                        Text("Battery Grade", style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 10.sp)
                         Text(batteryHealthGrade, style = MaterialTheme.typography.bodyMedium, fontWeight = FontWeight.Bold, color = PositiveMint)
                     }
                 }
 
                 Surface(
                     shape = RoundedCornerShape(12.dp),
-                    color = HighElevationDark,
+                    color = MaterialTheme.colorScheme.surfaceContainerHigh,
                     border = androidx.compose.foundation.BorderStroke(1.dp, Color(0x1538BDF8)),
                     modifier = Modifier.weight(1f)
                 ) {
                     Column(modifier = Modifier.padding(10.dp)) {
-                        Text("CPU Usage", style = MaterialTheme.typography.labelSmall, color = TextSecondaryDark, fontSize = 10.sp)
+                        Text("CPU Usage", style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 10.sp)
                         Text(cpuUsage, style = MaterialTheme.typography.bodyMedium, fontWeight = FontWeight.Bold, color = CyberCyan)
                     }
                 }
 
                 Surface(
                     shape = RoundedCornerShape(12.dp),
-                    color = HighElevationDark,
+                    color = MaterialTheme.colorScheme.surfaceContainerHigh,
                     border = androidx.compose.foundation.BorderStroke(1.dp, Color(0x1538BDF8)),
                     modifier = Modifier.weight(1f)
                 ) {
                     Column(modifier = Modifier.padding(10.dp)) {
-                        Text("Data Speed", style = MaterialTheme.typography.labelSmall, color = TextSecondaryDark, fontSize = 10.sp)
+                        Text("Data Speed", style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 10.sp)
                         Text(networkSpeed, style = MaterialTheme.typography.bodyMedium, fontWeight = FontWeight.Bold, color = PositiveMint)
                     }
                 }
@@ -690,13 +686,13 @@ fun DeviceBannerCard(
 
                 Surface(
                     shape = RoundedCornerShape(ModernDesignTokens.RadiusFull),
-                    color = HighElevationDark,
+                    color = MaterialTheme.colorScheme.surfaceContainerHigh,
                     border = androidx.compose.foundation.BorderStroke(1.dp, Color(0x3038BDF8))
                 ) {
                     Text(
                         text = "Android ${specs.androidVersion} (API ${specs.sdkInt})",
                         style = MaterialTheme.typography.labelSmall,
-                        color = TextPrimaryDark,
+                        color = MaterialTheme.colorScheme.onSurface,
                         fontWeight = FontWeight.Bold,
                         modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp)
                     )
@@ -733,7 +729,7 @@ fun MonitoringControlCard(
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .border(1.dp, OutlineDark, RoundedCornerShape(22.dp))
+            .border(1.dp, MaterialTheme.colorScheme.outline, RoundedCornerShape(22.dp))
             .testTag("monitoring_control_card"),
         shape = RoundedCornerShape(22.dp),
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainer)
@@ -765,8 +761,8 @@ fun MonitoringControlCard(
                 colors = SwitchDefaults.colors(
                     checkedThumbColor = Color(0xFF031628),
                     checkedTrackColor = CyberCyan,
-                    uncheckedThumbColor = TextSecondaryDark,
-                    uncheckedTrackColor = HighElevationDark
+                    uncheckedThumbColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                    uncheckedTrackColor = MaterialTheme.colorScheme.surfaceContainerHigh
                 ),
                 modifier = Modifier.testTag("switch_live_monitoring")
             )
@@ -833,9 +829,9 @@ fun PhilosophyCard() {
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .border(1.dp, OutlineDark, RoundedCornerShape(18.dp)),
+            .border(1.dp, MaterialTheme.colorScheme.outline, RoundedCornerShape(18.dp)),
         shape = RoundedCornerShape(18.dp),
-        colors = CardDefaults.cardColors(containerColor = HighElevationDark.copy(alpha = 0.45f))
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainerHigh.copy(alpha = 0.45f))
     ) {
         Column(modifier = Modifier.padding(18.dp)) {
             Text(
@@ -938,37 +934,37 @@ fun DashboardBoosterHeroCard(
             ) {
                 Surface(
                     shape = RoundedCornerShape(12.dp),
-                    color = HighElevationDark,
+                    color = MaterialTheme.colorScheme.surfaceContainerHigh,
                     border = androidx.compose.foundation.BorderStroke(1.dp, Color(0x1538BDF8)),
                     modifier = Modifier.weight(1f)
                 ) {
                     Column(modifier = Modifier.padding(10.dp)) {
-                        Text("RAM Headroom", style = MaterialTheme.typography.labelSmall, color = TextSecondaryDark, fontSize = 10.sp)
-                        Text(availableRam, style = MaterialTheme.typography.bodyMedium, fontWeight = FontWeight.Bold, color = TextPrimaryDark)
+                        Text("RAM Headroom", style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 10.sp)
+                        Text(availableRam, style = MaterialTheme.typography.bodyMedium, fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.onSurface)
                     }
                 }
 
                 Surface(
                     shape = RoundedCornerShape(12.dp),
-                    color = HighElevationDark,
+                    color = MaterialTheme.colorScheme.surfaceContainerHigh,
                     border = androidx.compose.foundation.BorderStroke(1.dp, Color(0x1538BDF8)),
                     modifier = Modifier.weight(1f)
                 ) {
                     Column(modifier = Modifier.padding(10.dp)) {
-                        Text("Cell Temp", style = MaterialTheme.typography.labelSmall, color = TextSecondaryDark, fontSize = 10.sp)
-                        Text(batteryTemp, style = MaterialTheme.typography.bodyMedium, fontWeight = FontWeight.Bold, color = TextPrimaryDark)
+                        Text("Cell Temp", style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 10.sp)
+                        Text(batteryTemp, style = MaterialTheme.typography.bodyMedium, fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.onSurface)
                     }
                 }
 
                 Surface(
                     shape = RoundedCornerShape(12.dp),
-                    color = HighElevationDark,
+                    color = MaterialTheme.colorScheme.surfaceContainerHigh,
                     border = androidx.compose.foundation.BorderStroke(1.dp, Color(0x1538BDF8)),
                     modifier = Modifier.weight(1f)
                 ) {
                     Column(modifier = Modifier.padding(10.dp)) {
-                        Text("Free Storage", style = MaterialTheme.typography.labelSmall, color = TextSecondaryDark, fontSize = 10.sp)
-                        Text(freeStorage, style = MaterialTheme.typography.bodyMedium, fontWeight = FontWeight.Bold, color = TextPrimaryDark)
+                        Text("Free Storage", style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 10.sp)
+                        Text(freeStorage, style = MaterialTheme.typography.bodyMedium, fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.onSurface)
                     }
                 }
             }

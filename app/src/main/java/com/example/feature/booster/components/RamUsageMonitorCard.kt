@@ -51,13 +51,8 @@ import com.example.core.booster.LiveRamMetrics
 import com.example.core.booster.MemoryPressureLevel
 import com.example.ui.theme.CriticalRed
 import com.example.ui.theme.CyberCyan
-import com.example.ui.theme.HighElevationDark
 import com.example.ui.theme.ModernDesignTokens
-import com.example.ui.theme.OutlineDark
 import com.example.ui.theme.PositiveMint
-import com.example.ui.theme.PrimaryBlue
-import com.example.ui.theme.TextPrimaryDark
-import com.example.ui.theme.TextSecondaryDark
 import com.example.ui.theme.WarningAmber
 
 @Composable
@@ -69,19 +64,20 @@ fun RamUsageMonitorCard(
 ) {
     val haptic = LocalHapticFeedback.current
 
-    val percentage = ramMetrics?.usedPercentage ?: 65f
+    val percentage = ramMetrics?.usedPercentage
     val animatedProgress by animateFloatAsState(
-        targetValue = (percentage / 100f).coerceIn(0f, 1f),
+        targetValue = ((percentage ?: 0f) / 100f).coerceIn(0f, 1f),
         animationSpec = tween(durationMillis = 800, easing = FastOutSlowInEasing),
         label = "ramProgress"
     )
 
-    val pressure = ramMetrics?.memoryPressure ?: MemoryPressureLevel.NOMINAL
+    val pressure = ramMetrics?.memoryPressure
     val accentColor by animateColorAsState(
         targetValue = when (pressure) {
             MemoryPressureLevel.CRITICAL -> CriticalRed
             MemoryPressureLevel.MODERATE -> WarningAmber
             MemoryPressureLevel.NOMINAL -> PositiveMint
+            null -> MaterialTheme.colorScheme.onSurfaceVariant
         },
         animationSpec = tween(500),
         label = "ramAccentColor"
@@ -165,7 +161,7 @@ fun RamUsageMonitorCard(
                         )
                         Spacer(modifier = Modifier.width(6.dp))
                         Text(
-                            text = pressure.label.uppercase(),
+                            text = pressure?.label?.uppercase() ?: "UNAVAILABLE",
                             style = MaterialTheme.typography.labelSmall,
                             color = accentColor,
                             fontWeight = FontWeight.ExtraBold,
@@ -195,13 +191,13 @@ fun RamUsageMonitorCard(
                     Spacer(modifier = Modifier.height(2.dp))
                     Row(verticalAlignment = Alignment.Bottom) {
                         Text(
-                            text = ramMetrics?.formattedUsed ?: "5.2 GB",
+                            text = ramMetrics?.formattedUsed ?: "Unavailable",
                             style = MaterialTheme.typography.headlineLarge,
                             fontWeight = FontWeight.Black,
                             color = MaterialTheme.colorScheme.onSurface
                         )
                         Text(
-                            text = " / ${ramMetrics?.formattedTotal ?: "8.0 GB"}",
+                            text = " / ${ramMetrics?.formattedTotal ?: "—"}",
                             style = MaterialTheme.typography.titleMedium,
                             fontWeight = FontWeight.SemiBold,
                             color = MaterialTheme.colorScheme.onSurfaceVariant,
@@ -221,7 +217,7 @@ fun RamUsageMonitorCard(
                     )
                     Spacer(modifier = Modifier.height(2.dp))
                     Text(
-                        text = "${percentage.toInt()}%",
+                        text = percentage?.let { "${it.toInt()}%" } ?: "—",
                         style = MaterialTheme.typography.headlineLarge,
                         fontWeight = FontWeight.Black,
                         color = accentColor
@@ -237,7 +233,7 @@ fun RamUsageMonitorCard(
                     .fillMaxWidth()
                     .height(10.dp)
                     .clip(RoundedCornerShape(5.dp))
-                    .background(HighElevationDark)
+                    .background(MaterialTheme.colorScheme.surfaceContainerHigh)
             ) {
                 Box(
                     modifier = Modifier
@@ -261,20 +257,20 @@ fun RamUsageMonitorCard(
             ) {
                 MetricSubTile(
                     label = "Free Headroom",
-                    value = ramMetrics?.formattedAvailable ?: "2.8 GB",
+                    value = ramMetrics?.formattedAvailable ?: "Unavailable",
                     accent = PositiveMint,
                     modifier = Modifier.weight(1f)
                 )
                 MetricSubTile(
                     label = "JVM Heap Load",
-                    value = ramMetrics?.formattedJvmAllocated ?: "42 MB",
+                    value = ramMetrics?.formattedJvmAllocated ?: "Unavailable",
                     accent = CyberCyan,
                     modifier = Modifier.weight(1f)
                 )
                 MetricSubTile(
                     label = "Max VM Heap",
-                    value = ramMetrics?.formattedJvmMax ?: "512 MB",
-                    accent = TextPrimaryDark,
+                    value = ramMetrics?.formattedJvmMax ?: "Unavailable",
+                    accent = MaterialTheme.colorScheme.onSurface,
                     modifier = Modifier.weight(1f)
                 )
             }
@@ -283,7 +279,7 @@ fun RamUsageMonitorCard(
 
             // Guidance description
             Text(
-                text = pressure.description,
+                text = pressure?.description ?: "Memory telemetry is not available yet. Refresh to try again.",
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
@@ -298,7 +294,7 @@ fun RamUsageMonitorCard(
                 },
                 enabled = !isOptimizing,
                 colors = ButtonDefaults.buttonColors(
-                    containerColor = HighElevationDark,
+                    containerColor = MaterialTheme.colorScheme.surfaceContainerHigh,
                     contentColor = CyberCyan
                 ),
                 shape = RoundedCornerShape(14.dp),
@@ -340,7 +336,7 @@ private fun MetricSubTile(
     Surface(
         modifier = modifier,
         shape = RoundedCornerShape(12.dp),
-        color = HighElevationDark.copy(alpha = 0.8f),
+        color = MaterialTheme.colorScheme.surfaceContainerHigh.copy(alpha = 0.8f),
         border = androidx.compose.foundation.BorderStroke(1.dp, Color(0x1538BDF8))
     ) {
         Column(
@@ -349,7 +345,7 @@ private fun MetricSubTile(
             Text(
                 text = label,
                 style = MaterialTheme.typography.labelSmall,
-                color = TextSecondaryDark,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
                 fontSize = 9.sp
             )
             Spacer(modifier = Modifier.height(2.dp))

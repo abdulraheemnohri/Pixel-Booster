@@ -19,14 +19,13 @@ data class DiagnosticsUiState(
     val touchPointsTested: Int = 0,
     val vibrationTested: Boolean = false,
     val audioTested: Boolean = false,
-    val compassHeading: Float = 42.5f,
-    val accelerometerG: Float = 1.0f,
-    val playIntegrityPassed: Boolean = true,
-    val biometricsAvailable: Boolean = true,
+    val compassHeading: Float = 0f,
+    val accelerometerG: Float = 0f,
+    val playIntegrityPassed: Boolean = false,
+    val biometricsAvailable: Boolean = false,
     val diagnosticLog: List<String> = listOf(
-        "Hardware Diagnostics Engine initialized",
-        "Sensors calibrated for Pixel architecture",
-        "Secure enclave status: Verified"
+        "Diagnostics ready. Run an individual test to record a result.",
+        "Sensor calibration, Play Integrity, and secure hardware checks have not been run by this screen."
     )
 )
 
@@ -54,10 +53,14 @@ class DiagnosticsViewModel(application: Application) : AndroidViewModel(applicat
             }
         } catch (_: Exception) {}
 
+        val available = vibrator != null
         _uiState.update { state ->
             state.copy(
-                vibrationTested = true,
-                diagnosticLog = listOf("Haptic vibration actuator test passed successfully") + state.diagnosticLog
+                vibrationTested = available,
+                diagnosticLog = listOf(
+                    if (available) "Haptic vibration command sent; physical actuator response was not independently verified."
+                    else "Haptic test unavailable: this device exposes no vibrator service."
+                ) + state.diagnosticLog
             )
         }
     }
@@ -67,16 +70,19 @@ class DiagnosticsViewModel(application: Application) : AndroidViewModel(applicat
             val newCount = state.touchPointsTested + 1
             state.copy(
                 touchPointsTested = newCount,
-                diagnosticLog = if (newCount == 1) listOf("Multi-touch digitizer responsiveness verified") + state.diagnosticLog else state.diagnosticLog
+                diagnosticLog = if (newCount == 1) listOf("Touch-test area tapped; this records interaction only and does not verify all digitizer points.") + state.diagnosticLog else state.diagnosticLog
             )
         }
     }
 
     fun testAudioSpeaker() {
+        // Do not report success until a real audible test tone is played and confirmed.
         _uiState.update { state ->
             state.copy(
-                audioTested = true,
-                diagnosticLog = listOf("Audio stereo transducer test completed (1kHz test tone)") + state.diagnosticLog
+                audioTested = false,
+                diagnosticLog = listOf(
+                    "Speaker test is not implemented yet; no audio tone was played and no result was recorded."
+                ) + state.diagnosticLog
             )
         }
     }
@@ -87,13 +93,9 @@ class DiagnosticsViewModel(application: Application) : AndroidViewModel(applicat
             _uiState.update { state ->
                 state.copy(
                     isRunningScan = false,
-                    vibrationTested = true,
-                    audioTested = true,
-                    touchPointsTested = maxOf(state.touchPointsTested, 5),
                     diagnosticLog = listOf(
-                        "Full hardware diagnostic scan passed: 0 defects detected",
-                        "CPU thermal throttling headroom: Optimal",
-                        "UFS storage read/write integrity: Verified"
+                        "Diagnostic workflow completed. This screen does not perform a full hardware integrity scan.",
+                        "No conclusion was made about CPU throttling, storage integrity, secure hardware, or defect counts."
                     ) + state.diagnosticLog
                 )
             }

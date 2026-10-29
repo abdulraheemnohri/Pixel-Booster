@@ -30,15 +30,16 @@ data class MemoryInfoData(
     val thresholdBytes: Long,
     val isLowMemory: Boolean
 ) {
-    val usedRamBytes: Long get() = (totalRamBytes - availableRamBytes).coerceAtLeast(0L)
+    val isAvailable: Boolean get() = totalRamBytes > 0L && availableRamBytes >= 0L
+    val usedRamBytes: Long get() = if (isAvailable) (totalRamBytes - availableRamBytes).coerceAtLeast(0L) else 0L
     val usedPercentage: Float
-        get() = if (totalRamBytes > 0) ((usedRamBytes.toFloat() / totalRamBytes.toFloat()) * 100f).coerceIn(0f, 100f) else 0f
+        get() = if (isAvailable) ((usedRamBytes.toFloat() / totalRamBytes.toFloat()) * 100f).coerceIn(0f, 100f) else 0f
     val availablePercentage: Float
-        get() = (100f - usedPercentage).coerceIn(0f, 100f)
+        get() = if (isAvailable) (100f - usedPercentage).coerceIn(0f, 100f) else 0f
 
-    val formattedTotal: String get() = formatBytes(totalRamBytes)
-    val formattedAvailable: String get() = formatBytes(availableRamBytes)
-    val formattedUsed: String get() = formatBytes(usedRamBytes)
+    val formattedTotal: String get() = if (totalRamBytes > 0L) formatBytes(totalRamBytes) else "Unavailable"
+    val formattedAvailable: String get() = if (isAvailable) formatBytes(availableRamBytes) else "Unavailable"
+    val formattedUsed: String get() = if (isAvailable) formatBytes(usedRamBytes) else "Unavailable"
 
     companion object {
         fun formatBytes(bytes: Long): String {
@@ -58,15 +59,16 @@ data class StorageInfoData(
     val totalBytes: Long,
     val freeBytes: Long
 ) {
-    val usedBytes: Long get() = (totalBytes - freeBytes).coerceAtLeast(0L)
+    val isAvailable: Boolean get() = totalBytes > 0L && freeBytes >= 0L
+    val usedBytes: Long get() = if (isAvailable) (totalBytes - freeBytes).coerceAtLeast(0L) else 0L
     val usedPercentage: Float
-        get() = if (totalBytes > 0) ((usedBytes.toFloat() / totalBytes.toFloat()) * 100f).coerceIn(0f, 100f) else 0f
+        get() = if (isAvailable) ((usedBytes.toFloat() / totalBytes.toFloat()) * 100f).coerceIn(0f, 100f) else 0f
     val freePercentage: Float
-        get() = (100f - usedPercentage).coerceIn(0f, 100f)
+        get() = if (isAvailable) (100f - usedPercentage).coerceIn(0f, 100f) else 0f
 
-    val formattedTotal: String get() = MemoryInfoData.formatBytes(totalBytes)
-    val formattedFree: String get() = MemoryInfoData.formatBytes(freeBytes)
-    val formattedUsed: String get() = MemoryInfoData.formatBytes(usedBytes)
+    val formattedTotal: String get() = if (totalBytes > 0L) MemoryInfoData.formatBytes(totalBytes) else "Unavailable"
+    val formattedFree: String get() = if (isAvailable) MemoryInfoData.formatBytes(freeBytes) else "Unavailable"
+    val formattedUsed: String get() = if (isAvailable) MemoryInfoData.formatBytes(usedBytes) else "Unavailable"
 }
 
 enum class BatteryChargingState {

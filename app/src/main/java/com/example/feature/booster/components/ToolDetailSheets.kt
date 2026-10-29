@@ -53,12 +53,7 @@ import com.example.core.model.BatteryInfoData
 import com.example.core.model.MemoryInfoData
 import com.example.core.model.StorageInfoData
 import com.example.core.model.ThermalStatusData
-import com.example.ui.theme.HighElevationDark
-import com.example.ui.theme.OutlineDark
 import com.example.ui.theme.PositiveMint
-import com.example.ui.theme.PrimaryBlue
-import com.example.ui.theme.TextPrimaryDark
-import com.example.ui.theme.TextSecondaryDark
 import com.example.ui.theme.WarningAmber
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -150,7 +145,7 @@ private fun RamBoosterContent(
 ) {
     Column {
         Row(verticalAlignment = Alignment.CenterVertically) {
-            Icon(Icons.Filled.Memory, contentDescription = null, tint = PrimaryBlue, modifier = Modifier.size(28.dp))
+            Icon(Icons.Filled.Memory, contentDescription = null, tint = MaterialTheme.colorScheme.primary, modifier = Modifier.size(28.dp))
             Spacer(modifier = Modifier.width(10.dp))
             Text(
                 text = "RAM Memory Booster",
@@ -169,20 +164,20 @@ private fun RamBoosterContent(
 
         if (memoryInfo != null) {
             Card(
-                modifier = Modifier.fillMaxWidth().border(1.dp, OutlineDark, RoundedCornerShape(16.dp)),
-                colors = CardDefaults.cardColors(containerColor = HighElevationDark)
+                modifier = Modifier.fillMaxWidth().border(1.dp, MaterialTheme.colorScheme.outline, RoundedCornerShape(16.dp)),
+                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainer)
             ) {
                 Column(modifier = Modifier.padding(16.dp)) {
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.SpaceBetween
                     ) {
-                        Text(text = "Memory Load", style = MaterialTheme.typography.labelSmall, color = TextSecondaryDark)
+                        Text(text = "Memory Load", style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
                         Text(
                             text = "${memoryInfo.formattedUsed} / ${memoryInfo.formattedTotal}",
                             style = MaterialTheme.typography.labelSmall,
                             fontWeight = FontWeight.Bold,
-                            color = TextPrimaryDark
+                            color = MaterialTheme.colorScheme.onSurface
                         )
                     }
                     Spacer(modifier = Modifier.height(8.dp))
@@ -207,7 +202,7 @@ private fun RamBoosterContent(
 
         Button(
             onClick = onBoost,
-            colors = ButtonDefaults.buttonColors(containerColor = PrimaryBlue, contentColor = Color(0xFF0A1020)),
+            colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary, contentColor = MaterialTheme.colorScheme.onPrimary),
             shape = RoundedCornerShape(14.dp),
             modifier = Modifier.fillMaxWidth().height(48.dp).testTag("btn_boost_ram_confirm")
         ) {
@@ -226,36 +221,52 @@ private fun JunkCleanerContent(
             Icon(Icons.Filled.CleaningServices, contentDescription = null, tint = PositiveMint, modifier = Modifier.size(28.dp))
             Spacer(modifier = Modifier.width(10.dp))
             Text(
-                text = "Deep Junk & Cache Cleaner",
+                text = "App Cache Cleaner",
                 style = MaterialTheme.typography.titleLarge,
                 fontWeight = FontWeight.Bold
             )
         }
         Spacer(modifier = Modifier.height(8.dp))
         Text(
-            text = "Scans internal storage for temporary app caches, thumbnail databases, obsolete APK residue, and runtime logs.",
+            text = "Android does not let ordinary apps inspect or delete other apps’ private caches, photos, thumbnails, or system logs. This action is limited to cache data owned by Pixel Booster.",
             style = MaterialTheme.typography.bodyMedium,
             color = MaterialTheme.colorScheme.onSurfaceVariant
         )
 
         Spacer(modifier = Modifier.height(20.dp))
 
-        Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
-            JunkItemTile(title = "App Cache & Temp Files", size = "340 MB", description = "Safe to delete, regenerates as needed")
-            JunkItemTile(title = "Thumbnail Cache", size = "180 MB", description = "Temporary gallery image previews")
-            JunkItemTile(title = "System Code Cache", size = "120 MB", description = "Compiled bytecode cache")
-            JunkItemTile(title = "Residual Diagnostic Logs", size = "45 MB", description = "Old telemetry and trace logs")
+        Card(
+            modifier = Modifier.fillMaxWidth(),
+            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainer)
+        ) {
+            Column(modifier = Modifier.padding(16.dp)) {
+                Text(
+                    text = "Device storage available",
+                    style = MaterialTheme.typography.labelMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+                Text(
+                    text = storageInfo?.formattedFree ?: "Unavailable",
+                    style = MaterialTheme.typography.titleLarge,
+                    fontWeight = FontWeight.Bold
+                )
+                Text(
+                    text = "This is device storage information, not a claim about reclaimable cache.",
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+            }
         }
 
         Spacer(modifier = Modifier.height(24.dp))
 
         Button(
             onClick = onClean,
-            colors = ButtonDefaults.buttonColors(containerColor = PositiveMint, contentColor = Color(0xFF06140D)),
+            colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.tertiary, contentColor = MaterialTheme.colorScheme.onTertiary),
             shape = RoundedCornerShape(14.dp),
             modifier = Modifier.fillMaxWidth().height(48.dp).testTag("btn_clean_junk_confirm")
         ) {
-            Text(text = "Purge Safe Caches (685 MB)", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
+            Text(text = "Clear Pixel Booster app cache", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
         }
     }
 }
@@ -264,7 +275,7 @@ private fun JunkCleanerContent(
 private fun JunkItemTile(title: String, size: String, description: String) {
     Surface(
         shape = RoundedCornerShape(12.dp),
-        color = HighElevationDark,
+        color = MaterialTheme.colorScheme.surfaceContainer,
         modifier = Modifier.fillMaxWidth()
     ) {
         Row(
@@ -273,8 +284,8 @@ private fun JunkItemTile(title: String, size: String, description: String) {
             verticalAlignment = Alignment.CenterVertically
         ) {
             Column(modifier = Modifier.weight(1f)) {
-                Text(text = title, style = MaterialTheme.typography.titleSmall, fontWeight = FontWeight.Bold, color = TextPrimaryDark)
-                Text(text = description, style = MaterialTheme.typography.bodySmall, color = TextSecondaryDark)
+                Text(text = title, style = MaterialTheme.typography.titleSmall, fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.onSurface)
+                Text(text = description, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
             }
             Text(text = size, style = MaterialTheme.typography.titleSmall, fontWeight = FontWeight.Bold, color = PositiveMint)
         }
@@ -292,14 +303,14 @@ private fun CpuCoolerContent(
             Icon(Icons.Filled.Thermostat, contentDescription = null, tint = WarningAmber, modifier = Modifier.size(28.dp))
             Spacer(modifier = Modifier.width(10.dp))
             Text(
-                text = "CPU Cooler & Thermal Engine",
+                text = "Thermal Monitor",
                 style = MaterialTheme.typography.titleLarge,
                 fontWeight = FontWeight.Bold
             )
         }
         Spacer(modifier = Modifier.height(8.dp))
         Text(
-            text = "Eases heavy background CPU load, mitigates thermal clock throttling, and helps maintain peak frame rates.",
+            text = "Shows thermal information when Android exposes it and offers supported guidance. An ordinary app cannot force-cool the processor or guarantee higher frame rates.",
             style = MaterialTheme.typography.bodyMedium,
             color = MaterialTheme.colorScheme.onSurfaceVariant
         )
@@ -307,17 +318,17 @@ private fun CpuCoolerContent(
         Spacer(modifier = Modifier.height(20.dp))
 
         Card(
-            modifier = Modifier.fillMaxWidth().border(1.dp, OutlineDark, RoundedCornerShape(16.dp)),
-            colors = CardDefaults.cardColors(containerColor = HighElevationDark)
+            modifier = Modifier.fillMaxWidth().border(1.dp, MaterialTheme.colorScheme.outline, RoundedCornerShape(16.dp)),
+            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainer)
         ) {
             Column(modifier = Modifier.padding(16.dp)) {
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
-                    Text(text = "Sensor Telemetry", style = MaterialTheme.typography.labelSmall, color = TextSecondaryDark)
+                    Text(text = "Sensor Telemetry", style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
                     Text(
-                        text = "Status: ${thermalStatus?.statusName ?: "Nominal"}",
+                        text = "Status: ${thermalStatus?.statusName ?: "Unavailable"}",
                         style = MaterialTheme.typography.labelSmall,
                         fontWeight = FontWeight.Bold,
                         color = WarningAmber
@@ -325,14 +336,14 @@ private fun CpuCoolerContent(
                 }
                 Spacer(modifier = Modifier.height(8.dp))
                 Text(
-                    text = "Battery Temp: ${batteryInfo?.formattedTemperature ?: "31.5°C"}",
+                    text = "Battery Temp: ${batteryInfo?.formattedTemperature ?: "Unavailable"}",
                     style = MaterialTheme.typography.titleLarge,
                     fontWeight = FontWeight.Bold,
-                    color = TextPrimaryDark
+                    color = MaterialTheme.colorScheme.onSurface
                 )
                 Spacer(modifier = Modifier.height(4.dp))
                 Text(
-                    text = thermalStatus?.recommendation ?: "Operating within normal parameters.",
+                    text = thermalStatus?.recommendation ?: "Thermal status is not available from Android on this device or at this time.",
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
@@ -343,11 +354,11 @@ private fun CpuCoolerContent(
 
         Button(
             onClick = onCool,
-            colors = ButtonDefaults.buttonColors(containerColor = PrimaryBlue, contentColor = Color(0xFF0A1020)),
+            colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary, contentColor = MaterialTheme.colorScheme.onPrimary),
             shape = RoundedCornerShape(14.dp),
             modifier = Modifier.fillMaxWidth().height(48.dp).testTag("btn_cool_cpu_confirm")
         ) {
-            Text(text = "Start CPU Cooldown", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
+            Text(text = "Measure Temperature Change", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
         }
     }
 }
@@ -381,14 +392,14 @@ private fun BatterySaverContent(
             val isSelected = activeProfile == profile
             Surface(
                 shape = RoundedCornerShape(14.dp),
-                color = if (isSelected) PrimaryBlue.copy(alpha = 0.15f) else HighElevationDark,
+                color = if (isSelected) MaterialTheme.colorScheme.primary.copy(alpha = 0.15f) else MaterialTheme.colorScheme.surfaceContainer,
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(vertical = 4.dp)
                     .clickable { onSelectProfile(profile) }
                     .border(
                         1.dp,
-                        if (isSelected) PrimaryBlue else OutlineDark,
+                        if (isSelected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.outline,
                         RoundedCornerShape(14.dp)
                     )
             ) {
@@ -400,8 +411,8 @@ private fun BatterySaverContent(
                         selected = isSelected,
                         onClick = { onSelectProfile(profile) },
                         colors = RadioButtonDefaults.colors(
-                            selectedColor = PrimaryBlue,
-                            unselectedColor = TextSecondaryDark
+                            selectedColor = MaterialTheme.colorScheme.primary,
+                            unselectedColor = MaterialTheme.colorScheme.onSurfaceVariant
                         )
                     )
                     Spacer(modifier = Modifier.width(8.dp))
@@ -410,12 +421,12 @@ private fun BatterySaverContent(
                             text = profile.label,
                             style = MaterialTheme.typography.titleSmall,
                             fontWeight = FontWeight.Bold,
-                            color = if (isSelected) PrimaryBlue else TextPrimaryDark
+                            color = if (isSelected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurface
                         )
                         Text(
                             text = profile.description,
                             style = MaterialTheme.typography.bodySmall,
-                            color = TextSecondaryDark
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
                     }
                 }
@@ -430,17 +441,17 @@ private fun NetworkTurboContent(
 ) {
     Column {
         Row(verticalAlignment = Alignment.CenterVertically) {
-            Icon(Icons.Filled.NetworkCheck, contentDescription = null, tint = PrimaryBlue, modifier = Modifier.size(28.dp))
+            Icon(Icons.Filled.NetworkCheck, contentDescription = null, tint = MaterialTheme.colorScheme.primary, modifier = Modifier.size(28.dp))
             Spacer(modifier = Modifier.width(10.dp))
             Text(
-                text = "Network Turbo Accelerator",
+                text = "Network Diagnostics",
                 style = MaterialTheme.typography.titleLarge,
                 fontWeight = FontWeight.Bold
             )
         }
         Spacer(modifier = Modifier.height(8.dp))
         Text(
-            text = "Pings Google DNS servers, refreshes socket buffers, flushes DNS cache buffers, and minimizes packet round-trip delay.",
+            text = "Runs a basic connectivity/latency check. Android does not expose general controls for flushing system DNS or prioritizing network packets to ordinary apps.",
             style = MaterialTheme.typography.bodyMedium,
             color = MaterialTheme.colorScheme.onSurfaceVariant
         )
@@ -449,11 +460,11 @@ private fun NetworkTurboContent(
 
         Button(
             onClick = onBoost,
-            colors = ButtonDefaults.buttonColors(containerColor = PrimaryBlue, contentColor = Color(0xFF0A1020)),
+            colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary, contentColor = MaterialTheme.colorScheme.onPrimary),
             shape = RoundedCornerShape(14.dp),
             modifier = Modifier.fillMaxWidth().height(48.dp).testTag("btn_accelerate_network_confirm")
         ) {
-            Text(text = "Accelerate & Flush Latency", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
+            Text(text = "Run Connectivity Check", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
         }
     }
 }
@@ -468,14 +479,14 @@ private fun GameTurboContent(
             Icon(Icons.Filled.SportsEsports, contentDescription = null, tint = PositiveMint, modifier = Modifier.size(28.dp))
             Spacer(modifier = Modifier.width(10.dp))
             Text(
-                text = "Game Turbo Mode",
+                text = "Gaming Preferences",
                 style = MaterialTheme.typography.titleLarge,
                 fontWeight = FontWeight.Bold
             )
         }
         Spacer(modifier = Modifier.height(8.dp))
         Text(
-            text = "Locks hardware focus on the active foreground 3D game, prioritizes GPU rendering pipelines, and prevents frame drops.",
+            text = "A shortcut and preference panel for gaming. Android does not let an ordinary app lock GPU scheduling or guarantee fewer frame drops.",
             style = MaterialTheme.typography.bodyMedium,
             color = MaterialTheme.colorScheme.onSurfaceVariant
         )
@@ -483,8 +494,8 @@ private fun GameTurboContent(
         Spacer(modifier = Modifier.height(20.dp))
 
         Card(
-            modifier = Modifier.fillMaxWidth().border(1.dp, OutlineDark, RoundedCornerShape(16.dp)),
-            colors = CardDefaults.cardColors(containerColor = HighElevationDark)
+            modifier = Modifier.fillMaxWidth().border(1.dp, MaterialTheme.colorScheme.outline, RoundedCornerShape(16.dp)),
+            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainer)
         ) {
             Row(
                 modifier = Modifier.fillMaxWidth().padding(16.dp),
@@ -493,15 +504,15 @@ private fun GameTurboContent(
             ) {
                 Column(modifier = Modifier.weight(1f)) {
                     Text(
-                        text = if (isActive) "Game Turbo ACTIVE" else "Game Turbo Inactive",
+                        text = if (isActive) "Gaming preference enabled" else "Gaming preference disabled",
                         style = MaterialTheme.typography.titleMedium,
                         fontWeight = FontWeight.Bold,
-                        color = if (isActive) PositiveMint else TextPrimaryDark
+                        color = if (isActive) PositiveMint else MaterialTheme.colorScheme.onSurface
                     )
                     Text(
-                        text = if (isActive) "Memory headroom locked for active games" else "Standard Android background scheduling",
+                        text = if (isActive) "Preference saved in this app; system scheduling is unchanged" else "Android retains control of background scheduling",
                         style = MaterialTheme.typography.bodySmall,
-                        color = TextSecondaryDark
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                 }
 
@@ -509,9 +520,9 @@ private fun GameTurboContent(
                     checked = isActive,
                     onCheckedChange = { onToggle() },
                     colors = SwitchDefaults.colors(
-                        checkedThumbColor = Color(0xFF06140D),
+                        checkedThumbColor = MaterialTheme.colorScheme.onPrimary,
                         checkedTrackColor = PositiveMint,
-                        uncheckedThumbColor = TextSecondaryDark,
+                        uncheckedThumbColor = MaterialTheme.colorScheme.onSurfaceVariant,
                         uncheckedTrackColor = MaterialTheme.colorScheme.surface
                     ),
                     modifier = Modifier.testTag("switch_game_turbo")

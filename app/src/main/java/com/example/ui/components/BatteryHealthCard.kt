@@ -56,13 +56,8 @@ import com.example.core.model.BatteryHealthData
 import com.example.core.model.BatteryPluggedSource
 import com.example.ui.theme.CriticalRed
 import com.example.ui.theme.CyberCyan
-import com.example.ui.theme.HighElevationDark
 import com.example.ui.theme.ModernDesignTokens
-import com.example.ui.theme.OutlineDark
 import com.example.ui.theme.PositiveMint
-import com.example.ui.theme.PrimaryBlue
-import com.example.ui.theme.TextPrimaryDark
-import com.example.ui.theme.TextSecondaryDark
 import com.example.ui.theme.WarningAmber
 
 @Composable
@@ -119,7 +114,7 @@ fun BatteryHealthCard(
                 ) {
                     Surface(
                         shape = CircleShape,
-                        color = if (battery.isCharging) PositiveMint.copy(alpha = 0.18f) else HighElevationDark,
+                        color = if (battery.isCharging) PositiveMint.copy(alpha = 0.18f) else MaterialTheme.colorScheme.surfaceContainer,
                         modifier = Modifier.size(38.dp)
                     ) {
                         Box(contentAlignment = Alignment.Center) {
@@ -147,7 +142,7 @@ fun BatteryHealthCard(
                         Text(
                             text = "Battery readings exposed by Android",
                             style = MaterialTheme.typography.bodySmall,
-                            color = TextSecondaryDark,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
                             fontSize = 11.sp
                         )
                     }
@@ -206,10 +201,10 @@ fun BatteryHealthCard(
                 // Charging Status Indicator Pill
                 Surface(
                     shape = RoundedCornerShape(14.dp),
-                    color = if (battery.isCharging) PositiveMint.copy(alpha = 0.14f) else HighElevationDark,
+                    color = if (battery.isCharging) PositiveMint.copy(alpha = 0.14f) else MaterialTheme.colorScheme.surfaceContainer,
                     border = androidx.compose.foundation.BorderStroke(
                         1.dp,
-                        if (battery.isCharging) PositiveMint.copy(alpha = 0.5f) else OutlineDark
+                        if (battery.isCharging) PositiveMint.copy(alpha = 0.5f) else MaterialTheme.colorScheme.outline
                     )
                 ) {
                     Row(
@@ -234,7 +229,7 @@ fun BatteryHealthCard(
                                 Text(
                                     text = "${battery.pluggedSource.name} • ${battery.formattedWattage}",
                                     style = MaterialTheme.typography.bodySmall,
-                                    color = TextPrimaryDark,
+                                    color = MaterialTheme.colorScheme.onSurface,
                                     fontSize = 11.sp
                                 )
                             }
@@ -244,12 +239,12 @@ fun BatteryHealthCard(
                                     text = if (battery.isFull) "FULLY CHARGED" else "DISCHARGING",
                                     style = MaterialTheme.typography.labelSmall,
                                     fontWeight = FontWeight.Bold,
-                                    color = TextPrimaryDark
+                                    color = MaterialTheme.colorScheme.onSurface
                                 )
                                 Text(
                                     text = "${battery.formattedVoltage} • ${battery.technology}",
                                     style = MaterialTheme.typography.bodySmall,
-                                    color = TextSecondaryDark,
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant,
                                     fontSize = 11.sp
                                 )
                             }
@@ -281,7 +276,7 @@ fun BatteryHealthCard(
                     text = "${battery.formattedCurrentCapacity} / ${battery.formattedDesignedCapacity}",
                     style = MaterialTheme.typography.labelSmall,
                     fontWeight = FontWeight.Bold,
-                    color = TextPrimaryDark
+                    color = MaterialTheme.colorScheme.onSurface
                 )
             }
 
@@ -294,7 +289,7 @@ fun BatteryHealthCard(
                     .height(8.dp)
                     .clip(RoundedCornerShape(4.dp)),
                 color = if (battery.isCharging) PositiveMint else CyberCyan,
-                trackColor = HighElevationDark,
+                trackColor = MaterialTheme.colorScheme.surfaceContainer,
                 strokeCap = StrokeCap.Round
             )
 
@@ -304,7 +299,7 @@ fun BatteryHealthCard(
             Surface(
                 modifier = Modifier.fillMaxWidth(),
                 shape = RoundedCornerShape(16.dp),
-                color = HighElevationDark,
+                color = MaterialTheme.colorScheme.surfaceContainer,
                 border = androidx.compose.foundation.BorderStroke(1.dp, Color(0x2538BDF8))
             ) {
                 Column(modifier = Modifier.padding(14.dp)) {
@@ -350,7 +345,7 @@ fun BatteryHealthCard(
                         )
                         BatteryBreakdownItem(
                             title = "CELL TEMPERATURE",
-                            value = String.format(java.util.Locale.US, "%.1f°C", battery.temperatureCelsius),
+                            value = if (battery.temperatureCelsius > 0f) String.format(java.util.Locale.US, "%.1f°C", battery.temperatureCelsius) else "Unavailable",
                             subtitle = if (battery.temperatureCelsius > 0f) "${(battery.temperatureCelsius * 9f / 5f + 32f).toInt()}°F Thermal" else "Sensor not exposed",
                             modifier = Modifier.weight(1f)
                         )
@@ -366,7 +361,7 @@ fun BatteryHealthCard(
                             Text(
                                 text = "Coulomb Draw / Charge Rate:",
                                 style = MaterialTheme.typography.bodySmall,
-                                color = TextSecondaryDark,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant,
                                 fontSize = 11.sp
                             )
                             Text(
@@ -383,7 +378,7 @@ fun BatteryHealthCard(
                     Text(
                         text = "Sensor Source: ${battery.chargeCyclesSource}",
                         style = MaterialTheme.typography.bodySmall,
-                        color = TextSecondaryDark,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
                         fontSize = 10.sp
                     )
                 }
@@ -436,7 +431,7 @@ fun BatteryHealthCard(
                     Spacer(modifier = Modifier.height(6.dp))
                     Text(
                         text = if (battery.levelPercentage >= 85 && battery.isCharging)
-                            "⚠️ Charge reached 85% cutoff threshold! Unplug to preserve battery longevity."
+                            "Battery is at or above 85% while charging. Unplugging is optional; use your preferred charging routine."
                         else
                             "Monitoring thermal and voltage safety. Protects against overcharge and overheating.",
                         style = MaterialTheme.typography.bodySmall,
@@ -451,7 +446,7 @@ fun BatteryHealthCard(
             Button(
                 onClick = onOpenBatterySettings,
                 colors = ButtonDefaults.buttonColors(
-                    containerColor = HighElevationDark,
+                    containerColor = MaterialTheme.colorScheme.surfaceContainer,
                     contentColor = CyberCyan
                 ),
                 shape = RoundedCornerShape(12.dp),
@@ -495,7 +490,7 @@ private fun BatteryBreakdownItem(
             Text(
                 text = title,
                 style = MaterialTheme.typography.labelSmall,
-                color = TextSecondaryDark,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
                 fontSize = 9.sp,
                 fontWeight = FontWeight.Bold
             )
@@ -510,7 +505,7 @@ private fun BatteryBreakdownItem(
             Text(
                 text = subtitle,
                 style = MaterialTheme.typography.bodySmall,
-                color = TextSecondaryDark,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
                 fontSize = 10.sp,
                 maxLines = 1
             )

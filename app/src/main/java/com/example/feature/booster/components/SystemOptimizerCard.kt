@@ -41,11 +41,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.ui.theme.CyberCyan
 import com.example.ui.theme.ElectricIndigo
-import com.example.ui.theme.HighElevationDark
 import com.example.ui.theme.ModernDesignTokens
 import com.example.ui.theme.PositiveMint
 import com.example.ui.theme.SpaceGrotesk
-import com.example.ui.theme.TextPrimaryDark
 import com.example.ui.theme.modernCard
 import com.example.ui.theme.pulsingGlow
 
@@ -82,7 +80,7 @@ fun SystemOptimizerCard(
                     ) {
                         Surface(
                             shape = CircleShape,
-                            color = HighElevationDark,
+                            color = MaterialTheme.colorScheme.surfaceContainerHigh,
                             border = androidx.compose.foundation.BorderStroke(1.5.dp, CyberCyan),
                             modifier = Modifier.size(40.dp)
                         ) {
@@ -102,7 +100,7 @@ fun SystemOptimizerCard(
                     Column {
                         Row(verticalAlignment = Alignment.CenterVertically) {
                             Text(
-                                text = "SYSTEM OPTIMIZER",
+                                text = "DEVICE CHECKS",
                                 style = MaterialTheme.typography.titleMedium,
                                 fontWeight = FontWeight.Bold,
                                 fontFamily = SpaceGrotesk,
@@ -115,7 +113,7 @@ fun SystemOptimizerCard(
                                 border = androidx.compose.foundation.BorderStroke(1.dp, PositiveMint.copy(alpha = 0.4f))
                             ) {
                                 Text(
-                                    text = "LIVE",
+                                    text = "LOCAL",
                                     style = MaterialTheme.typography.labelSmall,
                                     color = PositiveMint,
                                     fontFamily = SpaceGrotesk,
@@ -126,7 +124,7 @@ fun SystemOptimizerCard(
                             }
                         }
                         Text(
-                            text = "Clears app cache files & releases background memory",
+                            text = "Measures memory and clears this app’s cache only",
                             style = MaterialTheme.typography.bodySmall,
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
@@ -143,7 +141,7 @@ fun SystemOptimizerCard(
             ) {
                 Surface(
                     shape = RoundedCornerShape(12.dp),
-                    color = HighElevationDark.copy(alpha = 0.6f),
+                    color = MaterialTheme.colorScheme.surfaceContainerHigh.copy(alpha = 0.6f),
                     border = androidx.compose.foundation.BorderStroke(1.dp, Color(0x1538BDF8)),
                     modifier = Modifier.weight(1f)
                 ) {
@@ -168,13 +166,13 @@ fun SystemOptimizerCard(
 
                 Surface(
                     shape = RoundedCornerShape(12.dp),
-                    color = HighElevationDark.copy(alpha = 0.6f),
+                    color = MaterialTheme.colorScheme.surfaceContainerHigh.copy(alpha = 0.6f),
                     border = androidx.compose.foundation.BorderStroke(1.dp, Color(0x1538BDF8)),
                     modifier = Modifier.weight(1f)
                 ) {
                     Column(modifier = Modifier.padding(12.dp)) {
                         Text(
-                            text = "RAM ACTION",
+                            text = "MEMORY DATA",
                             style = MaterialTheme.typography.labelSmall,
                             color = MaterialTheme.colorScheme.onSurfaceVariant,
                             fontFamily = SpaceGrotesk,
@@ -182,7 +180,7 @@ fun SystemOptimizerCard(
                         )
                         Spacer(modifier = Modifier.height(4.dp))
                         Text(
-                            text = "Trim & Flush",
+                            text = "Measured only",
                             style = MaterialTheme.typography.titleMedium,
                             fontFamily = SpaceGrotesk,
                             fontWeight = FontWeight.Bold,
@@ -216,7 +214,7 @@ fun SystemOptimizerCard(
                     )
                     Spacer(modifier = Modifier.width(10.dp))
                     Text(
-                        text = "OPTIMIZING SYSTEM...",
+                        text = "CHECKING DEVICE...",
                         style = MaterialTheme.typography.labelLarge,
                         fontFamily = SpaceGrotesk,
                         fontWeight = FontWeight.Bold
@@ -229,7 +227,7 @@ fun SystemOptimizerCard(
                     )
                     Spacer(modifier = Modifier.width(8.dp))
                     Text(
-                        text = "RUN SYSTEM OPTIMIZER",
+                        text = "RUN DEVICE CHECK",
                         style = MaterialTheme.typography.labelLarge,
                         fontFamily = SpaceGrotesk,
                         fontWeight = FontWeight.Bold

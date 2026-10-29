@@ -39,13 +39,9 @@ import androidx.compose.ui.window.Dialog
 import com.example.core.optimizer.SystemOptimizationResult
 import com.example.ui.theme.CyberCyan
 import com.example.ui.theme.ElectricIndigo
-import com.example.ui.theme.HighElevationDark
 import com.example.ui.theme.ModernDesignTokens
 import com.example.ui.theme.PositiveMint
-import com.example.ui.theme.PrimaryBlue
 import com.example.ui.theme.SpaceGrotesk
-import com.example.ui.theme.TextPrimaryDark
-import com.example.ui.theme.TextSecondaryDark
 import com.example.ui.theme.modernCard
 import com.example.ui.theme.pulsingGlow
 
@@ -83,7 +79,7 @@ fun SystemOptimizerResultDialog(
                 ) {
                     Surface(
                         shape = CircleShape,
-                        color = HighElevationDark,
+                        color = MaterialTheme.colorScheme.surfaceContainerHigh,
                         border = androidx.compose.foundation.BorderStroke(2.dp, ModernDesignTokens.PrimaryGlowBrush),
                         modifier = Modifier.size(64.dp)
                     ) {
@@ -119,7 +115,7 @@ fun SystemOptimizerResultDialog(
                 // Big Headline Reclaimed Metric
                 Surface(
                     shape = RoundedCornerShape(18.dp),
-                    color = HighElevationDark,
+                    color = MaterialTheme.colorScheme.surfaceContainerHigh,
                     border = androidx.compose.foundation.BorderStroke(1.5.dp, CyberCyan.copy(alpha = 0.5f)),
                     modifier = Modifier.fillMaxWidth()
                 ) {
@@ -223,7 +219,7 @@ private fun OptimizerMetricRow(
 ) {
     Surface(
         shape = RoundedCornerShape(12.dp),
-        color = HighElevationDark.copy(alpha = 0.5f),
+        color = MaterialTheme.colorScheme.surfaceContainerHigh.copy(alpha = 0.5f),
         border = androidx.compose.foundation.BorderStroke(1.dp, Color(0x1538BDF8)),
         modifier = Modifier.fillMaxWidth()
     ) {
@@ -242,7 +238,7 @@ private fun OptimizerMetricRow(
                 style = MaterialTheme.typography.bodyMedium,
                 fontFamily = SpaceGrotesk,
                 fontWeight = if (highlight) FontWeight.Bold else FontWeight.Medium,
-                color = if (highlight) CyberCyan else TextPrimaryDark
+                color = if (highlight) CyberCyan else MaterialTheme.colorScheme.onSurface
             )
         }
     }
