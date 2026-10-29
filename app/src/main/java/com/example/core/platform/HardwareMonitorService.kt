@@ -120,7 +120,18 @@ class HardwareMonitorService(
             latencyMs = -1L, // Initial state: no latency probe has run.
             isConnected = connectivityManager?.activeNetwork != null
         )
-        val memory = boosterService.getLiveRamMetrics()
+        val memory = boosterService.getLiveRamMetrics() ?: LiveRamMetrics(
+            totalBytes = 0L,
+            availableBytes = -1L,
+            usedBytes = -1L,
+            usedPercentage = 0f,
+            thresholdBytes = 0L,
+            isLowMemory = false,
+            jvmAllocatedBytes = 0L,
+            jvmMaxBytes = 0L,
+            jvmFreeBytes = 0L,
+            memoryPressure = MemoryPressureLevel.NOMINAL
+        )
         val storage = diagnosticsProvider.getStorageInfo()
         val vitality = calculateVitalityScore(thermal, battery, memory.usedPercentage)
 
