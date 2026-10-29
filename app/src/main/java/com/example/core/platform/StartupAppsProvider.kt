@@ -19,7 +19,6 @@ class StartupAppsProvider(
     private val preferencesRepository: UserPreferencesRepository
 ) {
     private val packageManager: PackageManager = context.packageManager
-    private val actionLauncher = SystemActionLauncher(context)
 
     suspend fun getStartupApps(): List<StartupAppInfo> = withContext(Dispatchers.IO) {
         val restrictedSet = preferencesRepository.restrictedStartupPackagesFlow.first()
@@ -56,8 +55,6 @@ class StartupAppsProvider(
             }
 
             val impact = evaluateBootImpact(pkg, isSystem)
-            val delayMs = calculateDelayMs(impact)
-            val ramFootprint = calculateRamFootprint(impact)
             val isEnabled = !restrictedSet.contains(pkg)
 
             discoveredPackages[pkg] = StartupAppInfo(
@@ -104,8 +101,6 @@ class StartupAppsProvider(
 
             // APK size is not a measurement of startup impact or runtime RAM.
             val impact = evaluateBootImpact(pkg, isSystem)
-            val delayMs = calculateDelayMs(impact)
-            val ramFootprint = 0L // Android does not expose reliable per-app RAM usage here.
             val isEnabled = !restrictedSet.contains(pkg)
 
             discoveredPackages[pkg] = StartupAppInfo(
@@ -115,9 +110,9 @@ class StartupAppsProvider(
                 isEssential = isEssential,
                 isEnabledAtBoot = isEnabled,
                 bootImpact = impact,
-                estimatedBootDelayMs = delayMs,
-                estimatedRamBytes = ramFootprint,
-                bootTriggerReason = if (isSystem) "System Auto-Start Service" else "Installed Launchable Application"
+                estimatedBootDelayMs = 0,
+                estimatedRamBytes = 0L,
+                bootTriggerReason = "Launchable app; auto-start behavior not verified"
             )
         }
 
@@ -151,9 +146,9 @@ class StartupAppsProvider(
                     isEssential = false,
                     isEnabledAtBoot = isEnabled,
                     bootImpact = impact,
-                    estimatedBootDelayMs = calculateDelayMs(impact),
-                    estimatedRamBytes = calculateRamFootprint(impact),
-                    bootTriggerReason = "User Installed App Background Process"
+                    estimatedBootDelayMs = 0,
+                    estimatedRamBytes = 0L,
+                    bootTriggerReason = "Installed app; auto-start behavior not verified"
                 )
             }
         } catch (_: Throwable) {}
@@ -168,9 +163,6 @@ class StartupAppsProvider(
     suspend fun toggleAppStartup(packageName: String, enable: Boolean): Unit = withContext(Dispatchers.IO) {
         val restrict = !enable
         preferencesRepository.setStartupAppRestricted(packageName, restrict)
-        if (restrict) {
-            actionLauncher.killAppBackgroundProcess(packageName)
-        }
     }
 
     suspend fun optimizeAllNonEssential(): BootOptimizationResult = withContext(Dispatchers.IO) {
@@ -181,10 +173,8 @@ class StartupAppsProvider(
         var ramSavedBytes = 0L
 
         for (app in nonEssentialActive) {
+            // Local review preference only; public APIs cannot disable another app's boot receivers.
             preferencesRepository.setStartupAppRestricted(app.packageName, true)
-            actionLauncher.killAppBackgroundProcess(app.packageName)
-            delaySavedMs += app.estimatedBootDelayMs
-            ramSavedBytes += app.estimatedRamBytes
         }
 
         BootOptimizationResult(
@@ -231,14 +221,5 @@ class StartupAppsProvider(
         }
     }
 
-    private fun calculateDelayMs(impact: BootImpactLevel): Int {
-        return when (impact) {
-            BootImpactLevel.HIGH -> 680
-            BootImpactLevel.MEDIUM -> 310
-            BootImpactLevel.LOW -> 85
-        }
-    }
-
-    // Android does not expose reliable per-app RAM usage here. Zero means unavailable, not zero actual use.
-    private fun calculateRamFootprint(impact: BootImpactLevel): Long = 0L
+    // Per-app boot delay and RAM usage are not reliably measurable through public APIs here.
 }
