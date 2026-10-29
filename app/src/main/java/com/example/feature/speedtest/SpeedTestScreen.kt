@@ -340,6 +340,7 @@ fun SpeedGaugeHeroCard(
     )
 
     val currentSpeed = if (downloadMbps > 0f) downloadMbps else uploadMbps
+    val gaugeTrackColor = MaterialTheme.colorScheme.surfaceContainerHigh
     val speedSweep = (currentSpeed / 100f).coerceIn(0f, 1f) * 240f
     val animatedSweep by animateFloatAsState(
         targetValue = speedSweep,
@@ -428,7 +429,7 @@ fun SpeedGaugeHeroCard(
                     val arcSize = Size(diameter, diameter)
 
                     drawArc(
-                        color = MaterialTheme.colorScheme.surfaceContainerHigh,
+                        color = gaugeTrackColor,
                         startAngle = 150f,
                         sweepAngle = 240f,
                         useCenter = false,
