@@ -169,9 +169,6 @@ class StartupAppsProvider(
         val apps = getStartupApps()
         val nonEssentialActive = apps.filter { !it.isEssential && it.isEnabledAtBoot }
 
-        var delaySavedMs = 0
-        var ramSavedBytes = 0L
-
         for (app in nonEssentialActive) {
             // Local review preference only; public APIs cannot disable another app's boot receivers.
             preferencesRepository.setStartupAppRestricted(app.packageName, true)
@@ -179,8 +176,8 @@ class StartupAppsProvider(
 
         BootOptimizationResult(
             appsOptimizedCount = nonEssentialActive.size,
-            totalDelayReducedMs = delaySavedMs,
-            ramHeadroomReclaimedBytes = ramSavedBytes
+            totalDelayReducedMs = 0, // No measured boot-time change is available.
+            ramHeadroomReclaimedBytes = 0L // No verified RAM reclaim is available.
         )
     }
 
