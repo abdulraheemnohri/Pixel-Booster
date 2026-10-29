@@ -747,7 +747,7 @@ fun StartupGuidanceCard() {
             )
             Spacer(modifier = Modifier.height(6.dp))
             Text(
-                text = "Restricting non-essential apps from launching at boot prevents background CPU contention and memory paging while Android initializes. System core services remain safely protected.",
+                text = "This screen saves local review preferences only. A regular no-root app cannot disable another app's boot receiver or verify its boot-time impact. Use Android's app settings to review battery and background activity; all boot-delay and per-app RAM figures remain unmeasured.",
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
