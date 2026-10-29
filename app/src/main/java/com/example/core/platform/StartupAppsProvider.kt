@@ -64,9 +64,9 @@ class StartupAppsProvider(
                 isEssential = isEssential,
                 isEnabledAtBoot = isEnabled,
                 bootImpact = impact,
-                estimatedBootDelayMs = delayMs,
-                estimatedRamBytes = ramFootprint,
-                bootTriggerReason = "BOOT_COMPLETED Receiver"
+                estimatedBootDelayMs = 0,
+                estimatedRamBytes = 0L,
+                bootTriggerReason = "BOOT_COMPLETED receiver detected; startup impact not measured"
             )
         }
 
