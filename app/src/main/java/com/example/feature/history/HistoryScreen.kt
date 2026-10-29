@@ -456,6 +456,7 @@ fun CanvasLineChart(
     modifier: Modifier = Modifier
 ) {
     val lineColor = CyberCyan
+    val gridColor = MaterialTheme.colorScheme.outline.copy(alpha = 0.6f)
     val fillColor = Brush.verticalGradient(
         colors = listOf(
             CyberCyan.copy(alpha = 0.35f),
@@ -472,7 +473,7 @@ fun CanvasLineChart(
         for (i in 0..gridCount) {
             val y = height * (i.toFloat() / gridCount.toFloat())
             drawLine(
-                color = MaterialTheme.colorScheme.outline.copy(alpha = 0.6f),
+                color = gridColor,
                 start = Offset(0f, y),
                 end = Offset(width, y),
                 strokeWidth = 1.dp.toPx()
