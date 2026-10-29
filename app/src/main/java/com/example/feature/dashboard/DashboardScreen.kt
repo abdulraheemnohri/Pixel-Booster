@@ -536,6 +536,7 @@ fun SystemVitalityHudCard(
                 }
 
                 // Modern Circular Dial with score
+                val dialTrackColor = MaterialTheme.colorScheme.surfaceContainerHigh
                 Box(
                     modifier = Modifier.size(76.dp),
                     contentAlignment = Alignment.Center
@@ -543,7 +544,7 @@ fun SystemVitalityHudCard(
                     Canvas(modifier = Modifier.size(76.dp)) {
                         val stroke = 6.dp.toPx()
                         drawArc(
-                            color = MaterialTheme.colorScheme.surfaceContainerHigh,
+                            color = dialTrackColor,
                             startAngle = 135f,
                             sweepAngle = 270f,
                             useCenter = false,
