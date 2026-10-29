@@ -133,17 +133,6 @@ class HardwareMonitorService(
             jvmMaxBytes = 0L,
             jvmFreeBytes = 0L,
             memoryPressure = MemoryPressureLevel.NOMINAL
-        ) ?: LiveRamMetrics(
-            totalBytes = 0L,
-            availableBytes = -1L,
-            usedBytes = -1L,
-            usedPercentage = 0f,
-            thresholdBytes = 0L,
-            isLowMemory = false,
-            jvmAllocatedBytes = 0L,
-            jvmMaxBytes = 0L,
-            jvmFreeBytes = 0L,
-            memoryPressure = MemoryPressureLevel.NOMINAL
         )
         val storage = diagnosticsProvider.getStorageInfo()
         val vitality = calculateVitalityScore(thermal, battery, memory.usedPercentage)
@@ -164,7 +153,18 @@ class HardwareMonitorService(
         val battery = sampleBatteryHealthTelemetry()
         val processor = sampleProcessorTelemetry()
         val network = sampleNetworkTelemetry()
-        val memory = boosterService.getLiveRamMetrics()
+        val memory = boosterService.getLiveRamMetrics() ?: LiveRamMetrics(
+            totalBytes = 0L,
+            availableBytes = -1L,
+            usedBytes = -1L,
+            usedPercentage = 0f,
+            thresholdBytes = 0L,
+            isLowMemory = false,
+            jvmAllocatedBytes = 0L,
+            jvmMaxBytes = 0L,
+            jvmFreeBytes = 0L,
+            memoryPressure = MemoryPressureLevel.NOMINAL
+        )
         val storage = diagnosticsProvider.getStorageInfo()
         val vitality = calculateVitalityScore(thermal, battery, memory.usedPercentage)
 
