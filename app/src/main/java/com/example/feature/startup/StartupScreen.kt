@@ -443,7 +443,7 @@ fun StartupHeroCard(
                     Spacer(modifier = Modifier.width(12.dp))
                     Column {
                         Text(
-                            text = "STARTUP LATENCY ENGINE",
+                            text = "STARTUP APP REVIEW",
                             style = MaterialTheme.typography.labelSmall,
                             color = MaterialTheme.colorScheme.onSurfaceVariant,
                             letterSpacing = 1.2.sp,
@@ -491,8 +491,8 @@ fun StartupHeroCard(
                     modifier = Modifier.weight(1f)
                 ) {
                     Column(modifier = Modifier.padding(12.dp)) {
-                        Text("Est. Boot Delay", style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 9.sp)
-                        Text(summary.formattedTotalBootDelay, style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.Bold, color = WarningAmber)
+                        Text("Boot-time change", style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 9.sp)
+                        Text("Not measured", style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.Bold, color = WarningAmber)
                     }
                 }
 
